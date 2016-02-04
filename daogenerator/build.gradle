@@ -1,7 +1,7 @@
 apply plugin: 'application'
 apply plugin: 'java'
 
-mainClassName = "com.example.DaoGenerator"
+mainClassName = "com.example.KidQuestDaoGenerator"
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/greendao-generator-2.1.0.jar')
