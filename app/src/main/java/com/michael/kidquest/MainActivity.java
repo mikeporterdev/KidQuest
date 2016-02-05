@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession daoSession = daoMaster.newSession();
 
-        insertSampleData(daoSession);
+        //insertSampleData(daoSession);
 
         QuestDao questDao = daoSession.getQuestDao();
         List<Quest> questList = questDao.loadAll();

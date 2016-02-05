@@ -2,25 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!-- quest name -->
-    <TextView
-        android:id="@+id/activity_main_item_quest_name"
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16dp" />
-    <!-- quest description -->
-    <TextView
-        android:id="@+id/activity_main_item_quest_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16dp" />
-    <TextView
-        android:id="@+id/activity_main_gold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16dp" />
-    <TextView
-        android:id="@+id/activity_main_xp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:id="@+id/cv"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16px">
+
+            <TextView
+                android:id="@+id/activity_main_item_quest_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="questName" />
+            <!-- quest description -->
+
+            <TextView
+                android:id="@+id/activity_main_gold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:text="questGold"
+                android:layout_gravity="end"
+                android:layout_alignRight="@id/activity_main_item_quest_name"
+                android:layout_below="@id/activity_main_item_quest_name"/>
+
+            <TextView
+                android:id="@+id/activity_main_xp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="questXP"
+                android:textSize="16dp"
+                android:layout_below="@id/activity_main_gold"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:id="@+id/activity_main_item_quest_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:text="questDesc"
+                android:layout_below="@+id/activity_main_item_quest_name"/>
+        </RelativeLayout>
+        <!-- quest name -->
+
+    </android.support.v7.widget.CardView>
+
+
 </LinearLayout>

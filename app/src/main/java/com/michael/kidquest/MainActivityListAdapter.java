@@ -39,8 +39,8 @@ public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityLi
     public void onBindViewHolder(ViewHolder viewHolder, int position){
         viewHolder.textViewQuestName.setText(mData.get(position).getTitle());
         viewHolder.textViewQuestDescription.setText(mData.get(position).getDescription());
-        viewHolder.textViewGoldReward.setText("Gold: " + mData.get(position).getDifficulty().getGold() + "gp");
-        viewHolder.textViewXpReward.setText("XP: " + mData.get(position).getDifficulty().getExperience());
+        viewHolder.textViewGoldReward.setText(mData.get(position).getDifficulty().getGold() + "gp");
+        viewHolder.textViewXpReward.setText(mData.get(position).getDifficulty().getExperience() + "xp");
 
     }
 
