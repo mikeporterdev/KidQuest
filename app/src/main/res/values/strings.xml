@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">KidQuest</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Your Quests</string>
+
+    <string-array name="difficulty">
+        <item>Very Easy</item>
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+        <item>Very Hard</item>
+    </string-array>
+    <string name="title_activity_add_quest">AddQuestActivity</string>
 </resources>
