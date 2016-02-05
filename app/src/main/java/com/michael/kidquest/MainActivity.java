@@ -10,12 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.example.model.DaoMaster;
-import com.example.model.DaoSession;
-import com.example.model.Difficulty;
-import com.example.model.DifficultyDao;
-import com.example.model.Quest;
-import com.example.model.QuestDao;
+import com.michael.kidquest.custommodel.DifficultyLevel;
+import com.michael.kidquest.model.DaoMaster;
+import com.michael.kidquest.model.DaoSession;
+import com.michael.kidquest.model.Difficulty;
+import com.michael.kidquest.model.DifficultyDao;
+import com.michael.kidquest.model.Quest;
+import com.michael.kidquest.model.QuestDao;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Difficulty difficulty = new Difficulty();
         difficulty.setGold(40);
         difficulty.setExperience(400);
-        difficulty.setDifficultyLevel("Easy");
+        difficulty.setDifficultyLevel(DifficultyLevel.EASY);
         DifficultyDao difficultyDao = daoSession.getDifficultyDao();
         difficultyDao.insertOrReplace(difficulty);
 

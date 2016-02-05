@@ -1,0 +1,24 @@
+package com.michael.kidquest.propertyconverters;
+
+import com.michael.kidquest.custommodel.DifficultyLevel;
+
+/**
+ * Created by Michael Porter on 05/02/16.
+ */
+public class DifficultyConverter implements PropertyConverter<DifficultyLevel, String> {
+
+
+    @Override
+    public DifficultyLevel convertToEntityProperty(String databaseValue) {
+        try {
+            return DifficultyLevel.valueOf(databaseValue);
+        } catch (IllegalArgumentException e) {
+            return DifficultyLevel.MEDIUM;
+        }
+    }
+
+    @Override
+    public String convertToDatabaseValue(DifficultyLevel entityProperty) {
+        return entityProperty.getDifficultyLevel();
+    }
+}

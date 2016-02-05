@@ -10,11 +10,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.model.DaoMaster;
-import com.example.model.DaoSession;
-import com.example.model.Difficulty;
-import com.example.model.DifficultyDao;
-import com.example.model.Quest;
+import com.michael.kidquest.model.DaoMaster;
+import com.michael.kidquest.model.DaoSession;
+import com.michael.kidquest.model.Difficulty;
+import com.michael.kidquest.model.DifficultyDao;
+import com.michael.kidquest.model.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class AddQuestActivity extends AppCompatActivity {
 
         List<String> difficultyTexts = new ArrayList<String>();
         for (Difficulty difficulty: difficulties){
-            difficultyTexts.add(difficulty.getDifficultyLevel());
+            difficultyTexts.add(difficulty.getDifficultyLevel().getDifficultyLevel());
         }
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
@@ -83,6 +83,7 @@ public class AddQuestActivity extends AppCompatActivity {
 
                 quest.setTitle(editQuestName.getText().toString());
                 quest.setDescription(editQuestDesc.getText().toString());
+                quest.setCompleted(false);
 
                 daoSession.getQuestDao().insertOrReplace(quest);
 
