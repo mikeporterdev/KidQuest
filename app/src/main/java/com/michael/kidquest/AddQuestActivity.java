@@ -6,12 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.model.DaoMaster;
 import com.example.model.DaoSession;
 import com.example.model.Difficulty;
+import com.example.model.DifficultyDao;
+import com.example.model.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,7 @@ public class AddQuestActivity extends AppCompatActivity {
         DaoSession daoSession = daoMaster.newSession();
 
         List<Difficulty> difficulties = daoSession.getDifficultyDao().loadAll();
+
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
 
         List<String> difficultyTexts = new ArrayList<String>();
@@ -59,11 +63,30 @@ public class AddQuestActivity extends AppCompatActivity {
     public void addListenerOnButton(){
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
         btnSubmit = (Button) findViewById(R.id.addQuestSubmit);
+        final EditText editQuestName = (EditText) findViewById(R.id.questName);
+        final EditText editQuestDesc = (EditText) findViewById(R.id.questDesc);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AddQuestActivity.this, "you submitted some shit: " + String.valueOf(spinner.getSelectedItem()), Toast.LENGTH_SHORT).show();
+                Quest quest = new Quest();
+
+                DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(AddQuestActivity.this, "quest-db", null);
+                SQLiteDatabase db = helper.getWritableDatabase();
+                DaoMaster daoMaster = new DaoMaster(db);
+                DaoSession daoSession = daoMaster.newSession();
+
+                DifficultyDao dDao = daoSession.getDifficultyDao();
+                List<Difficulty> diff = dDao.queryBuilder().where(
+                        DifficultyDao.Properties.DifficultyLevel.eq(String.valueOf(spinner.getSelectedItem()))).list();
+                quest.setDifficulty(diff.get(0));
+
+                quest.setTitle(editQuestName.getText().toString());
+                quest.setDescription(editQuestDesc.getText().toString());
+
+                daoSession.getQuestDao().insertOrReplace(quest);
+
+                Toast.makeText(AddQuestActivity.this, "Quest Added", Toast.LENGTH_SHORT).show();
             }
         });
     }
