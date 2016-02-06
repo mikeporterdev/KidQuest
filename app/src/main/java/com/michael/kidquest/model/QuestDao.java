@@ -1,15 +1,15 @@
 package com.michael.kidquest.model;
 
-import java.util.List;
-import java.util.ArrayList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
-import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
+
+import com.michael.kidquest.custommodel.DifficultyLevel;
+import com.michael.kidquest.propertyconverters.DifficultyConverter;
 
 import com.michael.kidquest.model.Quest;
 
@@ -30,11 +30,10 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
         public final static Property Description = new Property(2, String.class, "description", false, "DESCRIPTION");
         public final static Property Completed = new Property(3, Boolean.class, "completed", false, "COMPLETED");
-        public final static Property DifficultyId = new Property(4, long.class, "difficultyId", false, "DIFFICULTY_ID");
+        public final static Property DifficultyLevel = new Property(4, String.class, "difficultyLevel", false, "DIFFICULTY_LEVEL");
     };
 
-    private DaoSession daoSession;
-
+    private final DifficultyConverter difficultyLevelConverter = new DifficultyConverter();
 
     public QuestDao(DaoConfig config) {
         super(config);
@@ -42,7 +41,6 @@ public class QuestDao extends AbstractDao<Quest, Long> {
     
     public QuestDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
-        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -53,7 +51,7 @@ public class QuestDao extends AbstractDao<Quest, Long> {
                 "\"TITLE\" TEXT," + // 1: title
                 "\"DESCRIPTION\" TEXT," + // 2: description
                 "\"COMPLETED\" INTEGER," + // 3: completed
-                "\"DIFFICULTY_ID\" INTEGER NOT NULL );"); // 4: difficultyId
+                "\"DIFFICULTY_LEVEL\" TEXT);"); // 4: difficultyLevel
     }
 
     /** Drops the underlying database table. */
@@ -86,13 +84,11 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         if (completed != null) {
             stmt.bindLong(4, completed ? 1L: 0L);
         }
-        stmt.bindLong(5, entity.getDifficultyId());
-    }
-
-    @Override
-    protected void attachEntity(Quest entity) {
-        super.attachEntity(entity);
-        entity.__setDaoSession(daoSession);
+ 
+        DifficultyLevel difficultyLevel = entity.getDifficultyLevel();
+        if (difficultyLevel != null) {
+            stmt.bindString(5, difficultyLevelConverter.convertToDatabaseValue(difficultyLevel));
+        }
     }
 
     /** @inheritdoc */
@@ -109,7 +105,7 @@ public class QuestDao extends AbstractDao<Quest, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // description
             cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0, // completed
-            cursor.getLong(offset + 4) // difficultyId
+            cursor.isNull(offset + 4) ? null : difficultyLevelConverter.convertToEntityProperty(cursor.getString(offset + 4)) // difficultyLevel
         );
         return entity;
     }
@@ -121,7 +117,7 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setDescription(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setCompleted(cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0);
-        entity.setDifficultyId(cursor.getLong(offset + 4));
+        entity.setDifficultyLevel(cursor.isNull(offset + 4) ? null : difficultyLevelConverter.convertToEntityProperty(cursor.getString(offset + 4)));
      }
     
     /** @inheritdoc */
@@ -147,97 +143,4 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         return true;
     }
     
-    private String selectDeep;
-
-    protected String getSelectDeep() {
-        if (selectDeep == null) {
-            StringBuilder builder = new StringBuilder("SELECT ");
-            SqlUtils.appendColumns(builder, "T", getAllColumns());
-            builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getDifficultyDao().getAllColumns());
-            builder.append(" FROM QUEST T");
-            builder.append(" LEFT JOIN DIFFICULTY T0 ON T.\"DIFFICULTY_ID\"=T0.\"_id\"");
-            builder.append(' ');
-            selectDeep = builder.toString();
-        }
-        return selectDeep;
-    }
-    
-    protected Quest loadCurrentDeep(Cursor cursor, boolean lock) {
-        Quest entity = loadCurrent(cursor, 0, lock);
-        int offset = getAllColumns().length;
-
-        Difficulty difficulty = loadCurrentOther(daoSession.getDifficultyDao(), cursor, offset);
-         if(difficulty != null) {
-            entity.setDifficulty(difficulty);
-        }
-
-        return entity;    
-    }
-
-    public Quest loadDeep(Long key) {
-        assertSinglePk();
-        if (key == null) {
-            return null;
-        }
-
-        StringBuilder builder = new StringBuilder(getSelectDeep());
-        builder.append("WHERE ");
-        SqlUtils.appendColumnsEqValue(builder, "T", getPkColumns());
-        String sql = builder.toString();
-        
-        String[] keyArray = new String[] { key.toString() };
-        Cursor cursor = db.rawQuery(sql, keyArray);
-        
-        try {
-            boolean available = cursor.moveToFirst();
-            if (!available) {
-                return null;
-            } else if (!cursor.isLast()) {
-                throw new IllegalStateException("Expected unique result, but count was " + cursor.getCount());
-            }
-            return loadCurrentDeep(cursor, true);
-        } finally {
-            cursor.close();
-        }
-    }
-    
-    /** Reads all available rows from the given cursor and returns a list of new ImageTO objects. */
-    public List<Quest> loadAllDeepFromCursor(Cursor cursor) {
-        int count = cursor.getCount();
-        List<Quest> list = new ArrayList<Quest>(count);
-        
-        if (cursor.moveToFirst()) {
-            if (identityScope != null) {
-                identityScope.lock();
-                identityScope.reserveRoom(count);
-            }
-            try {
-                do {
-                    list.add(loadCurrentDeep(cursor, false));
-                } while (cursor.moveToNext());
-            } finally {
-                if (identityScope != null) {
-                    identityScope.unlock();
-                }
-            }
-        }
-        return list;
-    }
-    
-    protected List<Quest> loadDeepAllAndCloseCursor(Cursor cursor) {
-        try {
-            return loadAllDeepFromCursor(cursor);
-        } finally {
-            cursor.close();
-        }
-    }
-    
-
-    /** A raw-style query where you can pass any WHERE clause and arguments. */
-    public List<Quest> queryDeep(String where, String... selectionArg) {
-        Cursor cursor = db.rawQuery(getSelectDeep() + where, selectionArg);
-        return loadDeepAllAndCloseCursor(cursor);
-    }
- 
 }

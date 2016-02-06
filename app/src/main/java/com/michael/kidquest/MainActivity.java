@@ -10,11 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.michael.kidquest.custommodel.DifficultyLevel;
 import com.michael.kidquest.model.DaoMaster;
 import com.michael.kidquest.model.DaoSession;
-import com.michael.kidquest.model.Difficulty;
-import com.michael.kidquest.model.DifficultyDao;
 import com.michael.kidquest.model.Quest;
 import com.michael.kidquest.model.QuestDao;
 
@@ -43,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession daoSession = daoMaster.newSession();
 
-        //insertSampleData(daoSession);
+        insertSampleData(daoSession);
 
         QuestDao questDao = daoSession.getQuestDao();
         List<Quest> questList = questDao.loadAll();
@@ -55,19 +52,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void insertSampleData(DaoSession daoSession){
-        Difficulty difficulty = new Difficulty();
-        difficulty.setGold(40);
-        difficulty.setExperience(400);
-        difficulty.setDifficultyLevel(DifficultyLevel.EASY);
-        DifficultyDao difficultyDao = daoSession.getDifficultyDao();
-        difficultyDao.insertOrReplace(difficulty);
 
-        Quest quest = new Quest();
-        quest.setTitle("Clean Your Room");
-        quest.setDescription("Test Quest");
-        quest.setCompleted(false);
-        quest.setDifficulty(difficulty);
-        daoSession.getQuestDao().insertOrReplace(quest);
+
     }
 
     public void addQuest(View view){

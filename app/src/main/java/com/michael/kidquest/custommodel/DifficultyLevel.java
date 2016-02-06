@@ -19,4 +19,13 @@ public enum DifficultyLevel {
     public String getDifficultyLevel(){
         return value;
     }
+
+    public static DifficultyLevel fromString(String value){
+        if (value != null) {
+            for (DifficultyLevel d : DifficultyLevel.values()){
+                if (value.equalsIgnoreCase(d.value)) return d;
+            }
+        }
+        throw new IllegalArgumentException("No difficulty level found with text " + value);
+    }
 }

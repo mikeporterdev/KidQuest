@@ -10,13 +10,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.michael.kidquest.custommodel.DifficultyLevel;
 import com.michael.kidquest.model.DaoMaster;
 import com.michael.kidquest.model.DaoSession;
-import com.michael.kidquest.model.Difficulty;
-import com.michael.kidquest.model.DifficultyDao;
 import com.michael.kidquest.model.Quest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AddQuestActivity extends AppCompatActivity {
@@ -39,13 +39,14 @@ public class AddQuestActivity extends AppCompatActivity {
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession daoSession = daoMaster.newSession();
 
-        List<Difficulty> difficulties = daoSession.getDifficultyDao().loadAll();
-
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
 
+        List<DifficultyLevel> diffs = Arrays.asList(DifficultyLevel.values());
+
+
         List<String> difficultyTexts = new ArrayList<String>();
-        for (Difficulty difficulty: difficulties){
-            difficultyTexts.add(difficulty.getDifficultyLevel().getDifficultyLevel());
+        for (DifficultyLevel difficulty: diffs){
+            difficultyTexts.add(difficulty.getDifficultyLevel());
         }
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
@@ -76,10 +77,9 @@ public class AddQuestActivity extends AppCompatActivity {
                 DaoMaster daoMaster = new DaoMaster(db);
                 DaoSession daoSession = daoMaster.newSession();
 
-                DifficultyDao dDao = daoSession.getDifficultyDao();
-                List<Difficulty> diff = dDao.queryBuilder().where(
-                        DifficultyDao.Properties.DifficultyLevel.eq(String.valueOf(spinner.getSelectedItem()))).list();
-                quest.setDifficulty(diff.get(0));
+                String diff = String.valueOf(spinner.getSelectedItem()); //Very Easy
+
+                quest.setDifficultyLevel(DifficultyLevel.fromString(diff));
 
                 quest.setTitle(editQuestName.getText().toString());
                 quest.setDescription(editQuestDesc.getText().toString());
