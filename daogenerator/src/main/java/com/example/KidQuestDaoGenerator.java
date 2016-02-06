@@ -28,12 +28,12 @@ public class KidQuestDaoGenerator {
 
         Entity quest = schema.addEntity("Quest");
         quest.addIdProperty();
-        quest.addStringProperty("title");
+        quest.addStringProperty("title").notNull();
         quest.addStringProperty("description");
-        quest.addBooleanProperty("completed");
+        quest.addBooleanProperty("completed").notNull();
         quest.addStringProperty("difficultyLevel").customType(
                 "com.michael.kidquest.custommodel.DifficultyLevel",
-                "com.michael.kidquest.propertyconverters.DifficultyConverter");
+                "com.michael.kidquest.propertyconverters.DifficultyConverter").notNull();
 
         new DaoGenerator().generateAll(schema, "../app/src/main/java");
 
