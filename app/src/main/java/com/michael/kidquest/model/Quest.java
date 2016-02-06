@@ -9,9 +9,11 @@ import com.michael.kidquest.custommodel.DifficultyLevel;
 public class Quest {
 
     private Long id;
+    /** Not-null value. */
     private String title;
     private String description;
-    private Boolean completed;
+    private boolean completed;
+    /** Not-null value. */
     private DifficultyLevel difficultyLevel;
 
     public Quest() {
@@ -21,7 +23,7 @@ public class Quest {
         this.id = id;
     }
 
-    public Quest(Long id, String title, String description, Boolean completed, DifficultyLevel difficultyLevel) {
+    public Quest(Long id, String title, String description, boolean completed, DifficultyLevel difficultyLevel) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -37,10 +39,12 @@ public class Quest {
         this.id = id;
     }
 
+    /** Not-null value. */
     public String getTitle() {
         return title;
     }
 
+    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setTitle(String title) {
         this.title = title;
     }
@@ -53,18 +57,20 @@ public class Quest {
         this.description = description;
     }
 
-    public Boolean getCompleted() {
+    public boolean getCompleted() {
         return completed;
     }
 
-    public void setCompleted(Boolean completed) {
+    public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 
+    /** Not-null value. */
     public DifficultyLevel getDifficultyLevel() {
         return difficultyLevel;
     }
 
+    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setDifficultyLevel(DifficultyLevel difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
     }

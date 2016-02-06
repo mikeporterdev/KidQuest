@@ -29,7 +29,7 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
         public final static Property Description = new Property(2, String.class, "description", false, "DESCRIPTION");
-        public final static Property Completed = new Property(3, Boolean.class, "completed", false, "COMPLETED");
+        public final static Property Completed = new Property(3, boolean.class, "completed", false, "COMPLETED");
         public final static Property DifficultyLevel = new Property(4, String.class, "difficultyLevel", false, "DIFFICULTY_LEVEL");
     };
 
@@ -48,10 +48,10 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"QUEST\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"TITLE\" TEXT," + // 1: title
+                "\"TITLE\" TEXT NOT NULL ," + // 1: title
                 "\"DESCRIPTION\" TEXT," + // 2: description
-                "\"COMPLETED\" INTEGER," + // 3: completed
-                "\"DIFFICULTY_LEVEL\" TEXT);"); // 4: difficultyLevel
+                "\"COMPLETED\" INTEGER NOT NULL ," + // 3: completed
+                "\"DIFFICULTY_LEVEL\" TEXT NOT NULL );"); // 4: difficultyLevel
     }
 
     /** Drops the underlying database table. */
@@ -69,26 +69,14 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
- 
-        String title = entity.getTitle();
-        if (title != null) {
-            stmt.bindString(2, title);
-        }
+        stmt.bindString(2, entity.getTitle());
  
         String description = entity.getDescription();
         if (description != null) {
             stmt.bindString(3, description);
         }
- 
-        Boolean completed = entity.getCompleted();
-        if (completed != null) {
-            stmt.bindLong(4, completed ? 1L: 0L);
-        }
- 
-        DifficultyLevel difficultyLevel = entity.getDifficultyLevel();
-        if (difficultyLevel != null) {
-            stmt.bindString(5, difficultyLevelConverter.convertToDatabaseValue(difficultyLevel));
-        }
+        stmt.bindLong(4, entity.getCompleted() ? 1L: 0L);
+        stmt.bindString(5, difficultyLevelConverter.convertToDatabaseValue(entity.getDifficultyLevel()));
     }
 
     /** @inheritdoc */
@@ -102,10 +90,10 @@ public class QuestDao extends AbstractDao<Quest, Long> {
     public Quest readEntity(Cursor cursor, int offset) {
         Quest entity = new Quest( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
+            cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // description
-            cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0, // completed
-            cursor.isNull(offset + 4) ? null : difficultyLevelConverter.convertToEntityProperty(cursor.getString(offset + 4)) // difficultyLevel
+            cursor.getShort(offset + 3) != 0, // completed
+            difficultyLevelConverter.convertToEntityProperty(cursor.getString(offset + 4)) // difficultyLevel
         );
         return entity;
     }
@@ -114,10 +102,10 @@ public class QuestDao extends AbstractDao<Quest, Long> {
     @Override
     public void readEntity(Cursor cursor, Quest entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setTitle(cursor.getString(offset + 1));
         entity.setDescription(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setCompleted(cursor.isNull(offset + 3) ? null : cursor.getShort(offset + 3) != 0);
-        entity.setDifficultyLevel(cursor.isNull(offset + 4) ? null : difficultyLevelConverter.convertToEntityProperty(cursor.getString(offset + 4)));
+        entity.setCompleted(cursor.getShort(offset + 3) != 0);
+        entity.setDifficultyLevel(difficultyLevelConverter.convertToEntityProperty(cursor.getString(offset + 4)));
      }
     
     /** @inheritdoc */

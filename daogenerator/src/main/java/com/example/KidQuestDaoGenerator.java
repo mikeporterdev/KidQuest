@@ -8,7 +8,7 @@ import de.greenrobot.daogenerator.Schema;
 
 public class KidQuestDaoGenerator {
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(2, "com.michael.kidquest.model");
+        Schema schema = new Schema(3, "com.michael.kidquest.model");
 
         Entity userDetails = schema.addEntity("Character");
         userDetails.addIdProperty();
