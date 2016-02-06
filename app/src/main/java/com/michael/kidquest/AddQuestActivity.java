@@ -62,21 +62,25 @@ public class AddQuestActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DaoSession daoSession = ((KidQuestApplication) getApplicationContext()).getDaoSession();
-
+                String qName = editQuestName.getText().toString();
                 String diff = String.valueOf(spinner.getSelectedItem());
 
-                Quest quest = new Quest();
-                quest.setDifficultyLevel(DifficultyLevel.fromString(diff));
-                quest.setTitle(editQuestName.getText().toString());
-                quest.setDescription(editQuestDesc.getText().toString());
-                quest.setCompleted(false);
+                if (qName != null && !qName.equals("")){
+                    DaoSession daoSession = ((KidQuestApplication) getApplicationContext()).getDaoSession();
+                    Quest quest = new Quest();
+                    quest.setDifficultyLevel(DifficultyLevel.fromString(diff));
+                    quest.setTitle(editQuestName.getText().toString());
+                    quest.setDescription(editQuestDesc.getText().toString());
+                    quest.setCompleted(false);
 
-                daoSession.getQuestDao().insertOrReplace(quest);
+                    daoSession.getQuestDao().insertOrReplace(quest);
 
-                Toast.makeText(AddQuestActivity.this, "Quest Added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddQuestActivity.this, "Quest Added", Toast.LENGTH_SHORT).show();
 
-                finish();
+                    finish();
+                } else {
+                    editQuestName.setError("Quest Name is required");
+                }
             }
         });
     }
