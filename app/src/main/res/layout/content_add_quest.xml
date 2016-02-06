@@ -1,42 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_add_quest"
-    tools:context="com.michael.kidquest.AddQuestActivity">
+    tools:context="com.michael.kidquest.AddQuestActivity"
+    tools:showIn="@layout/activity_add_quest">
+
     <EditText
         android:id="@+id/questName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="@string/editbox_quest_name"/>
+        android:hint="@string/editbox_quest_name"
+        android:inputType="text" />
+
     <EditText
         android:id="@+id/questDesc"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:inputType="text"
+        android:layout_height="wrap_content"
         android:hint="@string/editbox_quest_desc"
+
+        android:inputType="textMultiLine"
+        android:lines="8"
+        android:gravity="top|left"
+        android:scrollbars="vertical"
         />
+
+
     <Spinner
         android:id="@+id/addQuestDifficulty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/difficulty"
-        />
+        android:entries="@array/difficulty" />
 
     <Button
         android:id="@+id/addQuestSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/submit"/>
+        android:text="@string/submit" />
 
 </LinearLayout>
