@@ -20,6 +20,11 @@ public enum DifficultyLevel {
         return value;
     }
 
+    /**
+     * Converts the printed string of the difficulty level to the database value.
+     * @param value text string of the difficulty level, ie. "Very Easy"
+     * @throws IllegalArgumentException value does not match an enum.
+     * */
     public static DifficultyLevel fromString(String value){
         if (value != null) {
             for (DifficultyLevel d : DifficultyLevel.values()){

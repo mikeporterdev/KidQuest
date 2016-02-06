@@ -17,11 +17,15 @@
         android:id="@+id/questName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:hint="Quest Name"/>
     <EditText
         android:id="@+id/questDesc"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="50dp"
+        android:inputType="text"
+        android:hint="Description (Optional)"
+        />
     <Spinner
         android:id="@+id/addQuestDifficulty"
         android:layout_width="match_parent"
