@@ -1,6 +1,5 @@
 package com.michael.kidquest;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.michael.kidquest.custommodel.DifficultyLevel;
-import com.michael.kidquest.model.DaoMaster;
 import com.michael.kidquest.model.DaoSession;
 import com.michael.kidquest.model.Quest;
 
@@ -34,10 +32,7 @@ public class AddQuestActivity extends AppCompatActivity {
     }
 
     public void addDifficultiesToSpinner(){
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "quest-db", null);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession = daoMaster.newSession();
+        DaoSession daoSession = ((KidQuestApplication) getApplicationContext()).getDaoSession();
 
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
 
@@ -70,17 +65,12 @@ public class AddQuestActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DaoSession daoSession = ((KidQuestApplication) getApplicationContext()).getDaoSession();
+
+                String diff = String.valueOf(spinner.getSelectedItem());
+
                 Quest quest = new Quest();
-
-                DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(AddQuestActivity.this, "quest-db", null);
-                SQLiteDatabase db = helper.getWritableDatabase();
-                DaoMaster daoMaster = new DaoMaster(db);
-                DaoSession daoSession = daoMaster.newSession();
-
-                String diff = String.valueOf(spinner.getSelectedItem()); //Very Easy
-
                 quest.setDifficultyLevel(DifficultyLevel.fromString(diff));
-
                 quest.setTitle(editQuestName.getText().toString());
                 quest.setDescription(editQuestDesc.getText().toString());
                 quest.setCompleted(false);

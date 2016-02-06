@@ -1,7 +1,6 @@
 package com.michael.kidquest;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.michael.kidquest.model.DaoMaster;
 import com.michael.kidquest.model.DaoSession;
 import com.michael.kidquest.model.Quest;
 import com.michael.kidquest.model.QuestDao;
@@ -40,10 +38,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showQuests() {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "quest-db", null);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession = daoMaster.newSession();
+        DaoSession daoSession = ((KidQuestApplication) getApplicationContext()).getDaoSession();
 
         QuestDao questDao = daoSession.getQuestDao();
         List<Quest> questList = questDao.loadAll();
