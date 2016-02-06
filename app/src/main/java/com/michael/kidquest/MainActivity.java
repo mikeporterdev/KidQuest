@@ -49,11 +49,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    public void addQuest(View view){
-        Intent intent = new Intent(this, AddQuestActivity.class);
-    //    EditText editText = (EditText) findViewById(R.id.add_quest);
-    }
-
     @Override
     public void onResume(){
         super.onResume();

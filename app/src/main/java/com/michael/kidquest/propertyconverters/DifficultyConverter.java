@@ -4,6 +4,7 @@ import com.michael.kidquest.custommodel.DifficultyLevel;
 
 /**
  * Created by Michael Porter on 05/02/16.
+ * Used by GreenDAO to convert Enums into Database values
  */
 public class DifficultyConverter implements PropertyConverter<DifficultyLevel, String> {
 

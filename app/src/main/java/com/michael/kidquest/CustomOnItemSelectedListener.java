@@ -5,6 +5,9 @@ import android.widget.AdapterView;
 
 /**
  * Created by Michael Porter on 05/02/16.
+ *
+ * Selects things for spinners. Not actually sure if I need this
+ * TODO: See if you actually need this
  */
 public class CustomOnItemSelectedListener implements android.widget.AdapterView.OnItemSelectedListener {
     @Override

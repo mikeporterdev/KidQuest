@@ -2,6 +2,7 @@ package com.michael.kidquest.custommodel;
 
 /**
  * Created by Michael Porter on 05/02/16.
+ * Enum of the difficulty level of the quest
  */
 public enum DifficultyLevel {
     VERY_EASY("Very Easy"),
@@ -10,7 +11,7 @@ public enum DifficultyLevel {
     HARD("Hard"),
     VERY_HARD("Very Hard");
 
-    private String value;
+    private final String value;
 
     DifficultyLevel(String value){
         this.value = value;

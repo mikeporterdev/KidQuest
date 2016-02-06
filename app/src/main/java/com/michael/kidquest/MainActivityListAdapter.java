@@ -12,9 +12,11 @@ import java.util.List;
 
 /**
  * Created by Michael Porter on 04/02/16.
+ *
+ * Builds the content of the quest cards
  */
 public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityListAdapter.ViewHolder>{
-    private List<Quest> mData;
+    private final List<Quest> mData;
 
     @Override
     public int getItemCount() {
@@ -44,10 +46,10 @@ public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityLi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView textViewQuestName;
-        public TextView textViewQuestDescription;
-        public TextView textViewGoldReward;
-        public TextView textViewXpReward;
+        public final TextView textViewQuestName;
+        public final TextView textViewQuestDescription;
+        public final TextView textViewGoldReward;
+        public final TextView textViewXpReward;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);

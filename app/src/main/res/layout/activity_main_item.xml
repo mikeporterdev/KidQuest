@@ -27,7 +27,7 @@
                     android:id="@+id/activity_main_item_quest_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="questName"
+                    android:text="@string/debug_quest_name"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
 
@@ -35,9 +35,9 @@
                     android:id="@+id/activity_main_gold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_gravity="end"
-                    android:text="questGold"
+                    android:text="@string/debug_gold"
                     android:textColor="@android:color/white"
                     android:textSize="12sp" />
 
@@ -45,9 +45,9 @@
                     android:id="@+id/activity_main_xp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_below="@id/activity_main_gold"
-                    android:text="questXP"
+                    android:text="@string/debug_xp"
                     android:textColor="@android:color/white"
                     android:textSize="12sp" />
             </RelativeLayout>
@@ -57,8 +57,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/titleBar"
-                android:paddingLeft="8dp"
-                android:text="questDesc"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/debug_quest_desc"
                 android:textSize="14sp" />
 
         </RelativeLayout>

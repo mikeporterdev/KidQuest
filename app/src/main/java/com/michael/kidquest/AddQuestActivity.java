@@ -19,7 +19,6 @@ import java.util.List;
 
 public class AddQuestActivity extends AppCompatActivity {
     private Spinner spinner;
-    private Button btnSubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +30,7 @@ public class AddQuestActivity extends AppCompatActivity {
         addListenerOnButton();
     }
 
-    public void addDifficultiesToSpinner(){
-        DaoSession daoSession = ((KidQuestApplication) getApplicationContext()).getDaoSession();
-
+    private void addDifficultiesToSpinner(){
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
 
         List<DifficultyLevel> diffs = Arrays.asList(DifficultyLevel.values());
@@ -51,14 +48,14 @@ public class AddQuestActivity extends AppCompatActivity {
         spinner.setAdapter(dataAdapter);
     }
 
-    public void addListenerOnSpinnerItemSelection(){
+    private void addListenerOnSpinnerItemSelection(){
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
         spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
     }
 
-    public void addListenerOnButton(){
+    private void addListenerOnButton(){
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
-        btnSubmit = (Button) findViewById(R.id.addQuestSubmit);
+        Button btnSubmit = (Button) findViewById(R.id.addQuestSubmit);
         final EditText editQuestName = (EditText) findViewById(R.id.questName);
         final EditText editQuestDesc = (EditText) findViewById(R.id.questDesc);
 
