@@ -35,12 +35,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        showQuests();
+
+    }
+
+    private void showQuests() {
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "quest-db", null);
         SQLiteDatabase db = helper.getWritableDatabase();
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession daoSession = daoMaster.newSession();
-
-        insertSampleData(daoSession);
 
         QuestDao questDao = daoSession.getQuestDao();
         List<Quest> questList = questDao.loadAll();
@@ -51,13 +54,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    public void insertSampleData(DaoSession daoSession){
-
-
-    }
-
     public void addQuest(View view){
         Intent intent = new Intent(this, AddQuestActivity.class);
     //    EditText editText = (EditText) findViewById(R.id.add_quest);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        showQuests();
     }
 }

@@ -88,6 +88,8 @@ public class AddQuestActivity extends AppCompatActivity {
                 daoSession.getQuestDao().insertOrReplace(quest);
 
                 Toast.makeText(AddQuestActivity.this, "Quest Added", Toast.LENGTH_SHORT).show();
+
+                finish();
             }
         });
     }
