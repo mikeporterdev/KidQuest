@@ -1,71 +1,80 @@
 package com.michael.kidquest;
 
-import android.database.sqlite.SQLiteDatabase;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
-import com.example.model.DaoMaster;
-import com.example.model.DaoSession;
-import com.example.model.Difficulty;
-import com.example.model.DifficultyDao;
-import com.example.model.Quest;
-import com.example.model.QuestDao;
+import com.michael.kidquest.model.Quest;
 
-import java.util.List;
+public class MainActivity extends AppCompatActivity implements QuestLogFragment.OnListFragmentInteractionListener {
 
-public class MainActivity extends AppCompatActivity {
+    public RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /**
+         * Toolbar setup
+         * */
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Your Quests");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open,
+                R.string.drawer_close);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "quest-db", null);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        DaoSession daoSession = daoMaster.newSession();
+        String[] mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items);
+        RecyclerView mDrawerList = (RecyclerView) findViewById(R.id.left_drawer);
+        mDrawerList.setHasFixedSize(true);
 
-        insertSampleData(daoSession);
+        NavBarListAdapter mAdapter = new NavBarListAdapter(mNavigationDrawerItemTitles, "Balthazaro", 18);
+        mDrawerList.setAdapter(mAdapter);
 
-        QuestDao questDao = daoSession.getQuestDao();
-        List<Quest> questList = questDao.loadAll();
+        LinearLayoutManager mLayoutManager2 = new LinearLayoutManager(this);
+        mDrawerList.setLayoutManager(mLayoutManager2);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_activity_recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        MainActivityListAdapter adapter = new MainActivityListAdapter(questList);
-        recyclerView.setAdapter(adapter);
+
+        Fragment fragment = new QuestLogFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
     }
 
-    public void insertSampleData(DaoSession daoSession){
-        Difficulty difficulty = new Difficulty();
-        difficulty.setGold(40);
-        difficulty.setExperience(400);
-        difficulty.setDifficultyLevel("Easy");
-        DifficultyDao difficultyDao = daoSession.getDifficultyDao();
-        difficultyDao.insertOrReplace(difficulty);
+    private void addDrawerItems() {
 
-        Quest quest = new Quest();
-        quest.setTitle("Clean Your Room");
-        quest.setDescription("Test Quest");
-        quest.setCompleted(false);
-        quest.setDifficulty(difficulty);
-        daoSession.getQuestDao().insertOrReplace(quest);
+
+
+
+
+/**
+ mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+@Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+Fragment fragment = new QuestLogFragment();
+
+FragmentManager fragmentManager = getFragmentManager();
+fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+}
+});
+
+ */
+    }
+
+    @Override
+    public void onListFragmentInteraction(Quest quest) {
+
     }
 }
