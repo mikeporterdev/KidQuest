@@ -2,6 +2,11 @@
     <string name="app_name">KidQuest</string>
     <string name="title_activity_main">Your Quests</string>
 
+    <string-array name="navigation_drawer_items">
+        <item>Open Quests</item>
+        <item>Pending Quests</item>
+    </string-array>
+    
     <string-array name="difficulty">
         <item>Very Easy</item>
         <item>Easy</item>

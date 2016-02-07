@@ -50,7 +50,6 @@ public class AddQuestActivity extends AppCompatActivity {
 
     private void addListenerOnSpinnerItemSelection(){
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
-        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
     }
 
     private void addListenerOnButton(){

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.michael.kidquest.model.DaoSession;
 import com.michael.kidquest.model.Quest;
@@ -18,7 +17,7 @@ import java.util.List;
  * <p/>
  * Builds the content of the quest cards
  */
-public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityListAdapter.ViewHolder> {
+public class MyQuestLogRecyclerViewAdapter extends RecyclerView.Adapter<MyQuestLogRecyclerViewAdapter.ViewHolder> {
     private final List<Quest> mData;
 
     @Override
@@ -26,34 +25,37 @@ public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityLi
         return mData.size();
     }
 
-    public MainActivityListAdapter(List<Quest> data) {
+    public MyQuestLogRecyclerViewAdapter(List<Quest> data) {
         this.mData = data;
     }
 
     @Override
-    public MainActivityListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyQuestLogRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //Create a new view
         View itemLayoutView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_main_item, null);
+                .inflate(R.layout.fragment_questlog, null);
 
         //Create ViewHolder
-        return new MainActivityListAdapter.ViewHolder(itemLayoutView);
+        return new MyQuestLogRecyclerViewAdapter.ViewHolder(itemLayoutView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        viewHolder.textViewQuestName.setText(mData.get(position).getTitle());
-        viewHolder.textViewQuestDescription.setText(mData.get(position).getDescription());
+        Quest q = mData.get(position);
+
+        viewHolder.textViewQuestName.setText(q.getTitle());
+        viewHolder.textViewQuestDescription.setText(q.getDescription());
         viewHolder.textViewGoldReward.setText("10gp");
         viewHolder.textViewXpReward.setText("100xp");
 
         viewHolder.btnMarkAsComplete.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                //get clicked quest and mark as completed
                 Quest q = mData.get(position);
-
-                Toast.makeText(v.getContext(), q.getTitle(), Toast.LENGTH_SHORT).show();
                 q.setCompleted(true);
+
+                //save quest
                 DaoSession daoSession = ((KidQuestApplication) v.getContext().getApplicationContext()).getDaoSession();
                 daoSession.getQuestDao().insertOrReplace(q);
             }
