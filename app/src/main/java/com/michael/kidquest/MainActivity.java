@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements QuestLogFragment.
 
         mNavigationDrawerItemTitles = getResources().getStringArray(R.array.navigation_drawer_items);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_frame);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         addDrawerItems();
 
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements QuestLogFragment.
 
     private void addDrawerItems(){
         String[] navArray = {"Open Quests", "Pending Quests"};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, navArray);
+        mAdapter = new ArrayAdapter<String>(this, R.layout.drawer_list_item, navArray);
         mDrawerList.setAdapter(mAdapter);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener(){

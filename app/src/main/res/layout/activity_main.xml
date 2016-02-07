@@ -27,13 +27,5 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/left_frame"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#ffeeee"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+    <include layout="@layout/nav_drawer" />
 </android.support.v4.widget.DrawerLayout>
