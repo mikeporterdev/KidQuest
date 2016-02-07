@@ -27,6 +27,8 @@
                     android:id="@+id/activity_main_item_quest_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/activity_main_gold"
                     android:text="@string/debug_quest_name"
                     android:textColor="@android:color/white"
                     android:textSize="20sp" />
@@ -52,15 +54,43 @@
                     android:textSize="12sp" />
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/activity_main_item_quest_desc"
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/titleBar"
-                android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@string/debug_quest_desc"
-                android:textSize="14sp" />
+                android:paddingStart="8dp">
+
+                <TextView
+                    android:id="@+id/activity_main_item_quest_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/divider"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/debug_lorem_ipsum"
+                    android:textSize="14sp" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/btnMarkAsComplete"
+                    android:background="@android:color/darker_gray" />
+
+                <Button
+                    android:id="@+id/btnMarkAsComplete"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:text="Mark as complete"
+                    android:textColor="@color/accent_material_light" />
+
+            </RelativeLayout>
+
 
         </RelativeLayout>
         <!-- quest name -->

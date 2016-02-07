@@ -4,18 +4,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.michael.kidquest.model.DaoSession;
 import com.michael.kidquest.model.Quest;
 
 import java.util.List;
 
 /**
  * Created by Michael Porter on 04/02/16.
- *
+ * <p/>
  * Builds the content of the quest cards
  */
-public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityListAdapter.ViewHolder>{
+public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityListAdapter.ViewHolder> {
     private final List<Quest> mData;
 
     @Override
@@ -28,7 +31,7 @@ public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityLi
     }
 
     @Override
-    public MainActivityListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public MainActivityListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //Create a new view
         View itemLayoutView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.activity_main_item, null);
@@ -38,18 +41,32 @@ public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityLi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position){
+    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         viewHolder.textViewQuestName.setText(mData.get(position).getTitle());
         viewHolder.textViewQuestDescription.setText(mData.get(position).getDescription());
         viewHolder.textViewGoldReward.setText("10gp");
         viewHolder.textViewXpReward.setText("100xp");
+
+        viewHolder.btnMarkAsComplete.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Quest q = mData.get(position);
+
+                Toast.makeText(v.getContext(), q.getTitle(), Toast.LENGTH_SHORT).show();
+                q.setCompleted(true);
+                DaoSession daoSession = ((KidQuestApplication) v.getContext().getApplicationContext()).getDaoSession();
+                daoSession.getQuestDao().insertOrReplace(q);
+            }
+        });
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView textViewQuestName;
         public final TextView textViewQuestDescription;
         public final TextView textViewGoldReward;
         public final TextView textViewXpReward;
+
+        public final Button btnMarkAsComplete;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
@@ -57,6 +74,8 @@ public class MainActivityListAdapter extends RecyclerView.Adapter<MainActivityLi
             textViewQuestDescription = (TextView) itemLayoutView.findViewById(R.id.activity_main_item_quest_desc);
             textViewGoldReward = (TextView) itemLayoutView.findViewById(R.id.activity_main_gold);
             textViewXpReward = (TextView) itemLayoutView.findViewById(R.id.activity_main_xp);
+
+            btnMarkAsComplete = (Button) itemLayoutView.findViewById(R.id.btnMarkAsComplete);
         }
 
     }
