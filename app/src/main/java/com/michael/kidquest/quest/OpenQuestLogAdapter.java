@@ -20,15 +20,15 @@ import java.util.List;
  * Builds the content of the quest cards
  */
 public class OpenQuestLogAdapter extends RecyclerView.Adapter<OpenQuestLogAdapter.ViewHolder> {
-    private final List<Quest> mData;
+    private final List<Quest> mQuests;
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mQuests.size();
     }
 
-    public OpenQuestLogAdapter(List<Quest> data) {
-        this.mData = data;
+    public OpenQuestLogAdapter(List<Quest> quests) {
+        this.mQuests = quests;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class OpenQuestLogAdapter extends RecyclerView.Adapter<OpenQuestLogAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Quest q = mData.get(position);
+        Quest q = mQuests.get(position);
 
         viewHolder.textViewQuestName.setText(q.getTitle());
         viewHolder.textViewQuestDescription.setText(q.getDescription());
@@ -54,7 +54,7 @@ public class OpenQuestLogAdapter extends RecyclerView.Adapter<OpenQuestLogAdapte
             @Override
             public void onClick(View v) {
                 //get clicked quest and mark as completed
-                Quest q = mData.get(position);
+                Quest q = mQuests.get(position);
                 q.setCompleted(true);
 
                 //save quest
