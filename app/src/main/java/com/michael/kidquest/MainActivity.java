@@ -17,6 +17,7 @@ import com.michael.kidquest.quest.OpenQuestLogFragment;
 
 public class MainActivity extends AppCompatActivity implements OpenQuestLogFragment.OnListFragmentInteractionListener, PendingQuestLogFragment.OnListFragmentInteractionListener {
     private DrawerLayout mDrawerLayout;
+    private Toolbar mToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +46,14 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
             public void onItemClick(View view, int position) {
                 Fragment fragment = null;
                 switch(position){
-                    case 1: fragment = new OpenQuestLogFragment(); break;
-                    case 2: fragment = new PendingQuestLogFragment(); break;
+                    case 1:
+                        fragment = new OpenQuestLogFragment();
+                        mToolbar.setTitle("Your Quests");
+                        break;
+                    case 2:
+                        fragment = new PendingQuestLogFragment();
+                        mToolbar.setTitle("Your Pending Quests");
+                        break;
                     default: Toast.makeText(view.getContext(), "no fragment found, position: " + position, Toast.LENGTH_SHORT).show();
                 }
 
@@ -60,36 +67,16 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     }
 
     private void toolbarSetup() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Your Quests");
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setTitle("Your Quests");
+        setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open,
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open,
                 R.string.drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-    }
-
-    private void addDrawerItems() {
-
-
-
-
-
-/**
- mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
-@Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-Fragment fragment = new OpenQuestLogFragment();
-
-FragmentManager fragmentManager = getFragmentManager();
-fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-}
-});
-
- */
     }
 
     @Override

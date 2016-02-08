@@ -30,15 +30,18 @@ public class PendingQuestLogFragment extends Fragment {
         Context context = view.getContext();
         RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        List<Quest> pendingQuests = getQuests(context);
 
+        recyclerView.setAdapter(new PendingQuestLogAdapter(pendingQuests));
+        return view;
+    }
+
+    private List<Quest> getQuests(Context context) {
         //get list of pending quests
         DaoSession daoSession = ((KidQuestApplication) context.getApplicationContext()).getDaoSession();
         QuestDao qDao = daoSession.getQuestDao();
         QueryBuilder<Quest> query = qDao.queryBuilder().where(QuestDao.Properties.Completed.eq(true));
-        List<Quest> pendingQuests = query.list();
-
-        recyclerView.setAdapter(new PendingQuestLogAdapter(pendingQuests));
-        return view;
+        return query.list();
     }
 
     public interface OnListFragmentInteractionListener {
