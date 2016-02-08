@@ -3,8 +3,8 @@ package com.michael.kidquest;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.michael.kidquest.model.DaoMaster;
-import com.michael.kidquest.model.DaoSession;
+import com.michael.kidquest.greendao.model.DaoMaster;
+import com.michael.kidquest.greendao.model.DaoSession;
 
 /**
  * Created by Michael Porter on 06/02/16.

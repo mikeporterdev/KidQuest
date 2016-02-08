@@ -1,4 +1,4 @@
-package com.michael.kidquest.custommodel;
+package com.michael.kidquest.greendao.custommodel;
 
 /**
  * Created by Michael Porter on 05/02/16.

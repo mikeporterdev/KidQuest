@@ -1,4 +1,4 @@
-package com.michael.kidquest;
+package com.michael.kidquest.quest;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.michael.kidquest.model.DaoSession;
-import com.michael.kidquest.model.Quest;
+import com.michael.kidquest.KidQuestApplication;
+import com.michael.kidquest.R;
+import com.michael.kidquest.greendao.model.DaoSession;
+import com.michael.kidquest.greendao.model.Quest;
 
 import java.util.List;
 
@@ -17,47 +19,50 @@ import java.util.List;
  * <p/>
  * Builds the content of the quest cards
  */
-public class MyQuestLogRecyclerViewAdapter extends RecyclerView.Adapter<MyQuestLogRecyclerViewAdapter.ViewHolder> {
-    private final List<Quest> mData;
+public class OpenQuestLogAdapter extends RecyclerView.Adapter<OpenQuestLogAdapter.ViewHolder> {
+    private final List<Quest> mQuests;
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mQuests.size();
     }
 
-    public MyQuestLogRecyclerViewAdapter(List<Quest> data) {
-        this.mData = data;
+    public OpenQuestLogAdapter(List<Quest> quests) {
+        this.mQuests = quests;
     }
 
     @Override
-    public MyQuestLogRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OpenQuestLogAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //Create a new view
         View itemLayoutView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_questlog, null);
+                .inflate(R.layout.quest_card, null);
 
         //Create ViewHolder
-        return new MyQuestLogRecyclerViewAdapter.ViewHolder(itemLayoutView);
+        return new OpenQuestLogAdapter.ViewHolder(itemLayoutView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Quest q = mData.get(position);
+        Quest q = mQuests.get(position);
 
         viewHolder.textViewQuestName.setText(q.getTitle());
         viewHolder.textViewQuestDescription.setText(q.getDescription());
         viewHolder.textViewGoldReward.setText("10gp");
         viewHolder.textViewXpReward.setText("100xp");
 
-        viewHolder.btnMarkAsComplete.setOnClickListener(new View.OnClickListener(){
+        viewHolder.btnMarkAsComplete.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 //get clicked quest and mark as completed
-                Quest q = mData.get(position);
+                Quest q = mQuests.get(position);
                 q.setCompleted(true);
 
                 //save quest
                 DaoSession daoSession = ((KidQuestApplication) v.getContext().getApplicationContext()).getDaoSession();
                 daoSession.getQuestDao().insertOrReplace(q);
+
+                mQuests.remove(position);
+                notifyDataSetChanged();
             }
         });
     }
