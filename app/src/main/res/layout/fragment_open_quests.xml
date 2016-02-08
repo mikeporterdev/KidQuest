@@ -3,12 +3,12 @@
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/questlog_list"
+    android:id="@+id/open_questlog_list"
     android:name="com.michael.kidquest.QuestLogFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.michael.kidquest.QuestLogFragment"
-    tools:listitem="@layout/fragment_questlog" />
+    tools:context=".quest.OpenQuestLogFragment"
+    tools:listitem="@layout/quest_card" />

@@ -20,9 +20,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddQuestActivity"
+            android:name=".quest.AddQuestActivity"
             android:label="@string/title_activity_add_quest"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

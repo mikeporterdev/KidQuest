@@ -1,6 +1,6 @@
-package com.michael.kidquest.propertyconverters;
+package com.michael.kidquest.greendao.propertyconverters;
 
-import com.michael.kidquest.custommodel.DifficultyLevel;
+import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
 
 /**
  * Created by Michael Porter on 05/02/16.

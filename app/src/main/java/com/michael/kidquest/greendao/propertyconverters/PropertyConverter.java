@@ -1,4 +1,4 @@
-package com.michael.kidquest.propertyconverters;
+package com.michael.kidquest.greendao.propertyconverters;
 
 /**
  * Created by Michael Porter on 05/02/16.

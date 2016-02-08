@@ -18,7 +18,9 @@ public class NavBarListAdapter extends RecyclerView.Adapter<NavBarListAdapter.Vi
     private String characterName;
     private int characterLevel;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    OnItemClickListener mItemClickListener;
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         int holderId;
 
         TextView characterName;
@@ -37,8 +39,24 @@ public class NavBarListAdapter extends RecyclerView.Adapter<NavBarListAdapter.Vi
                 holderId = 0;
             }
 
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View v) {
+            if (mItemClickListener != null){
+                mItemClickListener.onItemClick(v, getAdapterPosition());
+            }
+        }
+
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener){
+        this.mItemClickListener = mItemClickListener;
     }
 
     public NavBarListAdapter(String[] navLocations, String characterName, int characterLevel) {
@@ -51,12 +69,10 @@ public class NavBarListAdapter extends RecyclerView.Adapter<NavBarListAdapter.Vi
     public NavBarListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.drawer_list_item, parent, false);
-            ViewHolder vh = new ViewHolder(v, viewType);
-            return vh;
+            return new ViewHolder(v, viewType);
         } else if (viewType == TYPE_HEADER){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.nav_header, parent, false);
-            ViewHolder vh = new ViewHolder(v, viewType);
-            return vh;
+            return new ViewHolder(v, viewType);
         }
         return null;
     }
@@ -67,7 +83,7 @@ public class NavBarListAdapter extends RecyclerView.Adapter<NavBarListAdapter.Vi
             holder.navDrawerItemName.setText(navLocations[position - 1]);
         } else {
             holder.characterName.setText(characterName);
-            holder.characterLevel.setText("Level:" + String.valueOf(characterLevel));
+            holder.characterLevel.setText("Level: " + String.valueOf(characterLevel));
         }
     }
 
