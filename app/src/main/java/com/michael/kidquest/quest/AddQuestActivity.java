@@ -1,4 +1,4 @@
-package com.michael.kidquest;
+package com.michael.kidquest.quest;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +9,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.michael.kidquest.custommodel.DifficultyLevel;
-import com.michael.kidquest.model.DaoSession;
-import com.michael.kidquest.model.Quest;
+import com.michael.kidquest.KidQuestApplication;
+import com.michael.kidquest.R;
+import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
+import com.michael.kidquest.greendao.model.DaoSession;
+import com.michael.kidquest.greendao.model.Quest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +52,6 @@ public class AddQuestActivity extends AppCompatActivity {
 
     private void addListenerOnSpinnerItemSelection(){
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
-        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
     }
 
     private void addListenerOnButton(){
@@ -77,6 +78,7 @@ public class AddQuestActivity extends AppCompatActivity {
 
                     Toast.makeText(AddQuestActivity.this, "Quest Added", Toast.LENGTH_SHORT).show();
 
+                    setResult(2);
                     finish();
                 } else {
                     editQuestName.setError("Quest Name is required");
