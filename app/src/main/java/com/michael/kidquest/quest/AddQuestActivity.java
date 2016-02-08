@@ -78,6 +78,7 @@ public class AddQuestActivity extends AppCompatActivity {
 
                     Toast.makeText(AddQuestActivity.this, "Quest Added", Toast.LENGTH_SHORT).show();
 
+                    setResult(2);
                     finish();
                 } else {
                     editQuestName.setError("Quest Name is required");

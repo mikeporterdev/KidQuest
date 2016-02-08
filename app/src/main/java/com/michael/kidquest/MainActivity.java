@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     private Toolbar mToolbar;
     private FragmentManager mFragmentManager;
 
+    private final static int ADD_QUEST_CODE = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +31,12 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
         toolbarSetup();
         sidebarSetup();
+        initialFragmentSetup();
 
+
+    }
+
+    private void initialFragmentSetup() {
         //Load initial fragment
         Fragment fragment = new OpenQuestLogFragment();
         FragmentManager fragmentManager = getFragmentManager();
@@ -59,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                         break;
                     case 3:
                         Intent intent = new Intent(view.getContext(), AddQuestActivity.class);
-                        startActivity(intent);
+                        startActivityForResult(intent, ADD_QUEST_CODE);
                         break;
                     default:
                         Toast.makeText(view.getContext(), "no fragment found, position: " + position, Toast.LENGTH_SHORT).show();
@@ -93,8 +100,13 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == ADD_QUEST_CODE)
+        {
+            initialFragmentSetup();
+            mDrawerLayout.closeDrawers();
+        }
     }
 }
