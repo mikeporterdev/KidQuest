@@ -61,6 +61,8 @@ public class OpenQuestLogAdapter extends RecyclerView.Adapter<OpenQuestLogAdapte
                 DaoSession daoSession = ((KidQuestApplication) v.getContext().getApplicationContext()).getDaoSession();
                 daoSession.getQuestDao().insertOrReplace(q);
 
+                mQuests.remove(position);
+                notifyDataSetChanged();
             }
         });
     }
