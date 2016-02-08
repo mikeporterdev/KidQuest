@@ -2,6 +2,7 @@ package com.michael.kidquest;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,11 +14,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.michael.kidquest.greendao.model.Quest;
+import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
 
 public class MainActivity extends AppCompatActivity implements OpenQuestLogFragment.OnListFragmentInteractionListener, PendingQuestLogFragment.OnListFragmentInteractionListener {
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
+    private FragmentManager mFragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         Fragment fragment = new OpenQuestLogFragment();
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
     }
 
     private void sidebarSetup() {
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
             @Override
             public void onItemClick(View view, int position) {
                 Fragment fragment = null;
-                switch(position){
+                switch (position) {
                     case 1:
                         fragment = new OpenQuestLogFragment();
                         mToolbar.setTitle("Your Quests");
@@ -54,10 +57,15 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                         fragment = new PendingQuestLogFragment();
                         mToolbar.setTitle("Your Pending Quests");
                         break;
-                    default: Toast.makeText(view.getContext(), "no fragment found, position: " + position, Toast.LENGTH_SHORT).show();
+                    case 3:
+                        Intent intent = new Intent(view.getContext(), AddQuestActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        Toast.makeText(view.getContext(), "no fragment found, position: " + position, Toast.LENGTH_SHORT).show();
                 }
 
-                if (fragment != null){
+                if (fragment != null) {
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     mDrawerLayout.closeDrawers();
@@ -81,6 +89,12 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
     @Override
     public void onListFragmentInteraction(Quest quest) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 }
