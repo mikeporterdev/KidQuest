@@ -16,7 +16,7 @@ import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
 
 public class MainActivity extends AppCompatActivity implements OpenQuestLogFragment.OnListFragmentInteractionListener, PendingQuestLogFragment.OnListFragmentInteractionListener {
-
+    private DrawerLayout mDrawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                 if (fragment != null){
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    mDrawerLayout.closeDrawers();
                 }
             }
         });
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open,
                 R.string.drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
