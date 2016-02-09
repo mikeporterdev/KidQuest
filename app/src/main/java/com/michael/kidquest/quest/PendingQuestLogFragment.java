@@ -1,4 +1,4 @@
-package com.michael.kidquest;
+package com.michael.kidquest.quest;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -10,10 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.michael.kidquest.KidQuestApplication;
+import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.greendao.model.QuestDao;
-import com.michael.kidquest.quest.PendingQuestLogAdapter;
 
 import java.util.List;
 

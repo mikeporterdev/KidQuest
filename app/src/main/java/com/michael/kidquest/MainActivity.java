@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
+import com.michael.kidquest.quest.PendingQuestLogFragment;
 
 public class MainActivity extends AppCompatActivity implements OpenQuestLogFragment.OnListFragmentInteractionListener, PendingQuestLogFragment.OnListFragmentInteractionListener {
     private DrawerLayout mDrawerLayout;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
     private void initialFragmentSetup() {
         //Load initial fragment
-        Fragment fragment = new OpenQuestLogFragment();
+        Fragment fragment = new CharacterScreenFragment();
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
@@ -56,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
             public void onItemClick(View view, int position) {
                 Fragment fragment = null;
                 switch (position) {
+                    case 0:
+                        fragment = new CharacterScreenFragment();
+                        mToolbar.setTitle("Your Character");
+                        break;
                     case 1:
                         fragment = new OpenQuestLogFragment();
                         mToolbar.setTitle("Your Quests");
@@ -105,7 +110,9 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
         if (requestCode == ADD_QUEST_CODE)
         {
-            initialFragmentSetup();
+            Fragment fragment = new OpenQuestLogFragment();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             mDrawerLayout.closeDrawers();
         }
     }

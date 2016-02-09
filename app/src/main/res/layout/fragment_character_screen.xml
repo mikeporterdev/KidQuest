@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <RelativeLayout
+            android:id="@+id/character_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="32dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Balthazar"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView"
+                android:text="Level: 20"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/textView2"
+                android:text="XP: 2700/5000"
+                android:textAlignment="textEnd"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/textView2"
+                android:layout_below="@+id/textView2"
+                android:text="Gold: 410gp"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </RelativeLayout>
+
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/character_info">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:padding="3dip"
+                    android:text="Chest Armor"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:padding="3dip"
+                    android:gravity="end"
+                    android:text="Breastplate" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:padding="3dip"
+                    android:text="Leg Armor"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:padding="3dip"
+                    android:text="Steel Leggings" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:padding="3dip"
+                    android:text="Weapon"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:padding="3dip"
+                    android:text="Shortsword" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:padding="3dip"
+                    android:text="Shield"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:padding="3dip"
+                    android:text="Small Shield" />
+            </TableRow>
+        </TableLayout>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
