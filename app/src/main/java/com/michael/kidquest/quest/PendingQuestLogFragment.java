@@ -16,7 +16,7 @@ import com.michael.kidquest.services.QuestService;
 
 import java.util.List;
 
-/**
+/**c
  * Created by m_por on 08/02/2016.
  */
 public class PendingQuestLogFragment extends Fragment {

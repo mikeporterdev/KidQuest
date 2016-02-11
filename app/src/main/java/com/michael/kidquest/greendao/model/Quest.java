@@ -15,6 +15,8 @@ public class Quest {
     private boolean completed;
     /** Not-null value. */
     private DifficultyLevel difficultyLevel;
+    /** Not-null value. */
+    private java.util.Date dateAdded;
 
     public Quest() {
     }
@@ -23,12 +25,13 @@ public class Quest {
         this.id = id;
     }
 
-    public Quest(Long id, String title, String description, boolean completed, DifficultyLevel difficultyLevel) {
+    public Quest(Long id, String title, String description, boolean completed, DifficultyLevel difficultyLevel, java.util.Date dateAdded) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.completed = completed;
         this.difficultyLevel = difficultyLevel;
+        this.dateAdded = dateAdded;
     }
 
     public Long getId() {
@@ -73,6 +76,16 @@ public class Quest {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setDifficultyLevel(DifficultyLevel difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
+    }
+
+    /** Not-null value. */
+    public java.util.Date getDateAdded() {
+        return dateAdded;
+    }
+
+    /** Not-null value; ensure this value is available before it is saved to the database. */
+    public void setDateAdded(java.util.Date dateAdded) {
+        this.dateAdded = dateAdded;
     }
 
 }

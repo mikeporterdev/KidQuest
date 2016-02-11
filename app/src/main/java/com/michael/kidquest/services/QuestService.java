@@ -7,6 +7,7 @@ import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.greendao.model.QuestDao;
 
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -17,14 +18,33 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class QuestService {
     private Context context;
 
+    public void addQuest(Quest quest){
+        QuestDao qDao = getQuestDao();
+
+        //Adding the quest now.
+        quest.setDateAdded(new Date());
+        //All quests start as incomplete
+        quest.setCompleted(false);
+
+        qDao.insert(quest);
+    }
+
     public List<Quest> getQuestListByCompleted(boolean completed){
-        DaoSession daoSession = ((KidQuestApplication) context).getDaoSession();
-        QuestDao qDao = daoSession.getQuestDao();
+        QuestDao qDao = getQuestDao();
 
         QueryBuilder<Quest> query = qDao.queryBuilder()
                 .where(QuestDao.Properties.Completed.eq(completed));
 
         return query.list();
+    }
+
+    private boolean validateQuest(){
+        return true;
+    }
+
+    private QuestDao getQuestDao(){
+        DaoSession daoSession = ((KidQuestApplication) context).getDaoSession();
+        return daoSession.getQuestDao();
     }
 
     public QuestService(Context context) {

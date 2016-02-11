@@ -28,6 +28,7 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         public final static Property Description = new Property(2, String.class, "description", false, "DESCRIPTION");
         public final static Property Completed = new Property(3, boolean.class, "completed", false, "COMPLETED");
         public final static Property DifficultyLevel = new Property(4, String.class, "difficultyLevel", false, "DIFFICULTY_LEVEL");
+        public final static Property DateAdded = new Property(5, java.util.Date.class, "dateAdded", false, "DATE_ADDED");
     };
 
     private final DifficultyConverter difficultyLevelConverter = new DifficultyConverter();
@@ -48,7 +49,8 @@ public class QuestDao extends AbstractDao<Quest, Long> {
                 "\"TITLE\" TEXT NOT NULL ," + // 1: title
                 "\"DESCRIPTION\" TEXT," + // 2: description
                 "\"COMPLETED\" INTEGER NOT NULL ," + // 3: completed
-                "\"DIFFICULTY_LEVEL\" TEXT NOT NULL );"); // 4: difficultyLevel
+                "\"DIFFICULTY_LEVEL\" TEXT NOT NULL ," + // 4: difficultyLevel
+                "\"DATE_ADDED\" INTEGER NOT NULL );"); // 5: dateAdded
     }
 
     /** Drops the underlying database table. */
@@ -74,6 +76,7 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         }
         stmt.bindLong(4, entity.getCompleted() ? 1L: 0L);
         stmt.bindString(5, difficultyLevelConverter.convertToDatabaseValue(entity.getDifficultyLevel()));
+        stmt.bindLong(6, entity.getDateAdded().getTime());
     }
 
     /** @inheritdoc */
@@ -90,7 +93,8 @@ public class QuestDao extends AbstractDao<Quest, Long> {
             cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // description
             cursor.getShort(offset + 3) != 0, // completed
-            difficultyLevelConverter.convertToEntityProperty(cursor.getString(offset + 4)) // difficultyLevel
+            difficultyLevelConverter.convertToEntityProperty(cursor.getString(offset + 4)), // difficultyLevel
+            new java.util.Date(cursor.getLong(offset + 5)) // dateAdded
         );
         return entity;
     }
@@ -103,6 +107,7 @@ public class QuestDao extends AbstractDao<Quest, Long> {
         entity.setDescription(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setCompleted(cursor.getShort(offset + 3) != 0);
         entity.setDifficultyLevel(difficultyLevelConverter.convertToEntityProperty(cursor.getString(offset + 4)));
+        entity.setDateAdded(new java.util.Date(cursor.getLong(offset + 5)));
      }
     
     /** @inheritdoc */

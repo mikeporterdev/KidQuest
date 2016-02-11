@@ -9,11 +9,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.michael.kidquest.KidQuestApplication;
 import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
-import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
+import com.michael.kidquest.services.QuestService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +20,7 @@ import java.util.List;
 
 public class AddQuestActivity extends AppCompatActivity {
     private Spinner spinner;
+    private QuestService questService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +36,7 @@ public class AddQuestActivity extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
 
         List<DifficultyLevel> diffs = Arrays.asList(DifficultyLevel.values());
-
-
+        
         List<String> difficultyTexts = new ArrayList<String>();
         for (DifficultyLevel difficulty: diffs){
             difficultyTexts.add(difficulty.getDifficultyLevel());
@@ -67,14 +66,14 @@ public class AddQuestActivity extends AppCompatActivity {
                 String diff = String.valueOf(spinner.getSelectedItem());
 
                 if (!qName.equals("")){
-                    DaoSession daoSession = ((KidQuestApplication) getApplicationContext()).getDaoSession();
+                    questService = new QuestService(getApplicationContext());
+
                     Quest quest = new Quest();
                     quest.setDifficultyLevel(DifficultyLevel.fromString(diff));
                     quest.setTitle(editQuestName.getText().toString());
                     quest.setDescription(editQuestDesc.getText().toString());
-                    quest.setCompleted(false);
 
-                    daoSession.getQuestDao().insertOrReplace(quest);
+                    questService.addQuest(quest);
 
                     Toast.makeText(AddQuestActivity.this, "Quest Added", Toast.LENGTH_SHORT).show();
 
