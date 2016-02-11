@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.michael.kidquest.greendao.model.Character;
-import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
@@ -32,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     private CharacterService cService;
 
     private final static int ADD_QUEST_CODE = 2;
-    private String mCharacterNameInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,8 +123,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ADD_QUEST_CODE)
-        {
+        if (requestCode == ADD_QUEST_CODE) {
             Fragment fragment = new OpenQuestLogFragment();
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -149,14 +146,11 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
             public void onClick(DialogInterface dialog, int which) {
                 Character character = new Character();
 
-                mCharacterNameInput = input.getText().toString();
-
-                character.setName(mCharacterNameInput);
-                character.setLevel(1);
+                character.setName(input.getText().toString());
                 character.setParentPin("1066");
 
-                DaoSession daoSession = ((KidQuestApplication) getApplicationContext()).getDaoSession();
-                daoSession.getCharacterDao().insertOrReplace(character);
+                CharacterService cService = new CharacterService(getApplicationContext());
+                cService.addCharacter(character);
 
                 initialFragmentSetup();
                 sidebarSetup();

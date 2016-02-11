@@ -15,21 +15,44 @@ import java.util.List;
 public class CharacterService {
     private Context context;
 
-    public Character getCharacter(){
-        DaoSession daoSession = ((KidQuestApplication) context).getDaoSession();
-        CharacterDao cDao = daoSession.getCharacterDao();
+    public void addCharacter(Character character) {
+        if (validateCharacter(character)) {
+            //All new characters start with level 1
+            character.setLevel(1);
 
-        List<Character> characters = cDao.queryBuilder().limit(1).list();
+            getCharacterDao().insertOrReplace(character);
+        }
+    }
 
-        if (characters.size() == 0){
+    public void levelUpCharacter() {
+        Character c = getCharacter();
+        c.setLevel(c.getLevel() + 1);
+        getCharacterDao().update(c);
+    }
+
+    public Character getCharacter() {
+        List<Character> characters = getCharacterDao().queryBuilder().limit(1).list();
+
+        if (characters.size() == 0) {
             //TODO: Handle this
             return null;
-        } else if (characters.size() == 1){
+        } else if (characters.size() == 1) {
             return characters.get(0);
         } else {
             //TODO: Throw exception
             return null;
         }
+    }
+
+    private CharacterDao getCharacterDao() {
+        DaoSession daoSession = ((KidQuestApplication) context).getDaoSession();
+        return daoSession.getCharacterDao();
+
+    }
+
+    public boolean validateCharacter(Character character) {
+        //TODO: Actually validate a character
+        return true;
     }
 
     public CharacterService(Context context) {
