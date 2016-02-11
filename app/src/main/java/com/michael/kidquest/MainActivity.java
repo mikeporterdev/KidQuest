@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.michael.kidquest.greendao.model.Character;
+import com.michael.kidquest.greendao.model.CharacterDao;
 import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.AddQuestActivity;
@@ -48,10 +49,11 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
             firstTimeSetup();
         } else {
             initialFragmentSetup();
+            sidebarSetup();
         }
 
         toolbarSetup();
-        sidebarSetup();
+
     }
 
     private void initialFragmentSetup() {
@@ -66,7 +68,12 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         navBarList.setHasFixedSize(true);
 
         String[] navBarLocationStrings = getResources().getStringArray(R.array.navigation_drawer_items);
-        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, "Balthazaro", 18);
+
+        DaoSession daoSession = ((KidQuestApplication) this.getApplicationContext()).getDaoSession();
+        CharacterDao cDao = daoSession.getCharacterDao();
+        Character c = cDao.queryBuilder().limit(1).list().get(0);
+
+        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, c.getName(), c.getLevel());
         navBarList.setAdapter(mAdapter);
         navBarList.setLayoutManager(new LinearLayoutManager(this));
         mAdapter.setOnItemClickListener(new NavBarListAdapter.OnItemClickListener() {
@@ -159,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                 daoSession.getCharacterDao().insertOrReplace(character);
 
                 initialFragmentSetup();
+                sidebarSetup();
             }
         });
 
