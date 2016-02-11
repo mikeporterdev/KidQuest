@@ -10,18 +10,23 @@ import android.widget.TextView;
 
 import com.michael.kidquest.greendao.model.*;
 import com.michael.kidquest.greendao.model.Character;
+import com.michael.kidquest.services.CharacterService;
 
 /**
  * Created by Michael Porter on 09/02/16.
  */
 public class CharacterScreenFragment extends Fragment {
+
+    private CharacterService cService;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_character_screen, container, false);
 
-        DaoSession daoSession = ((KidQuestApplication) view.getContext().getApplicationContext()).getDaoSession();
-        Character character = daoSession.getCharacterDao().loadAll().get(0);
+        CharacterService cService = new CharacterService(view.getContext().getApplicationContext());
+
+        Character character = cService.getCharacter();
 
         TextView txtName = (TextView) view.findViewById(R.id.character_name);
         txtName.setText(character.getName());

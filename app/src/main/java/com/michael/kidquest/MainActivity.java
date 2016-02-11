@@ -18,19 +18,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.michael.kidquest.greendao.model.Character;
-import com.michael.kidquest.greendao.model.CharacterDao;
 import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
 import com.michael.kidquest.quest.PendingQuestLogFragment;
-
-import java.util.List;
+import com.michael.kidquest.services.CharacterService;
 
 public class MainActivity extends AppCompatActivity implements OpenQuestLogFragment.OnListFragmentInteractionListener, PendingQuestLogFragment.OnListFragmentInteractionListener {
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private FragmentManager mFragmentManager;
+    private CharacterService cService;
 
     private final static int ADD_QUEST_CODE = 2;
     private String mCharacterNameInput;
@@ -40,18 +39,14 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DaoSession daoSession = ((KidQuestApplication) this.getApplicationContext()).getDaoSession();
+        cService = new CharacterService(this.getApplicationContext());
 
-        //TODO: change this to not use a list
-        List<Character> character = daoSession.getCharacterDao().loadAll();
-        //daoSession.getCharacterDao().delete(character.get(0));
-        if (character.size() == 0){
+        if (cService.getCharacter() == null){
             firstTimeSetup();
         } else {
             initialFragmentSetup();
             sidebarSetup();
         }
-
         toolbarSetup();
 
     }
@@ -69,9 +64,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
         String[] navBarLocationStrings = getResources().getStringArray(R.array.navigation_drawer_items);
 
-        DaoSession daoSession = ((KidQuestApplication) this.getApplicationContext()).getDaoSession();
-        CharacterDao cDao = daoSession.getCharacterDao();
-        Character c = cDao.queryBuilder().limit(1).list().get(0);
+        Character c = cService.getCharacter();
 
         NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, c.getName(), c.getLevel());
         navBarList.setAdapter(mAdapter);
