@@ -52,8 +52,11 @@ public class OpenQuestLogAdapter extends RecyclerView.Adapter<OpenQuestLogAdapte
         viewHolder.textViewXpReward.setText("100xp");
 
         if (q.getExpiryDate() != null) {
+            //print date in the format of (x hours/days/weeks from now)
             PrettyTime p = new PrettyTime();
             viewHolder.textViewExpiryDate.setText("Expires: " + p.format(q.getExpiryDate()));
+        } else {
+            viewHolder.textViewExpiryDate.setVisibility(View.GONE);
         }
 
         viewHolder.btnMarkAsComplete.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +70,7 @@ public class OpenQuestLogAdapter extends RecyclerView.Adapter<OpenQuestLogAdapte
                 DaoSession daoSession = ((KidQuestApplication) v.getContext().getApplicationContext()).getDaoSession();
                 daoSession.getQuestDao().insertOrReplace(q);
 
+                //hide quest from the list of open quests
                 mQuests.remove(position);
                 notifyDataSetChanged();
             }
