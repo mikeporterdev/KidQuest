@@ -31,7 +31,6 @@ public class OpenQuestLogFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_open_quests, container, false);
 
-
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();

@@ -66,7 +66,7 @@ public class AddQuestActivity extends AppCompatActivity {
                 String qName = editQuestName.getText().toString();
                 String diff = String.valueOf(spinner.getSelectedItem());
 
-                if (qName != null && !qName.equals("")){
+                if (!qName.equals("")){
                     DaoSession daoSession = ((KidQuestApplication) getApplicationContext()).getDaoSession();
                     Quest quest = new Quest();
                     quest.setDifficultyLevel(DifficultyLevel.fromString(diff));

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.michael.kidquest.greendao.model.*;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.services.CharacterService;
 
