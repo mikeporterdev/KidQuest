@@ -11,6 +11,7 @@ import com.michael.kidquest.KidQuestApplication;
 import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
+import com.ocpsoft.pretty.time.PrettyTime;
 
 import java.util.List;
 
@@ -50,6 +51,11 @@ public class OpenQuestLogAdapter extends RecyclerView.Adapter<OpenQuestLogAdapte
         viewHolder.textViewGoldReward.setText("10gp");
         viewHolder.textViewXpReward.setText("100xp");
 
+        if (q.getExpiryDate() != null) {
+            PrettyTime p = new PrettyTime();
+            viewHolder.textViewExpiryDate.setText("Expires: " + p.format(q.getExpiryDate()));
+        }
+
         viewHolder.btnMarkAsComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,15 +78,18 @@ public class OpenQuestLogAdapter extends RecyclerView.Adapter<OpenQuestLogAdapte
         public final TextView textViewQuestDescription;
         public final TextView textViewGoldReward;
         public final TextView textViewXpReward;
+        public final TextView textViewExpiryDate;
 
         public final Button btnMarkAsComplete;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
+
             textViewQuestName = (TextView) itemLayoutView.findViewById(R.id.activity_main_item_quest_name);
             textViewQuestDescription = (TextView) itemLayoutView.findViewById(R.id.activity_main_item_quest_desc);
             textViewGoldReward = (TextView) itemLayoutView.findViewById(R.id.activity_main_gold);
             textViewXpReward = (TextView) itemLayoutView.findViewById(R.id.activity_main_xp);
+            textViewExpiryDate = (TextView) itemLayoutView.findViewById(R.id.questExpiry);
 
             btnMarkAsComplete = (Button) itemLayoutView.findViewById(R.id.btnMarkAsComplete);
         }

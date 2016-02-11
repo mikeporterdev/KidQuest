@@ -32,7 +32,6 @@
         android:scrollbars="vertical"
         />
 
-
     <Spinner
         android:id="@+id/addQuestDifficulty"
         android:layout_width="match_parent"

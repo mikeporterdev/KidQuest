@@ -17,6 +17,7 @@ public class Quest {
     private DifficultyLevel difficultyLevel;
     /** Not-null value. */
     private java.util.Date dateAdded;
+    private java.util.Date expiryDate;
 
     public Quest() {
     }
@@ -25,13 +26,14 @@ public class Quest {
         this.id = id;
     }
 
-    public Quest(Long id, String title, String description, boolean completed, DifficultyLevel difficultyLevel, java.util.Date dateAdded) {
+    public Quest(Long id, String title, String description, boolean completed, DifficultyLevel difficultyLevel, java.util.Date dateAdded, java.util.Date expiryDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.completed = completed;
         this.difficultyLevel = difficultyLevel;
         this.dateAdded = dateAdded;
+        this.expiryDate = expiryDate;
     }
 
     public Long getId() {
@@ -86,6 +88,14 @@ public class Quest {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setDateAdded(java.util.Date dateAdded) {
         this.dateAdded = dateAdded;
+    }
+
+    public java.util.Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(java.util.Date expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
 }

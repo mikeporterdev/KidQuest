@@ -16,6 +16,9 @@ import com.michael.kidquest.services.QuestService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class AddQuestActivity extends AppCompatActivity {
@@ -36,7 +39,7 @@ public class AddQuestActivity extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
 
         List<DifficultyLevel> diffs = Arrays.asList(DifficultyLevel.values());
-        
+
         List<String> difficultyTexts = new ArrayList<String>();
         for (DifficultyLevel difficulty: diffs){
             difficultyTexts.add(difficulty.getDifficultyLevel());
@@ -72,6 +75,15 @@ public class AddQuestActivity extends AppCompatActivity {
                     quest.setDifficultyLevel(DifficultyLevel.fromString(diff));
                     quest.setTitle(editQuestName.getText().toString());
                     quest.setDescription(editQuestDesc.getText().toString());
+
+                    Date d = new Date();
+
+                    GregorianCalendar cal = new GregorianCalendar();
+                    cal.setTime(d);
+                    cal.add(Calendar.DATE, 47);
+                    d.setTime(cal.getTime().getTime());
+
+                    quest.setExpiryDate(d);
 
                     questService.addQuest(quest);
 

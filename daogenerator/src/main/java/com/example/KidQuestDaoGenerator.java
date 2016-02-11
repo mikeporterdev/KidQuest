@@ -8,7 +8,7 @@ import de.greenrobot.daogenerator.Schema;
 
 public class KidQuestDaoGenerator {
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(4, "com.michael.kidquest.greendao.model");
+        Schema schema = new Schema(5, "com.michael.kidquest.greendao.model");
 
         Entity userDetails = schema.addEntity("Character");
         userDetails.addIdProperty();
@@ -35,6 +35,7 @@ public class KidQuestDaoGenerator {
                 "com.michael.kidquest.greendao.custommodel.DifficultyLevel",
                 "com.michael.kidquest.greendao.propertyconverters.DifficultyConverter").notNull();
         quest.addDateProperty("dateAdded").notNull();
+        quest.addDateProperty("expiryDate");
 
         new DaoGenerator().generateAll(schema, "../app/src/main/java");
 
