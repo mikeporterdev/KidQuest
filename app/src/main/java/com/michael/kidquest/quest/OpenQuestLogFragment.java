@@ -1,5 +1,6 @@
 package com.michael.kidquest.quest;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,15 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.app.Fragment;
 
-import com.michael.kidquest.KidQuestApplication;
 import com.michael.kidquest.R;
-import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
-import com.michael.kidquest.greendao.model.QuestDao;
+import com.michael.kidquest.services.QuestService;
 
-import de.greenrobot.dao.query.QueryBuilder;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -44,10 +42,10 @@ public class OpenQuestLogFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            DaoSession daoSession = ((KidQuestApplication) view.getContext().getApplicationContext()).getDaoSession();
-            QuestDao qDao = daoSession.getQuestDao();
-            QueryBuilder<Quest> query = qDao.queryBuilder().where(QuestDao.Properties.Completed.eq(false));
-            recyclerView.setAdapter(new OpenQuestLogAdapter(query.list()));
+            QuestService qService = new QuestService(view.getContext().getApplicationContext());
+            List<Quest> quests = qService.getQuestListByCompleted(false);
+
+            recyclerView.setAdapter(new OpenQuestLogAdapter(quests));
         }
         return view;
     }

@@ -36,10 +36,6 @@ public class CharacterService {
         this.context = context;
     }
 
-    public Context getContext() {
-        return context;
-    }
-
     public void setContext(Context context) {
         this.context = context;
     }

@@ -10,15 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.michael.kidquest.KidQuestApplication;
 import com.michael.kidquest.R;
-import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
-import com.michael.kidquest.greendao.model.QuestDao;
+import com.michael.kidquest.services.QuestService;
 
 import java.util.List;
-
-import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * Created by m_por on 08/02/2016.
@@ -31,18 +27,12 @@ public class PendingQuestLogFragment extends Fragment {
         Context context = view.getContext();
         RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        List<Quest> pendingQuests = getQuests(context);
 
-        recyclerView.setAdapter(new PendingQuestLogAdapter(pendingQuests));
+        QuestService qService = new QuestService(view.getContext().getApplicationContext());
+        List<Quest> quests = qService.getQuestListByCompleted(true);
+
+        recyclerView.setAdapter(new PendingQuestLogAdapter(quests));
         return view;
-    }
-
-    private List<Quest> getQuests(Context context) {
-        //get list of pending quests
-        DaoSession daoSession = ((KidQuestApplication) context.getApplicationContext()).getDaoSession();
-        QuestDao qDao = daoSession.getQuestDao();
-        QueryBuilder<Quest> query = qDao.queryBuilder().where(QuestDao.Properties.Completed.eq(true));
-        return query.list();
     }
 
     public interface OnListFragmentInteractionListener {
