@@ -44,6 +44,12 @@ public class CharacterService {
         }
     }
 
+    public boolean matchesPin(String pin){
+        //TODO: Probably make this more secure
+        String pin2 = getCharacter().getParentPin();
+        return pin.equals(pin2);
+    }
+
     private CharacterDao getCharacterDao() {
         DaoSession daoSession = ((KidQuestApplication) context).getDaoSession();
         return daoSession.getCharacterDao();
