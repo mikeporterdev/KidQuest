@@ -55,15 +55,16 @@ public class CharacterService {
 
         final EditText editText = new EditText(context);
         builder.setView(editText);
-        builder.setTitle("Enter a pin");
+        builder.setTitle("Enter parent pin");
 
+        //Credit to Handrata Samsul for this code. http://stackoverflow.com/questions/35353350/alertdialog-return-boolean-value
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (matchesPin(editText.getText().toString())){
                     dialogSingleButtonListener.onButtonClicked(dialog);
                 } else {
-                    Toast.makeText(v.getContext(), "No match", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "Pin does not match", Toast.LENGTH_SHORT).show();
                 }
             }
         });

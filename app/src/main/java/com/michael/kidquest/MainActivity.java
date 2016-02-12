@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         navBarList.setLayoutManager(new LinearLayoutManager(this));
         mAdapter.setOnItemClickListener(new NavBarListAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(final View view, int position) {
                 Fragment fragment = null;
                 switch (position) {
                     case 0:
@@ -85,8 +85,13 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                         mToolbar.setTitle("Your Pending Quests");
                         break;
                     case 3:
-                        Intent intent = new Intent(view.getContext(), AddQuestActivity.class);
-                        startActivityForResult(intent, ADD_QUEST_CODE);
+                        cService.isCorrectPin(view, new DialogSingleButtonListener() {
+                            @Override
+                            public void onButtonClicked(DialogInterface dialog) {
+                                Intent intent = new Intent(view.getContext(), AddQuestActivity.class);
+                                startActivityForResult(intent, ADD_QUEST_CODE);
+                            }
+                        });
                         break;
                     default:
                         Toast.makeText(view.getContext(), "no fragment found, position: " + position, Toast.LENGTH_SHORT).show();
