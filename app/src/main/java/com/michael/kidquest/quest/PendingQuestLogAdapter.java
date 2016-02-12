@@ -1,12 +1,15 @@
 package com.michael.kidquest.quest;
 
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.services.CharacterService;
@@ -41,10 +44,15 @@ public class PendingQuestLogAdapter extends RecyclerView.Adapter<PendingQuestLog
 
         holder.btnMarkAsComplete.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-
+            public void onClick(final View v) {
                 CharacterService characterService = new CharacterService(v.getContext().getApplicationContext());
-                characterService.parentPrompt(v);
+
+                characterService.isCorrectPin(v, new DialogSingleButtonListener() {
+                    @Override
+                    public void onButtonClicked(DialogInterface dialog) {
+                        Toast.makeText(v.getContext(), "Match", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }

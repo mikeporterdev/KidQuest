@@ -3,12 +3,11 @@ package com.michael.kidquest.services;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.KidQuestApplication;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.CharacterDao;
@@ -51,30 +50,28 @@ public class CharacterService {
         }
     }
 
-    public void parentPrompt(View v){
-        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-        final EditText editText = new EditText(v.getContext());
+    public void isCorrectPin(final View v, final DialogSingleButtonListener dialogSingleButtonListener) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
 
-        editText.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-        //cap input at four numbers
-        editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(4)});
+        final EditText editText = new EditText(context);
         builder.setView(editText);
+        builder.setTitle("Enter a pin");
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (matchesPin(editText.getText().toString())){
-                    Toast.makeText(context.getApplicationContext(), "Pin matches", Toast.LENGTH_SHORT).show();
+                    dialogSingleButtonListener.onButtonClicked(dialog);
                 } else {
-                    Toast.makeText(context.getApplicationContext(), "Pin Does Not Match", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "No match", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-        builder.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
-    public boolean matchesPin(String pin){
+    public boolean matchesPin(String pin) {
         //TODO: Probably make this more secure
         String pin2 = getCharacter().getParentPin();
         return pin.equals(pin2);
