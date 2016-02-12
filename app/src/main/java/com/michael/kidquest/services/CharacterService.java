@@ -3,6 +3,8 @@ package com.michael.kidquest.services;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -52,10 +54,12 @@ public class CharacterService {
 
     public void isCorrectPin(final View v, final DialogSingleButtonListener dialogSingleButtonListener) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+        builder.setTitle("Enter parent pin");
 
         final EditText editText = new EditText(context);
+        editText.setInputType(InputType.TYPE_CLASS_PHONE | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        editText.setTextColor(Color.BLACK);
         builder.setView(editText);
-        builder.setTitle("Enter parent pin");
 
         //Credit to Handrata Samsul for this code. http://stackoverflow.com/questions/35353350/alertdialog-return-boolean-value
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
