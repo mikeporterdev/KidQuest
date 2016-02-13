@@ -1,24 +1,35 @@
 package com.michael.kidquest.services;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.michael.kidquest.KidQuestApplication;
 import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.greendao.model.QuestDao;
 
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.List;
 
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import de.greenrobot.dao.query.QueryBuilder;
+
 
 /**
  * Created by Michael Porter on 11/02/16.
  */
 public class QuestService {
+    private String TAG = "QuestService";
+
     private Context context;
 
-    public void addQuest(Quest quest){
+    public void addQuest(Quest quest) {
         QuestDao qDao = getQuestDao();
 
         //Adding the quest now.
@@ -27,9 +38,10 @@ public class QuestService {
         quest.setCompleted(false);
 
         qDao.insert(quest);
+        sendQuestToServer(quest);
     }
 
-    public List<Quest> getQuestListByCompleted(boolean completed){
+    public List<Quest> getQuestListByCompleted(boolean completed) {
         QuestDao qDao = getQuestDao();
 
         QueryBuilder<Quest> query = qDao.queryBuilder()
@@ -38,11 +50,39 @@ public class QuestService {
         return query.list();
     }
 
-    private boolean validateQuest(){
+    private void sendQuestToServer(Quest quest) {
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        RequestParams params = new RequestParams();
+        params.put("title", quest.getTitle());
+
+        JSONObject jsonParams = new JSONObject();
+        try {
+            jsonParams.put("title", quest.getTitle());
+            StringEntity entity = new StringEntity(jsonParams.toString());
+
+            client.post(context, "http://192.168.0.160:5000/add", entity, "application/json", new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(TAG, "Quest saved on server");
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.e(TAG, "Quest failed");
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
+        }
+    }
+
+
+    private boolean validateQuest() {
         return true;
     }
 
-    private QuestDao getQuestDao(){
+    private QuestDao getQuestDao() {
         DaoSession daoSession = ((KidQuestApplication) context).getDaoSession();
         return daoSession.getQuestDao();
     }

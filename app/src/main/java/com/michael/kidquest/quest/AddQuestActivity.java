@@ -37,12 +37,12 @@ public class AddQuestActivity extends AppCompatActivity {
 
         List<DifficultyLevel> diffs = Arrays.asList(DifficultyLevel.values());
 
-        List<String> difficultyTexts = new ArrayList<String>();
+        List<String> difficultyTexts = new ArrayList<>();
         for (DifficultyLevel difficulty: diffs){
             difficultyTexts.add(difficulty.getDifficultyLevel());
         }
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, difficultyTexts);
 
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
