@@ -44,7 +44,7 @@ public class OpenQuestLogFragment extends Fragment {
             QuestService qService = new QuestService(view.getContext().getApplicationContext());
             List<Quest> quests = qService.getQuestListByCompleted(false);
 
-            recyclerView.setAdapter(new OpenQuestLogAdapter(quests));
+            recyclerView.setAdapter(new QuestLogAdapter(quests, true));
         }
         return view;
     }

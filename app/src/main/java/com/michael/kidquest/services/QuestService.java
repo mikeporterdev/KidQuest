@@ -72,9 +72,7 @@ public class QuestService {
                 }
             });
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (JSONException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }

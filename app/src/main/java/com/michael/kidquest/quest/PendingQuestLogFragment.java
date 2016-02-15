@@ -31,7 +31,7 @@ public class PendingQuestLogFragment extends Fragment {
         QuestService qService = new QuestService(view.getContext().getApplicationContext());
         List<Quest> quests = qService.getQuestListByCompleted(true);
 
-        recyclerView.setAdapter(new PendingQuestLogAdapter(quests));
+        recyclerView.setAdapter(new QuestLogAdapter(quests, false));
         return view;
     }
 
