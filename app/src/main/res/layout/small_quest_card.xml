@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/scv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        card_view:cardCornerRadius="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/titleBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/small_card_quest_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/debug_quest_name"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:layout_toStartOf="@+id/small_card_difficulty" />
+
+                <TextView
+                    android:id="@+id/small_card_difficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="end"
+                    android:text="questDifficulty"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/titleBar"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp">
+
+                <Button
+                    android:id="@+id/small_card_btn_action"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:text="btnAction"
+                    android:textColor="@color/accent_material_light" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:id="@+id/questExpiry"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true" />
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+        <!-- quest name -->
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

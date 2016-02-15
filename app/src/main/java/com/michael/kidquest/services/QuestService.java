@@ -3,20 +3,17 @@ package com.michael.kidquest.services;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.KidQuestApplication;
 import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.greendao.model.QuestDao;
+import com.michael.kidquest.server.ServerRestClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -58,14 +55,12 @@ public class QuestService {
     }
 
     private void sendQuestToServer(Quest quest) {
-        AsyncHttpClient client = new AsyncHttpClient();
-
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("title", quest.getTitle());
             StringEntity entity = new StringEntity(jsonParams.toString());
 
-            client.post(context, String.format("%s/quest", SERVER_ADDRESS), entity, "application/json", new AsyncHttpResponseHandler() {
+            ServerRestClient.post(context, String.format("%s/quest", SERVER_ADDRESS), entity, "application/json", new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(TAG, "Quest saved on server");
@@ -76,30 +71,12 @@ public class QuestService {
                     Log.e(TAG, "Quest failed to save on server");
                 }
             });
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-    }
-
-    public List<Quest> getStaffPickQuests() {
-        AsyncHttpClient client = new AsyncHttpClient();
-
-        String url = String.format("%s/quest/get_staff_pick", SERVER_ADDRESS);
-
-        client.get(context, url, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Gson gson = new GsonBuilder().create();
-
-                try {
-                    mQuests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
-                } catch (JSONException e) {
-                    Log.e(TAG, "Error parsing list of staff pick quests", e);
-                }
-            }
-        });
-
-        return mQuests;
     }
 
 

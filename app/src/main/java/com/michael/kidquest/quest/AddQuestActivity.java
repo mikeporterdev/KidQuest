@@ -1,13 +1,14 @@
 package com.michael.kidquest.quest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.michael.kidquest.R;
@@ -22,9 +23,12 @@ import java.util.List;
 
 public class AddQuestActivity extends AppCompatActivity {
     private String TAG = "AddQuestActivity";
-
+    private final int GET_PRESET_QUEST_REQUEST = 1;
     private Spinner spinner;
     private QuestService questService;
+    private EditText editQuestName;
+    private EditText editQuestDesc;
+    private List<String> difficultyTexts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +37,18 @@ public class AddQuestActivity extends AppCompatActivity {
 
         questService = new QuestService(getApplicationContext());
 
-        List<Quest> testQuests = questService.getStaffPickQuests();
-
-
-
         addDifficultiesToSpinner();
         addListenerOnSpinnerItemSelection();
         addListenerOnButton();
+
+        TextView textView = (TextView) findViewById(R.id.presetQuestLink);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pickPresetQuestIntent = new Intent(getApplicationContext(), GetPresetQuestRequest.class);
+                startActivityForResult(pickPresetQuestIntent, GET_PRESET_QUEST_REQUEST);
+            }
+        });
     }
 
     private void addDifficultiesToSpinner() {
@@ -47,7 +56,7 @@ public class AddQuestActivity extends AppCompatActivity {
 
         List<DifficultyLevel> diffs = Arrays.asList(DifficultyLevel.values());
 
-        List<String> difficultyTexts = new ArrayList<>();
+        difficultyTexts = new ArrayList<>();
         for (DifficultyLevel difficulty : diffs) {
             difficultyTexts.add(difficulty.getDifficultyLevel());
         }
@@ -66,8 +75,8 @@ public class AddQuestActivity extends AppCompatActivity {
     private void addListenerOnButton() {
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
         Button btnSubmit = (Button) findViewById(R.id.addQuestSubmit);
-        final EditText editQuestName = (EditText) findViewById(R.id.questName);
-        final EditText editQuestDesc = (EditText) findViewById(R.id.questDesc);
+        editQuestName = (EditText) findViewById(R.id.questName);
+        editQuestDesc = (EditText) findViewById(R.id.questDesc);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,5 +101,28 @@ public class AddQuestActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == GET_PRESET_QUEST_REQUEST){
+                //Set form selected in the preset quest request
+                Quest quest = (Quest) data.getExtras().getSerializable("quest");
+
+                if (quest != null) {
+                    editQuestName.setText(quest.getTitle());
+
+                    //Weird workflow for setting a spinnery by string value.
+                    String compareString = quest.getDifficultyLevel().getDifficultyLevel();
+                    for (int i = 0; i < spinner.getCount(); i++){
+                        if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(compareString)){
+                            spinner.setSelection(i);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

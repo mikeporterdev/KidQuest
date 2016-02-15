@@ -8,20 +8,40 @@
     android:fitsSystemWindows="true"
     tools:context=".quest.AddQuestActivity">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_height="wrap_content"
+
+    <RelativeLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.AppBarLayout
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:id="@+id/Form">
 
-    </android.support.design.widget.AppBarLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <include layout="@layout/content_add_quest"/>
+        </android.support.design.widget.AppBarLayout>
 
+        <include
+            layout="@layout/content_add_quest"
+            android:layout_below="@+id/Form"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Or pick from a preset quest..."
+            android:gravity="end"
+            android:id="@+id/presetQuestLink"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
