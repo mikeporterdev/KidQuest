@@ -1,14 +1,21 @@
 package com.michael.kidquest.greendao.custommodel;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Michael Porter on 05/02/16.
  * Enum of the difficulty level of the quest
  */
 public enum DifficultyLevel {
+    @SerializedName("Very Easy")
     VERY_EASY("Very Easy"),
+    @SerializedName("Easy")
     EASY("Easy"),
+    @SerializedName("Medium")
     MEDIUM("Medium"),
+    @SerializedName("Hard")
     HARD("Hard"),
+    @SerializedName("Very Hard")
     VERY_HARD("Very Hard");
 
     private final String value;
