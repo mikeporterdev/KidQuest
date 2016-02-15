@@ -2,6 +2,7 @@ package com.michael.kidquest.quest;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,7 +19,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class AddQuestActivity extends AppCompatActivity {
+    private String TAG = "AddQuestActivity";
+
     private Spinner spinner;
     private QuestService questService;
 
@@ -27,18 +31,24 @@ public class AddQuestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_quest);
 
+        questService = new QuestService(getApplicationContext());
+
+        List<Quest> testQuests = questService.getStaffPickQuests();
+
+
+
         addDifficultiesToSpinner();
         addListenerOnSpinnerItemSelection();
         addListenerOnButton();
     }
 
-    private void addDifficultiesToSpinner(){
+    private void addDifficultiesToSpinner() {
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
 
         List<DifficultyLevel> diffs = Arrays.asList(DifficultyLevel.values());
 
         List<String> difficultyTexts = new ArrayList<>();
-        for (DifficultyLevel difficulty: diffs){
+        for (DifficultyLevel difficulty : diffs) {
             difficultyTexts.add(difficulty.getDifficultyLevel());
         }
 
@@ -49,11 +59,11 @@ public class AddQuestActivity extends AppCompatActivity {
         spinner.setAdapter(dataAdapter);
     }
 
-    private void addListenerOnSpinnerItemSelection(){
+    private void addListenerOnSpinnerItemSelection() {
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
     }
 
-    private void addListenerOnButton(){
+    private void addListenerOnButton() {
         spinner = (Spinner) findViewById(R.id.addQuestDifficulty);
         Button btnSubmit = (Button) findViewById(R.id.addQuestSubmit);
         final EditText editQuestName = (EditText) findViewById(R.id.questName);
@@ -65,9 +75,7 @@ public class AddQuestActivity extends AppCompatActivity {
                 String qName = editQuestName.getText().toString();
                 String diff = String.valueOf(spinner.getSelectedItem());
 
-                if (!qName.equals("")){
-                    questService = new QuestService(getApplicationContext());
-
+                if (!qName.equals("")) {
                     Quest quest = new Quest();
                     quest.setDifficultyLevel(DifficultyLevel.fromString(diff));
                     quest.setTitle(editQuestName.getText().toString());
