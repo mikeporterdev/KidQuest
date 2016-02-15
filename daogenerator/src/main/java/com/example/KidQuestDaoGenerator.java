@@ -27,6 +27,7 @@ public class KidQuestDaoGenerator {
         inventory.addToOne(item, itemId);
 
         Entity quest = schema.addEntity("Quest");
+        quest.implementsSerializable();
         quest.addIdProperty();
         quest.addStringProperty("title").notNull();
         quest.addStringProperty("description");

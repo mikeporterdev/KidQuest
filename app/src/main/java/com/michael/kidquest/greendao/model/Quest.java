@@ -6,7 +6,7 @@ import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
 /**
  * Entity mapped to table "QUEST".
  */
-public class Quest {
+public class Quest implements java.io.Serializable {
 
     private Long id;
     /** Not-null value. */
