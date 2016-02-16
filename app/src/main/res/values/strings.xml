@@ -7,7 +7,7 @@
         <item>Pending Quests</item>
         <item>Add Quest</item>
     </string-array>
-    
+
     <string-array name="difficulty">
         <item>Very Easy</item>
         <item>Easy</item>
@@ -15,7 +15,7 @@
         <item>Hard</item>
         <item>Very Hard</item>
     </string-array>
-    <string name="title_activity_add_quest">AddQuestActivity</string>
+    <string name="title_activity_add_quest">Add Quest</string>
 
     <!-- Debugging values -->
     <string name="debug_quest_name">questName</string>

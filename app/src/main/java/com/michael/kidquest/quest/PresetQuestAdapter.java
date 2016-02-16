@@ -1,5 +1,6 @@
 package com.michael.kidquest.quest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +37,7 @@ public class PresetQuestAdapter extends RecyclerView.Adapter<PresetQuestAdapter.
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Quest q = mQuests.get(position);
         holder.textViewQuestName.setText(q.getTitle());
-        holder.textViewQuestDifficulty.setText(q.getDifficultyLevel().toString());
+        holder.textViewQuestDifficulty.setText(q.getDifficultyLevel().getDifficultyLevel());
 
         holder.btnAction.setText("Add Quest");
         holder.btnAction.setOnClickListener(new View.OnClickListener(){
@@ -44,7 +45,7 @@ public class PresetQuestAdapter extends RecyclerView.Adapter<PresetQuestAdapter.
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("quest", mQuests.get(position));
-                GetPresetQuestRequest activity = (GetPresetQuestRequest) mContext;
+                Activity activity = (Activity) mContext;
                 activity.setResult(1, returnIntent);
                 activity.finish();
             }

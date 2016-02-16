@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     android:minHeight="?attr/actionBarSize"
     android:background="?attr/colorPrimaryDark"
+    android:elevation="2dp"
     app:titleTextColor="#FFFFFF"
-    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     tools:showIn="@layout/activity_main"/>

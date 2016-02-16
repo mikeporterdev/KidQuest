@@ -25,8 +25,8 @@
             android:name=".quest.AddQuestActivity"
             android:label="@string/title_activity_add_quest"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".quest.GetPresetQuestRequest"
-            android:label="Staff Pick"/>
+        <activity android:name=".TabActivity"
+            android:label="Add Preset Quest"/>
     </application>
 
 </manifest>

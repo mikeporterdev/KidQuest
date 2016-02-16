@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.michael.kidquest.R;
+import com.michael.kidquest.TabActivity;
 import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.services.QuestService;
@@ -45,7 +46,7 @@ public class AddQuestActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent pickPresetQuestIntent = new Intent(getApplicationContext(), GetPresetQuestRequest.class);
+                Intent pickPresetQuestIntent = new Intent(getApplicationContext(), TabActivity.class);
                 startActivityForResult(pickPresetQuestIntent, GET_PRESET_QUEST_REQUEST);
             }
         });
