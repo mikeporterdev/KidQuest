@@ -16,6 +16,7 @@ public class QuestViewHolder extends RecyclerView.ViewHolder {
     public final TextView txtGoldReward;
     public final TextView txtXpReward;
     public final TextView txtExpiryDate;
+    public final View viewDivider;
 
     public final Button btnAction;
 
@@ -27,8 +28,9 @@ public class QuestViewHolder extends RecyclerView.ViewHolder {
         txtGoldReward = (TextView) itemLayoutView.findViewById(R.id.activity_main_gold);
         txtXpReward = (TextView) itemLayoutView.findViewById(R.id.activity_main_xp);
         txtExpiryDate = (TextView) itemLayoutView.findViewById(R.id.questExpiry);
+        viewDivider = (View) itemLayoutView.findViewById(R.id.divider);
 
-        btnAction = (Button) itemLayoutView.findViewById(R.id.btnMarkAsComplete);
+        btnAction = (Button) itemLayoutView.findViewById(R.id.btnAction);
     }
 
 }

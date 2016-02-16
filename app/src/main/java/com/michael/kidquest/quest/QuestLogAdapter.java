@@ -43,7 +43,17 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
         Quest q = mQuests.get(position);
 
         viewHolder.txtQuestName.setText(q.getTitle());
-        viewHolder.txtQuestDescription.setText(q.getDescription());
+
+
+        if (q.getDescription() != null && !q.getDescription().equalsIgnoreCase("")) {
+            viewHolder.txtQuestDescription.setVisibility(View.VISIBLE);
+            viewHolder.txtQuestDescription.setText(q.getDescription());
+
+        } else {
+            viewHolder.txtQuestDescription.setVisibility(View.GONE);
+            viewHolder.viewDivider.setVisibility(View.GONE);
+        }
+
         viewHolder.txtGoldReward.setText("10gp");
         viewHolder.txtXpReward.setText("100xp");
 
