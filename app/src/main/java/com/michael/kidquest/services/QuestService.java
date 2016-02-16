@@ -60,7 +60,7 @@ public class QuestService {
             jsonParams.put("title", quest.getTitle());
             StringEntity entity = new StringEntity(jsonParams.toString());
 
-            ServerRestClient.post(context, String.format("%s/quest", SERVER_ADDRESS), entity, "application/json", new AsyncHttpResponseHandler() {
+            ServerRestClient.post(context, "quest", entity, "application/json", new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(TAG, "Quest saved on server");
@@ -72,9 +72,7 @@ public class QuestService {
                 }
             });
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (JSONException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
