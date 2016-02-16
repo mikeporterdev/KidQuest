@@ -49,8 +49,8 @@ public class QuestService {
         QuestDao qDao = getQuestDao();
 
         QueryBuilder<Quest> query = qDao.queryBuilder();
-        query.and(QuestDao.Properties.Completed.eq(completed),
-                QuestDao.Properties.Confirmed.eq(false));
+        query.where(QuestDao.Properties.Confirmed.eq(false));
+        query.where(QuestDao.Properties.Completed.eq(completed));
 
         return query.list();
     }
