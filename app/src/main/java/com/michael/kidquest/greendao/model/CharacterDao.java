@@ -27,6 +27,8 @@ public class CharacterDao extends AbstractDao<Character, Long> {
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Level = new Property(2, int.class, "level", false, "LEVEL");
         public final static Property ParentPin = new Property(3, String.class, "parentPin", false, "PARENT_PIN");
+        public final static Property Gold = new Property(4, int.class, "gold", false, "GOLD");
+        public final static Property Xp = new Property(5, int.class, "xp", false, "XP");
     };
 
 
@@ -45,7 +47,9 @@ public class CharacterDao extends AbstractDao<Character, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"NAME\" TEXT NOT NULL ," + // 1: name
                 "\"LEVEL\" INTEGER NOT NULL ," + // 2: level
-                "\"PARENT_PIN\" TEXT NOT NULL );"); // 3: parentPin
+                "\"PARENT_PIN\" TEXT NOT NULL ," + // 3: parentPin
+                "\"GOLD\" INTEGER NOT NULL ," + // 4: gold
+                "\"XP\" INTEGER NOT NULL );"); // 5: xp
     }
 
     /** Drops the underlying database table. */
@@ -66,6 +70,8 @@ public class CharacterDao extends AbstractDao<Character, Long> {
         stmt.bindString(2, entity.getName());
         stmt.bindLong(3, entity.getLevel());
         stmt.bindString(4, entity.getParentPin());
+        stmt.bindLong(5, entity.getGold());
+        stmt.bindLong(6, entity.getXp());
     }
 
     /** @inheritdoc */
@@ -81,7 +87,9 @@ public class CharacterDao extends AbstractDao<Character, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // name
             cursor.getInt(offset + 2), // level
-            cursor.getString(offset + 3) // parentPin
+            cursor.getString(offset + 3), // parentPin
+            cursor.getInt(offset + 4), // gold
+            cursor.getInt(offset + 5) // xp
         );
         return entity;
     }
@@ -93,6 +101,8 @@ public class CharacterDao extends AbstractDao<Character, Long> {
         entity.setName(cursor.getString(offset + 1));
         entity.setLevel(cursor.getInt(offset + 2));
         entity.setParentPin(cursor.getString(offset + 3));
+        entity.setGold(cursor.getInt(offset + 4));
+        entity.setXp(cursor.getInt(offset + 5));
      }
     
     /** @inheritdoc */

@@ -13,6 +13,7 @@ public class Quest implements java.io.Serializable {
     private String title;
     private String description;
     private boolean completed;
+    private boolean confirmed;
     /** Not-null value. */
     private DifficultyLevel difficultyLevel;
     /** Not-null value. */
@@ -26,11 +27,12 @@ public class Quest implements java.io.Serializable {
         this.id = id;
     }
 
-    public Quest(Long id, String title, String description, boolean completed, DifficultyLevel difficultyLevel, java.util.Date dateAdded, java.util.Date expiryDate) {
+    public Quest(Long id, String title, String description, boolean completed, boolean confirmed, DifficultyLevel difficultyLevel, java.util.Date dateAdded, java.util.Date expiryDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.completed = completed;
+        this.confirmed = confirmed;
         this.difficultyLevel = difficultyLevel;
         this.dateAdded = dateAdded;
         this.expiryDate = expiryDate;
@@ -68,6 +70,14 @@ public class Quest implements java.io.Serializable {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
     }
 
     /** Not-null value. */

@@ -12,6 +12,8 @@ public class Character {
     private int level;
     /** Not-null value. */
     private String parentPin;
+    private int gold;
+    private int xp;
 
     public Character() {
     }
@@ -20,11 +22,13 @@ public class Character {
         this.id = id;
     }
 
-    public Character(Long id, String name, int level, String parentPin) {
+    public Character(Long id, String name, int level, String parentPin, int gold, int xp) {
         this.id = id;
         this.name = name;
         this.level = level;
         this.parentPin = parentPin;
+        this.gold = gold;
+        this.xp = xp;
     }
 
     public Long getId() {
@@ -61,6 +65,22 @@ public class Character {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setParentPin(String parentPin) {
         this.parentPin = parentPin;
+    }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
     }
 
 }

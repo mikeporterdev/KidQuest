@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.KidQuestApplication;
+import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.CharacterDao;
 import com.michael.kidquest.greendao.model.DaoSession;
@@ -74,6 +75,38 @@ public class CharacterService {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void questReward(DifficultyLevel difficultyLevel){
+        int xp = 0;
+        int gold = 0;
+
+        switch (difficultyLevel){
+            case VERY_EASY:
+                xp = 100;
+                gold = 100;
+                break;
+            case EASY:
+                xp = 300;
+                gold = 300;
+                break;
+            case MEDIUM:
+                xp = 600;
+                gold = 600;
+                break;
+            case HARD:
+                xp = 1000;
+                gold = 1000;
+                break;
+            case VERY_HARD:
+                xp = 1500;
+                gold = 1500;
+                break;
+        }
+
+        Character c = getCharacter();
+        c.setXp(c.getXp() + xp);
+        c.setGold(c.getGold() + gold);
     }
 
     public boolean matchesPin(String pin) {

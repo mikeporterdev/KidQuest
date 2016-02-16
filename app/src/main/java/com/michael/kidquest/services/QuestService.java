@@ -48,8 +48,9 @@ public class QuestService {
     public List<Quest> getQuestListByCompleted(boolean completed) {
         QuestDao qDao = getQuestDao();
 
-        QueryBuilder<Quest> query = qDao.queryBuilder()
-                .where(QuestDao.Properties.Completed.eq(completed));
+        QueryBuilder<Quest> query = qDao.queryBuilder();
+        query.and(QuestDao.Properties.Completed.eq(completed),
+                QuestDao.Properties.Confirmed.eq(false));
 
         return query.list();
     }
@@ -77,6 +78,13 @@ public class QuestService {
         }
     }
 
+    public void completeQuest(Quest q){
+        q.setConfirmed(true);
+        getQuestDao().insertOrReplace(q);
+
+        CharacterService characterService = new CharacterService(context);
+        characterService.questReward(q.getDifficultyLevel());
+    }
 
     private boolean validateQuest() {
         //TODO: Actually validate a quest
