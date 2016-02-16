@@ -107,6 +107,7 @@ public class CharacterService {
         Character c = getCharacter();
         c.setXp(c.getXp() + xp);
         c.setGold(c.getGold() + gold);
+        getCharacterDao().insertOrReplace(c);
     }
 
     public boolean matchesPin(String pin) {
