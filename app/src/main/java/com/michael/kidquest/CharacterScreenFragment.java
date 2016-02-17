@@ -17,13 +17,26 @@ import com.michael.kidquest.services.CharacterService;
 public class CharacterScreenFragment extends Fragment {
 
     private CharacterService cService;
+    private View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_character_screen, container, false);
+        view = inflater.inflate(R.layout.fragment_character_screen, container, false);
 
-        CharacterService cService = new CharacterService(view.getContext().getApplicationContext());
+        updateCharacter();
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateCharacter();
+    }
+
+    public void updateCharacter(){
+        cService = new CharacterService(view.getContext().getApplicationContext());
 
         Character character = cService.getCharacter();
 
@@ -33,6 +46,10 @@ public class CharacterScreenFragment extends Fragment {
         TextView txtLevel = (TextView) view.findViewById(R.id.character_level);
         txtLevel.setText("Level: " + String.valueOf(character.getLevel()));
 
-        return view;
+        TextView txtGold = (TextView) view.findViewById(R.id.character_gold);
+        txtGold.setText(String.valueOf(character.getGold()) + "gp");
+
+        TextView txtXp = (TextView) view.findViewById(R.id.character_xp);
+        txtXp.setText("XP: " + String.valueOf(character.getXp()) + "/10000");
     }
 }

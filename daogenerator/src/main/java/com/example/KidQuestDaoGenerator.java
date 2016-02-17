@@ -8,13 +8,15 @@ import de.greenrobot.daogenerator.Schema;
 
 public class KidQuestDaoGenerator {
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema(5, "com.michael.kidquest.greendao.model");
+        Schema schema = new Schema(7, "com.michael.kidquest.greendao.model");
 
         Entity userDetails = schema.addEntity("Character");
         userDetails.addIdProperty();
         userDetails.addStringProperty("name").notNull();
         userDetails.addIntProperty("level").notNull();
         userDetails.addStringProperty("parentPin").notNull();
+        userDetails.addIntProperty("gold").notNull();
+        userDetails.addIntProperty("xp").notNull();
 
         Entity item = schema.addEntity("Item");
         item.addIdProperty();
@@ -32,6 +34,7 @@ public class KidQuestDaoGenerator {
         quest.addStringProperty("title").notNull();
         quest.addStringProperty("description");
         quest.addBooleanProperty("completed").notNull();
+        quest.addBooleanProperty("confirmed").notNull();
         quest.addStringProperty("difficultyLevel").customType(
                 "com.michael.kidquest.greendao.custommodel.DifficultyLevel",
                 "com.michael.kidquest.greendao.propertyconverters.DifficultyConverter").notNull();

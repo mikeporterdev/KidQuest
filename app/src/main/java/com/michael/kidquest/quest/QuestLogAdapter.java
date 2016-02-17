@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.KidQuestApplication;
@@ -13,6 +12,7 @@ import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.services.CharacterService;
+import com.michael.kidquest.services.QuestService;
 import com.ocpsoft.pretty.time.PrettyTime;
 
 import java.util.List;
@@ -94,7 +94,7 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
         });
     }
 
-    private void closeMethod(QuestViewHolder viewHolder, int position) {
+    private void closeMethod(QuestViewHolder viewHolder, final int position) {
         Quest q = mQuests.get(position);
 
         viewHolder.btnAction.setText("Confirm Quest");
@@ -106,7 +106,12 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
                 characterService.isCorrectPin(v, new DialogSingleButtonListener() {
                     @Override
                     public void onButtonClicked(DialogInterface dialog) {
-                        Toast.makeText(v.getContext(), "Match", Toast.LENGTH_SHORT).show();
+                        QuestService questService = new QuestService(v.getContext().getApplicationContext());
+                        Quest q = mQuests.get(position);
+                        questService.completeQuest(q);
+
+                        mQuests.remove(position);
+                        notifyDataSetChanged();
                     }
                 });
             }
