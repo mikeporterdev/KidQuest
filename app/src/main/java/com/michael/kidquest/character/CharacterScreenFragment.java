@@ -17,7 +17,6 @@ import com.michael.kidquest.services.CharacterService;
  */
 public class CharacterScreenFragment extends Fragment {
 
-    private CharacterService cService;
     private View view;
 
     @Nullable
@@ -37,7 +36,7 @@ public class CharacterScreenFragment extends Fragment {
     }
 
     public void updateCharacter(){
-        cService = new CharacterService(view.getContext().getApplicationContext());
+        CharacterService cService = new CharacterService(view.getContext().getApplicationContext());
 
         Character character = cService.getCharacter();
 
@@ -45,12 +44,12 @@ public class CharacterScreenFragment extends Fragment {
         txtName.setText(character.getName());
 
         TextView txtLevel = (TextView) view.findViewById(R.id.character_level);
-        txtLevel.setText("Level: " + String.valueOf(character.getLevel()));
+        txtLevel.setText(String.format("Level: %s", String.valueOf(character.getLevel())));
 
         TextView txtGold = (TextView) view.findViewById(R.id.character_gold);
-        txtGold.setText(String.valueOf(character.getGold()) + "gp");
+        txtGold.setText(String.format("%sgp", String.valueOf(character.getGold())));
 
         TextView txtXp = (TextView) view.findViewById(R.id.character_xp);
-        txtXp.setText("XP: " + String.valueOf(character.getXp()) + "/10000");
+        txtXp.setText(String.format("XP: %s/10000", String.valueOf(character.getXp())));
     }
 }

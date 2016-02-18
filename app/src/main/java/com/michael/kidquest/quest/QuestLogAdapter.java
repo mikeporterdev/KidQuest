@@ -95,8 +95,6 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
     }
 
     private void closeMethod(QuestViewHolder viewHolder, final int position) {
-        Quest q = mQuests.get(position);
-
         viewHolder.btnAction.setText("Confirm Quest");
         viewHolder.btnAction.setOnClickListener(new View.OnClickListener(){
             @Override

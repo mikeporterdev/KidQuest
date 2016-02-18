@@ -29,7 +29,6 @@ public class AddQuestActivity extends AppCompatActivity {
     private QuestService questService;
     private EditText editQuestName;
     private EditText editQuestDesc;
-    private List<String> difficultyTexts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class AddQuestActivity extends AppCompatActivity {
 
         List<DifficultyLevel> diffs = Arrays.asList(DifficultyLevel.values());
 
-        difficultyTexts = new ArrayList<>();
+        List<String> difficultyTexts = new ArrayList<>();
         for (DifficultyLevel difficulty : diffs) {
             difficultyTexts.add(difficulty.getDifficultyLevel());
         }

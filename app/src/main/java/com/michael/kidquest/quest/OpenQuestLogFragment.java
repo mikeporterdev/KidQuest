@@ -3,7 +3,6 @@ package com.michael.kidquest.quest;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,34 +17,27 @@ import java.util.List;
 
 /**
  * A fragment representing a list of Items.
- * <p/>
+ * <p>
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
 public class OpenQuestLogFragment extends Fragment {
-
-    private int mColumnCount = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_open_quests, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+        Context context = view.getContext();
+        RecyclerView recyclerView = (RecyclerView) view;
 
-            QuestService qService = new QuestService(view.getContext().getApplicationContext());
-            List<Quest> quests = qService.getQuestListByCompleted(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            recyclerView.setAdapter(new QuestLogAdapter(quests, true));
-        }
+        QuestService qService = new QuestService(view.getContext().getApplicationContext());
+        List<Quest> quests = qService.getQuestListByCompleted(false);
+
+        recyclerView.setAdapter(new QuestLogAdapter(quests, true));
+
         return view;
     }
 
@@ -54,7 +46,7 @@ public class OpenQuestLogFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
