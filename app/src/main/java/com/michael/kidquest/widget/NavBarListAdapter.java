@@ -1,10 +1,12 @@
-package com.michael.kidquest;
+package com.michael.kidquest.widget;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.michael.kidquest.R;
 
 /**
  * Created by Michael Porter on 07/02/16.

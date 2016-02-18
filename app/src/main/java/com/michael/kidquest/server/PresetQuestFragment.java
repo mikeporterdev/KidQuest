@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,21 +31,32 @@ import cz.msebera.android.httpclient.Header;
 /**
  * Created by m_por on 16/02/2016.
  */
-public class StaffPickQuestFragment extends Fragment {
+public class PresetQuestFragment extends Fragment {
 
-    private String TAG = "StaffPickQuestFragment";
+    private String TAG = "PresetQuestFragment";
     private RecyclerView mRecyclerView;
     private Context context;
+    private ProgressBar mProgressBar;
+    private TextView mErrorMessage;
+    private String url;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.staff_pick_quest_fragment, container, false);
+        View view = inflater.inflate(R.layout.preset_quest_fragment, container, false);
         context = view.getContext();
-        mRecyclerView = (RecyclerView) view;
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.preset_quest_list);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.preset_quest_progress);
+        mErrorMessage = (TextView) view.findViewById(R.id.preset_quest_error_message);
+
+        mRecyclerView.setVisibility(View.GONE);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        ServerRestClient.get("quest/get_staff_pick", null, new JsonHttpResponseHandler(){
+        Bundle bundle = this.getArguments();
+        String url = bundle.getString("URL");
+
+        ServerRestClient.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();
@@ -51,9 +64,19 @@ public class StaffPickQuestFragment extends Fragment {
                     List<Quest> quests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
                     RecyclerView.Adapter adapter = new PresetQuestAdapter(quests, context);
                     mRecyclerView.setAdapter(adapter);
+
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    mProgressBar.setVisibility(View.GONE);
                 } catch (JSONException e) {
                     Log.e(TAG, "Error parsing list of trending quests", e);
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                mProgressBar.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);
             }
         });
 

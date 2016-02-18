@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.michael.kidquest.R;
-import com.michael.kidquest.TabActivity;
+import com.michael.kidquest.widget.TabActivity;
 import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.services.QuestService;

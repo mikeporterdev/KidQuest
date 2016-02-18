@@ -17,12 +17,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.michael.kidquest.character.CharacterScreenFragment;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
 import com.michael.kidquest.quest.PendingQuestLogFragment;
 import com.michael.kidquest.services.CharacterService;
+import com.michael.kidquest.widget.NavBarListAdapter;
 
 public class MainActivity extends AppCompatActivity implements OpenQuestLogFragment.OnListFragmentInteractionListener, PendingQuestLogFragment.OnListFragmentInteractionListener {
     private DrawerLayout mDrawerLayout;

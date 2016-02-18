@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.michael.kidquest.KidQuestApplication;
+import com.michael.kidquest.greendao.KidQuestApplication;
 import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.greendao.model.QuestDao;

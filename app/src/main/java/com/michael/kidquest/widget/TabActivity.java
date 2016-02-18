@@ -1,11 +1,13 @@
-package com.michael.kidquest;
+package com.michael.kidquest.widget;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.michael.kidquest.R;
 import com.michael.kidquest.widget.SlidingTabLayout;
+import com.michael.kidquest.widget.ViewPagerAdapter;
 
 /**
  * Created by m_por on 16/02/2016.

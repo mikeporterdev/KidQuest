@@ -1,4 +1,4 @@
-package com.michael.kidquest;
+package com.michael.kidquest.character;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.services.CharacterService;
 

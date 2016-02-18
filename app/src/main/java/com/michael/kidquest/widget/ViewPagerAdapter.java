@@ -1,16 +1,18 @@
-package com.michael.kidquest;
+package com.michael.kidquest.widget;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
-import com.michael.kidquest.server.StaffPickQuestFragment;
-import com.michael.kidquest.server.TrendingQuestFragment;
+import com.michael.kidquest.server.PresetQuestFragment;
 
 /**
  * Created by m_por on 16/02/2016.
  */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter{
+    private static final String TAG = "ViewPagerAdapter";
     CharSequence titles[]={"Staff Pick", "Trending"};
     int numberOfTabs = 2;
 
@@ -20,11 +22,19 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
+        Bundle bundle = new Bundle();
+        Fragment fragment = new PresetQuestFragment();
         switch (position){
             case 0:
-                return new StaffPickQuestFragment();
+                bundle.putString("URL", "quest/get_staff_pick");
+                fragment.setArguments(bundle);
+                return fragment;
             case 1:
-                return new TrendingQuestFragment();
+                bundle.putString("URL", "quest/get_trending");
+                fragment.setArguments(bundle);
+                return fragment;
+            default:
+                Log.e(TAG, "Tab handler not found");
         }
         return null;
     }

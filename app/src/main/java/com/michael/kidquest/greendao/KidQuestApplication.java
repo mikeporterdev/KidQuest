@@ -1,4 +1,4 @@
-package com.michael.kidquest;
+package com.michael.kidquest.greendao;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;

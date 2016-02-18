@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.michael.kidquest.DialogSingleButtonListener;
-import com.michael.kidquest.KidQuestApplication;
+import com.michael.kidquest.greendao.KidQuestApplication;
 import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;

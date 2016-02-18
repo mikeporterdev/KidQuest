@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.michael.kidquest.DialogSingleButtonListener;
-import com.michael.kidquest.KidQuestApplication;
+import com.michael.kidquest.greendao.KidQuestApplication;
 import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.CharacterDao;

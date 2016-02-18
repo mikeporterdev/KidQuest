@@ -13,12 +13,15 @@ import cz.msebera.android.httpclient.HttpEntity;
  * Created by m_por on 15/02/2016.
  */
 public class ServerRestClient {
-    private static final String BASE_URL = "http://192.168.0.160:5000/";
+    private static final String BASE_URL = "http://kitari.ddns.net:5000/";
     private static final String TAG = "ServerRestClient";
+    //milliseconds
+    private static final int GET_TIMEOUT = 3000;
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
+        client.setTimeout(GET_TIMEOUT);
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
