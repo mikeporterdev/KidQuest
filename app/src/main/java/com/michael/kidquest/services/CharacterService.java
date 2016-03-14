@@ -116,6 +116,17 @@ public class CharacterService {
         return pin.equals(pin2);
     }
 
+    public String getToken(){
+        String token = getCharacter().getToken();
+        return token;
+    }
+
+    public void setToken(String token){
+        Character c = getCharacter();
+        c.setToken(token);
+        getCharacterDao().insertOrReplace(c);
+    }
+
     private CharacterDao getCharacterDao() {
         DaoSession daoSession = ((KidQuestApplication) context).getDaoSession();
         return daoSession.getCharacterDao();

@@ -78,6 +78,13 @@ public class PresetQuestFragment extends Fragment {
                 mProgressBar.setVisibility(View.GONE);
                 mErrorMessage.setVisibility(View.VISIBLE);
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                mProgressBar.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);
+            }
         });
 
         return view;

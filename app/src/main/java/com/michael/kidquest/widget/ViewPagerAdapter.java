@@ -26,11 +26,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter{
         Fragment fragment = new PresetQuestFragment();
         switch (position){
             case 0:
-                bundle.putString("URL", "quest/get_staff_pick");
+                bundle.putString("URL", "quests/staff_pick");
                 fragment.setArguments(bundle);
                 return fragment;
             case 1:
-                bundle.putString("URL", "quest/get_trending");
+                bundle.putString("URL", "quests/trending");
                 fragment.setArguments(bundle);
                 return fragment;
             default:

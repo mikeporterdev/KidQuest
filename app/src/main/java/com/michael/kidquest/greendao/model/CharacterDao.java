@@ -29,6 +29,7 @@ public class CharacterDao extends AbstractDao<Character, Long> {
         public final static Property ParentPin = new Property(3, String.class, "parentPin", false, "PARENT_PIN");
         public final static Property Gold = new Property(4, int.class, "gold", false, "GOLD");
         public final static Property Xp = new Property(5, int.class, "xp", false, "XP");
+        public final static Property Token = new Property(6, String.class, "token", false, "TOKEN");
     };
 
 
@@ -49,7 +50,8 @@ public class CharacterDao extends AbstractDao<Character, Long> {
                 "\"LEVEL\" INTEGER NOT NULL ," + // 2: level
                 "\"PARENT_PIN\" TEXT NOT NULL ," + // 3: parentPin
                 "\"GOLD\" INTEGER NOT NULL ," + // 4: gold
-                "\"XP\" INTEGER NOT NULL );"); // 5: xp
+                "\"XP\" INTEGER NOT NULL ," + // 5: xp
+                "\"TOKEN\" TEXT);"); // 6: token
     }
 
     /** Drops the underlying database table. */
@@ -72,6 +74,11 @@ public class CharacterDao extends AbstractDao<Character, Long> {
         stmt.bindString(4, entity.getParentPin());
         stmt.bindLong(5, entity.getGold());
         stmt.bindLong(6, entity.getXp());
+ 
+        String token = entity.getToken();
+        if (token != null) {
+            stmt.bindString(7, token);
+        }
     }
 
     /** @inheritdoc */
@@ -89,7 +96,8 @@ public class CharacterDao extends AbstractDao<Character, Long> {
             cursor.getInt(offset + 2), // level
             cursor.getString(offset + 3), // parentPin
             cursor.getInt(offset + 4), // gold
-            cursor.getInt(offset + 5) // xp
+            cursor.getInt(offset + 5), // xp
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // token
         );
         return entity;
     }
@@ -103,6 +111,7 @@ public class CharacterDao extends AbstractDao<Character, Long> {
         entity.setParentPin(cursor.getString(offset + 3));
         entity.setGold(cursor.getInt(offset + 4));
         entity.setXp(cursor.getInt(offset + 5));
+        entity.setToken(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     /** @inheritdoc */

@@ -6,6 +6,7 @@ import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.michael.kidquest.Constants;
 
 import cz.msebera.android.httpclient.HttpEntity;
 
@@ -13,12 +14,19 @@ import cz.msebera.android.httpclient.HttpEntity;
  * Created by m_por on 15/02/2016.
  */
 public class ServerRestClient {
-    private static final String BASE_URL = "http://kitari.ddns.net:5000/";
     private static final String TAG = "ServerRestClient";
     //milliseconds
     private static final int GET_TIMEOUT = 3000;
 
     private static AsyncHttpClient client = new AsyncHttpClient();
+
+    public ServerRestClient(String email, String password) {
+        client.setBasicAuth(email, password);
+    }
+
+    public ServerRestClient(String token) {
+        client.setBasicAuth(token, "nopassword");
+    }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
         client.setTimeout(GET_TIMEOUT);
@@ -30,7 +38,7 @@ public class ServerRestClient {
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {
-        Log.i(TAG, BASE_URL + relativeUrl);
-        return BASE_URL + relativeUrl;
+        Log.i(TAG, Constants.SERVER_URL + relativeUrl);
+        return Constants.SERVER_URL + relativeUrl;
     }
 }

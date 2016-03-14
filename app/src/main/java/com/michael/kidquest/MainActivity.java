@@ -1,6 +1,5 @@
 package com.michael.kidquest;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
@@ -12,9 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.michael.kidquest.character.CharacterScreenFragment;
@@ -41,12 +38,8 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
         cService = new CharacterService(this.getApplicationContext());
 
-        if (cService.getCharacter() == null){
-            firstTimeSetup();
-        } else {
-            initialFragmentSetup();
-            sidebarSetup();
-        }
+        initialFragmentSetup();
+        sidebarSetup();
         toolbarSetup();
 
     }
@@ -138,34 +131,5 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             mDrawerLayout.closeDrawers();
         }
-    }
-
-    public void firstTimeSetup(){
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter Character Name");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Character character = new Character();
-
-                character.setName(input.getText().toString());
-                character.setParentPin("1066");
-
-                CharacterService cService = new CharacterService(getApplicationContext());
-                cService.addCharacter(character);
-
-                initialFragmentSetup();
-                sidebarSetup();
-            }
-        });
-
-        builder.show();
     }
 }
