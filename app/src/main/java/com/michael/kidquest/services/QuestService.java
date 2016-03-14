@@ -60,6 +60,8 @@ public class QuestService {
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("title", quest.getTitle());
+            jsonParams.put("difficulty_level", quest.getDifficultyLevel());
+            jsonParams.put("description", quest.getDescription());
             StringEntity entity = new StringEntity(jsonParams.toString());
 
             CharacterService characterService = new CharacterService(context);
