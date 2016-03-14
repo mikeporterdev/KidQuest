@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -48,7 +49,7 @@ public class OpenQuestLogFragment extends Fragment {
         context = view.getContext();
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        
+
         CharacterService characterService = new CharacterService(view.getContext().getApplicationContext());
 
         ServerRestClient client = new ServerRestClient(characterService.getToken());
@@ -58,7 +59,7 @@ public class OpenQuestLogFragment extends Fragment {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();
                 try {
-                    List<Quest> quests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
+                    List<Quest> quests = new LinkedList<Quest>(Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class)));
 
                     for (Quest q : quests){
                         if (q.getCompleted()){

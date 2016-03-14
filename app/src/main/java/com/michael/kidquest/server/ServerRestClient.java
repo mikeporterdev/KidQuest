@@ -37,6 +37,10 @@ public class ServerRestClient {
         client.post(context, getAbsoluteUrl(url), entity, contentType, responseHandler);
     }
 
+    public void put(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler){
+        client.put(context, getAbsoluteUrl(url), entity, contentType, responseHandler);
+    }
+
     private static String getAbsoluteUrl(String relativeUrl) {
         Log.i(TAG, Constants.SERVER_URL + relativeUrl);
         return Constants.SERVER_URL + relativeUrl;

@@ -83,11 +83,61 @@ public class QuestService {
     }
 
     public void completeQuest(Quest q){
-        q.setConfirmed(true);
-        getQuestDao().insertOrReplace(q);
+        JSONObject jsonParams = new JSONObject();
+        try {
+            jsonParams.put("completed", true);
+            StringEntity entity = new StringEntity(jsonParams.toString());
 
-        CharacterService characterService = new CharacterService(context);
-        characterService.questReward(q.getDifficultyLevel());
+            CharacterService characterService = new CharacterService(context);
+            ServerRestClient serverRestClient = new ServerRestClient(characterService.getToken());
+
+            String url = "users/" + characterService.getServerId() + "/quests/" + q.getId() + "/";
+
+            serverRestClient.put(context, url, entity, "application/json", new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(TAG, "Quest marked as complete on server");
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.i(TAG, "Unable to mark as complete on server");
+                    error.printStackTrace();
+                }
+            });
+
+        } catch (JSONException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void confirmQuest(Quest q){
+        JSONObject jsonParams = new JSONObject();
+        try {
+            jsonParams.put("confirmed", true);
+            StringEntity entity = new StringEntity(jsonParams.toString());
+
+            CharacterService characterService = new CharacterService(context);
+            ServerRestClient serverRestClient = new ServerRestClient(characterService.getToken());
+
+            String url = "users/" + characterService.getServerId() + "/quests/" + q.getId() + "/";
+
+            serverRestClient.put(context, url, entity, "application/json", new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(TAG, "Quest marked as confirmed on server");
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.i(TAG, "Unable to mark as confirmed on server");
+                    error.printStackTrace();
+                }
+            });
+
+        } catch (JSONException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean validateQuest() {

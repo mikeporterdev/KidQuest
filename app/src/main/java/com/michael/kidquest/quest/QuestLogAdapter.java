@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.michael.kidquest.DialogSingleButtonListener;
-import com.michael.kidquest.greendao.KidQuestApplication;
 import com.michael.kidquest.R;
-import com.michael.kidquest.greendao.model.DaoSession;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.services.CharacterService;
 import com.michael.kidquest.services.QuestService;
@@ -81,13 +79,9 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
             public void onClick(View v) {
                 //get clicked quest and mark as completed
                 Quest q = mQuests.get(position);
-                q.setCompleted(true);
+                QuestService qService = new QuestService(v.getContext().getApplicationContext());
+                qService.completeQuest(q);
 
-                //save quest
-                DaoSession daoSession = ((KidQuestApplication) v.getContext().getApplicationContext()).getDaoSession();
-                daoSession.getQuestDao().insertOrReplace(q);
-
-                //hide quest from the list of open quests
                 mQuests.remove(position);
                 notifyDataSetChanged();
             }
@@ -106,7 +100,7 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
                     public void onButtonClicked(DialogInterface dialog) {
                         QuestService questService = new QuestService(v.getContext().getApplicationContext());
                         Quest q = mQuests.get(position);
-                        questService.completeQuest(q);
+                        questService.confirmQuest(q);
 
                         mQuests.remove(position);
                         notifyDataSetChanged();
