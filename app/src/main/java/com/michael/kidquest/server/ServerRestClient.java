@@ -28,17 +28,21 @@ public class ServerRestClient {
         client.setBasicAuth(token, "nopassword");
     }
 
-    public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
+    public void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
         client.setTimeout(GET_TIMEOUT);
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
-    public static void post(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
+    public void post(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
         client.post(context, getAbsoluteUrl(url), entity, contentType, responseHandler);
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {
         Log.i(TAG, Constants.SERVER_URL + relativeUrl);
         return Constants.SERVER_URL + relativeUrl;
+    }
+
+    private static boolean getAuthRequired(){
+        return true;
     }
 }

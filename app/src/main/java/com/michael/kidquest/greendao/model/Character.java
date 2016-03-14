@@ -15,6 +15,7 @@ public class Character {
     private int gold;
     private int xp;
     private String token;
+    private Integer serverId;
 
     public Character() {
     }
@@ -23,7 +24,7 @@ public class Character {
         this.id = id;
     }
 
-    public Character(Long id, String name, int level, String parentPin, int gold, int xp, String token) {
+    public Character(Long id, String name, int level, String parentPin, int gold, int xp, String token, Integer serverId) {
         this.id = id;
         this.name = name;
         this.level = level;
@@ -31,6 +32,7 @@ public class Character {
         this.gold = gold;
         this.xp = xp;
         this.token = token;
+        this.serverId = serverId;
     }
 
     public Long getId() {
@@ -91,6 +93,14 @@ public class Character {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Integer getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Integer serverId) {
+        this.serverId = serverId;
     }
 
 }

@@ -333,10 +333,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 HttpResponse response = client.execute(request);
                 String json = EntityUtils.toString(response.getEntity());
 
-                String token = new Gson().fromJson(json, JsonObject.class).get("token").getAsString();
+
+                JsonObject jsonobj = new Gson().fromJson(json, JsonObject.class);
+
+                String token = jsonobj.get("token").getAsString();
+                int id = jsonobj.get("id").getAsInt();
 
                 CharacterService cService = new CharacterService(getApplicationContext());
                 cService.setToken(token);
+                cService.setServerId(id);
 
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);

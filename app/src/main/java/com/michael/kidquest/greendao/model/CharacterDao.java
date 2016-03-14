@@ -30,6 +30,7 @@ public class CharacterDao extends AbstractDao<Character, Long> {
         public final static Property Gold = new Property(4, int.class, "gold", false, "GOLD");
         public final static Property Xp = new Property(5, int.class, "xp", false, "XP");
         public final static Property Token = new Property(6, String.class, "token", false, "TOKEN");
+        public final static Property ServerId = new Property(7, Integer.class, "serverId", false, "SERVER_ID");
     };
 
 
@@ -51,7 +52,8 @@ public class CharacterDao extends AbstractDao<Character, Long> {
                 "\"PARENT_PIN\" TEXT NOT NULL ," + // 3: parentPin
                 "\"GOLD\" INTEGER NOT NULL ," + // 4: gold
                 "\"XP\" INTEGER NOT NULL ," + // 5: xp
-                "\"TOKEN\" TEXT);"); // 6: token
+                "\"TOKEN\" TEXT," + // 6: token
+                "\"SERVER_ID\" INTEGER);"); // 7: serverId
     }
 
     /** Drops the underlying database table. */
@@ -79,6 +81,11 @@ public class CharacterDao extends AbstractDao<Character, Long> {
         if (token != null) {
             stmt.bindString(7, token);
         }
+ 
+        Integer serverId = entity.getServerId();
+        if (serverId != null) {
+            stmt.bindLong(8, serverId);
+        }
     }
 
     /** @inheritdoc */
@@ -97,7 +104,8 @@ public class CharacterDao extends AbstractDao<Character, Long> {
             cursor.getString(offset + 3), // parentPin
             cursor.getInt(offset + 4), // gold
             cursor.getInt(offset + 5), // xp
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // token
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // token
+            cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7) // serverId
         );
         return entity;
     }
@@ -112,6 +120,7 @@ public class CharacterDao extends AbstractDao<Character, Long> {
         entity.setGold(cursor.getInt(offset + 4));
         entity.setXp(cursor.getInt(offset + 5));
         entity.setToken(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setServerId(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
      }
     
     /** @inheritdoc */

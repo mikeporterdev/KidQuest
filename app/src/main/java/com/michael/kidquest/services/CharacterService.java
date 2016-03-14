@@ -127,6 +127,16 @@ public class CharacterService {
         getCharacterDao().insertOrReplace(c);
     }
 
+    public int getServerId(){
+        return getCharacter().getServerId();
+    }
+
+    public void setServerId(int id){
+        Character c = getCharacter();
+        c.setServerId(id);
+        getCharacterDao().insertOrReplace(c);
+    }
+
     private CharacterDao getCharacterDao() {
         DaoSession daoSession = ((KidQuestApplication) context).getDaoSession();
         return daoSession.getCharacterDao();

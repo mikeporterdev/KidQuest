@@ -19,6 +19,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.PresetQuestAdapter;
+import com.michael.kidquest.services.CharacterService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +57,10 @@ public class PresetQuestFragment extends Fragment {
         Bundle bundle = this.getArguments();
         String url = bundle.getString("URL");
 
-        ServerRestClient.get(url, null, new JsonHttpResponseHandler() {
+        CharacterService characterService = new CharacterService(this.getContext());
+        ServerRestClient client = new ServerRestClient(characterService.getToken());
+
+        client.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();

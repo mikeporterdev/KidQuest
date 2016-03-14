@@ -52,6 +52,7 @@ public class QuestService {
         query.where(QuestDao.Properties.Confirmed.eq(false));
         query.where(QuestDao.Properties.Completed.eq(completed));
 
+
         return query.list();
     }
 
@@ -61,7 +62,10 @@ public class QuestService {
             jsonParams.put("title", quest.getTitle());
             StringEntity entity = new StringEntity(jsonParams.toString());
 
-            ServerRestClient.post(context, "quest", entity, "application/json", new AsyncHttpResponseHandler() {
+            CharacterService characterService = new CharacterService(context);
+            ServerRestClient client = new ServerRestClient(characterService.getToken());
+            String url = "users/" + characterService.getServerId() + "/quests/";
+            client.post(context, url, entity, "application/json", new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(TAG, "Quest saved on server");
