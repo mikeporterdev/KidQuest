@@ -86,6 +86,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             firstTimeSetup();
         }
 
+        if (cService.getToken() != null){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 

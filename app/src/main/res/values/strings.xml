@@ -30,7 +30,7 @@
     <string name="submit">Submit</string>
     <string name="drawer_open">Open Nav Bar</string>
     <string name="drawer_close">Close Nav Bar</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">KidQuest</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

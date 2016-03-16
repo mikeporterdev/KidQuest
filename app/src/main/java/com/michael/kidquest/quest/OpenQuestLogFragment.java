@@ -21,8 +21,8 @@ import com.michael.kidquest.services.CharacterService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -59,15 +59,17 @@ public class OpenQuestLogFragment extends Fragment {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();
                 try {
-                    List<Quest> quests = new LinkedList<Quest>(Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class)));
+                    List<Quest> quests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
+
+                    List<Quest> openQuests = new ArrayList<Quest>();
 
                     for (Quest q : quests){
-                        if (q.getCompleted()){
-                            quests.remove(q);
+                        if (!q.getConfirmed() && !q.getCompleted()){
+                            openQuests.add(q);
                         }
                     }
 
-                    RecyclerView.Adapter adapter = new QuestLogAdapter(quests, true);
+                    RecyclerView.Adapter adapter = new QuestLogAdapter(openQuests, true);
                     mRecyclerView.setAdapter(adapter);
 
                     mRecyclerView.setVisibility(View.VISIBLE);
