@@ -6,6 +6,7 @@
         <item>Open Quests</item>
         <item>Pending Quests</item>
         <item>Add Quest</item>
+        <item>Set Up Parent</item>
     </string-array>
 
     <string-array name="difficulty">
@@ -44,4 +45,5 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="title_activity_parent_setup">ParentSetup</string>
 </resources>

@@ -9,14 +9,23 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.greendao.KidQuestApplication;
 import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.CharacterDao;
 import com.michael.kidquest.greendao.model.DaoSession;
+import com.michael.kidquest.server.ServerRestClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 /**
  * Created by Michael Porter on 11/02/16.
@@ -135,6 +144,33 @@ public class CharacterService {
         Character c = getCharacter();
         c.setServerId(id);
         getCharacterDao().insertOrReplace(c);
+    }
+
+    public void setParent(int id){
+        JSONObject jsonParams = new JSONObject();
+        try {
+            jsonParams.put("parent_id", id);
+            StringEntity stringEntity = new StringEntity(jsonParams.toString());
+
+            String url = "users/" + getServerId() + "/";
+            ServerRestClient serverRestClient = new ServerRestClient(getToken());
+
+            serverRestClient.put(context, url, stringEntity, "application/json", new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     private CharacterDao getCharacterDao() {

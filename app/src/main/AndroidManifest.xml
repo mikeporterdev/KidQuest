@@ -19,9 +19,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".quest.AddQuestActivity"
             android:label="@string/title_activity_add_quest"
@@ -34,9 +32,14 @@
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".character.ParentSetup"
+            android:label="@string/title_activity_parent_setup"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

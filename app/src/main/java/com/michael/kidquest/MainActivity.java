@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.michael.kidquest.character.CharacterScreenFragment;
+import com.michael.kidquest.character.ParentSetup;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.AddQuestActivity;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     private CharacterService cService;
 
     private final static int ADD_QUEST_CODE = 2;
+    private final static int SETUP_PARENT_CODE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,15 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                             public void onButtonClicked(DialogInterface dialog) {
                                 Intent intent = new Intent(view.getContext(), AddQuestActivity.class);
                                 startActivityForResult(intent, ADD_QUEST_CODE);
+                            }
+                        });
+                        break;
+                    case 4:
+                        cService.isCorrectPin(view, new DialogSingleButtonListener() {
+                            @Override
+                            public void onButtonClicked(DialogInterface dialog) {
+                                Intent intent = new Intent(view.getContext(), ParentSetup.class);
+                                startActivityForResult(intent, SETUP_PARENT_CODE);
                             }
                         });
                         break;
