@@ -2,8 +2,10 @@ package com.michael.kidquest;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -33,27 +35,38 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     private final static int ADD_QUEST_CODE = 2;
     private final static int SETUP_PARENT_CODE = 3;
 
+    private boolean parent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        parent = sharedPreferences.getBoolean("isparent", false);
+
         cService = new CharacterService(this.getApplicationContext());
 
         initialFragmentSetup();
-        sidebarSetup();
+        childSidebarSetup();
         toolbarSetup();
 
     }
 
     private void initialFragmentSetup() {
         //Load initial fragment
-        Fragment fragment = new CharacterScreenFragment();
+        Fragment fragment;
+
+        if (parent){
+            fragment = new OpenQuestLogFragment();
+        } else {
+            fragment = new CharacterScreenFragment();
+        }
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
 
-    private void sidebarSetup() {
+    private void childSidebarSetup() {
         RecyclerView navBarList = (RecyclerView) findViewById(R.id.left_drawer);
         navBarList.setHasFixedSize(true);
 
@@ -114,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
     private void toolbarSetup() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle("Your Quests");
+        mToolbar.setTitle("KidQuest");
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null){
             getSupportActionBar().setHomeButtonEnabled(true);

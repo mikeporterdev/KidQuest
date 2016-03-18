@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -67,6 +68,9 @@ public class ParentSetup extends AppCompatActivity {
                 int id = jsonobj.get("id").getAsInt();
 
                 characterService.setParent(id);
+
+                Toast.makeText(getApplicationContext(), "Added parent account", Toast.LENGTH_SHORT).show();
+                finishActivity(3);
             }
 
             @Override

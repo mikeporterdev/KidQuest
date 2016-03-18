@@ -5,10 +5,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -85,6 +87,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (cService.getCharacter() == null){
             firstTimeSetup();
         }
+
+        SharedPreferences sharedPref = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        //Returns false if none found
+        sharedPref.getBoolean("isparent", false);
 
         if (cService.getToken() != null){
             Intent intent = new Intent(this, MainActivity.class);
