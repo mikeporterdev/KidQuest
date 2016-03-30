@@ -20,6 +20,9 @@ public class ServerRestClient {
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
+    public ServerRestClient() {
+    }
+
     public ServerRestClient(String email, String password) {
         client.setBasicAuth(email, password);
     }
@@ -31,6 +34,7 @@ public class ServerRestClient {
     public void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
         client.setTimeout(GET_TIMEOUT);
         client.get(getAbsoluteUrl(url), params, responseHandler);
+
     }
 
     public void post(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {

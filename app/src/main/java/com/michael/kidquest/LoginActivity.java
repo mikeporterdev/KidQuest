@@ -36,20 +36,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.michael.kidquest.greendao.model.Character;
+import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpResponse;
-import cz.msebera.android.httpclient.client.ClientProtocolException;
 import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.client.methods.HttpGet;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
@@ -82,20 +89,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
 
-        CharacterService cService = new CharacterService(this.getApplicationContext());
-
-        if (cService.getCharacter() == null){
-            firstTimeSetup();
-        }
-
         SharedPreferences sharedPref = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
         //Returns false if none found
         sharedPref.getBoolean("isparent", false);
 
-        if (cService.getToken() != null){
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
+        startMainIfTokenValid();
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -342,31 +340,58 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 request.setURI(new URI(Constants.SERVER_URL + "token/"));
                 HttpResponse response = client.execute(request);
-                String json = EntityUtils.toString(response.getEntity());
+
+                if (response.getStatusLine().getStatusCode() == 200){
+                    login(response);
+                } else if (response.getStatusLine().getStatusCode() == 401){
+                    response.getEntity().consumeContent();
+                    //Register account
+
+                    //TODO: prompt to register
+                    HttpPost postRequest = new HttpPost();
+
+                    Map<String, String> details = new HashMap<>();
+                    details.put("email", mEmail);
+                    details.put("password", mPassword);
+
+                    String json = new GsonBuilder().create().toJson(details, Map.class);
+
+                    postRequest.setEntity(new StringEntity(json));
+                    postRequest.setURI(new URI(Constants.SERVER_URL + "users/"));
+                    postRequest.setHeader("Accept", "application/json");
+                    postRequest.setHeader("Content-type", "application/json");
+                    HttpResponse postResponse = client.execute(postRequest);
+                    //TODO: Check response
+                    //FIXME: Infinite loop requests
+                    if (postResponse.getStatusLine().getStatusCode() == 201){
+                        doInBackground((Void) null);
+                    }
+
+                }
 
 
-                JsonObject jsonobj = new Gson().fromJson(json, JsonObject.class);
 
-                String token = jsonobj.get("token").getAsString();
-                int id = jsonobj.get("id").getAsInt();
-
-                CharacterService cService = new CharacterService(getApplicationContext());
-                cService.setToken(token);
-                cService.setServerId(id);
-
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (URISyntaxException | IOException e) {
                 e.printStackTrace();
             }
 
             // TODO: register the new account here.
             return true;
+        }
+
+        private void login(HttpResponse response) throws IOException {
+            String json = EntityUtils.toString(response.getEntity());
+            JsonObject jsonObject = new Gson().fromJson(json, JsonObject.class);
+
+            String token = jsonObject.get("token").getAsString();
+            int id = jsonObject.get("id").getAsInt();
+
+            CharacterService cService = new CharacterService(getApplicationContext());
+            cService.setToken(token);
+            cService.setServerId(id);
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
         }
 
         @Override
@@ -414,6 +439,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         builder.show();
+    }
+
+    public void startMainIfTokenValid(){
+        CharacterService cService = new CharacterService(getApplicationContext());
+
+        String token = cService.getToken();
+
+        if (token != null){
+            ServerRestClient serverRestClient = new ServerRestClient(token);
+            serverRestClient.get("token/", null, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                }
+            });
+        }
     }
 }
 

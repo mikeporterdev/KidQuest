@@ -16,6 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.character.CharacterScreenFragment;
 import com.michael.kidquest.character.ParentSetup;
 import com.michael.kidquest.greendao.model.Character;
@@ -23,8 +26,13 @@ import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
 import com.michael.kidquest.quest.PendingQuestLogFragment;
+import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
 import com.michael.kidquest.widget.NavBarListAdapter;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity implements OpenQuestLogFragment.OnListFragmentInteractionListener, PendingQuestLogFragment.OnListFragmentInteractionListener {
     private DrawerLayout mDrawerLayout;
@@ -36,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     private final static int SETUP_PARENT_CODE = 3;
 
     private boolean parent;
+    private Character character;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +57,19 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         cService = new CharacterService(this.getApplicationContext());
 
         initialFragmentSetup();
-        childSidebarSetup();
+
         toolbarSetup();
+
+        ServerRestClient serverRestClient = new ServerRestClient(cService.getToken());
+
+        serverRestClient.get("users/" + cService.getServerId() + "/", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder().create();
+                character = gson.fromJson(response.toString(), Character.class);
+                childSidebarSetup();
+            }
+        });
 
     }
 
@@ -71,10 +91,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         navBarList.setHasFixedSize(true);
 
         String[] navBarLocationStrings = getResources().getStringArray(R.array.navigation_drawer_items);
-
-        Character c = cService.getCharacter();
-
-        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, c.getName(), c.getLevel());
+        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, character.getName(), character.getCharacter_level());
         navBarList.setAdapter(mAdapter);
         navBarList.setLayoutManager(new LinearLayoutManager(this));
         mAdapter.setOnItemClickListener(new NavBarListAdapter.OnItemClickListener() {

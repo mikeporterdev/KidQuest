@@ -40,6 +40,14 @@
             android:name=".character.ParentSetup"
             android:label="@string/title_activity_parent_setup"
             android:theme="@style/AppTheme"></activity>
+
+        <service
+            android:name=".gcm.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

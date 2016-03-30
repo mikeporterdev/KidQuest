@@ -3,16 +3,19 @@ package com.michael.kidquest.services;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.greendao.KidQuestApplication;
-import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.CharacterDao;
 import com.michael.kidquest.greendao.model.DaoSession;
@@ -22,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -32,34 +34,28 @@ import cz.msebera.android.httpclient.entity.StringEntity;
  */
 public class CharacterService {
     private Context context;
+    private Character character;
 
     public void addCharacter(Character character) {
         if (validateCharacter(character)) {
             //All new characters start with level 1
-            character.setLevel(1);
+            character.setCharacter_level(1);
 
             getCharacterDao().insertOrReplace(character);
         }
     }
 
-    public void levelUpCharacter() {
-        Character c = getCharacter();
-        c.setLevel(c.getLevel() + 1);
-        getCharacterDao().update(c);
-    }
-
     public Character getCharacter() {
-        List<Character> characters = getCharacterDao().queryBuilder().limit(1).list();
+        ServerRestClient serverRestClient = new ServerRestClient(getToken());
 
-        if (characters.size() == 0) {
-            //TODO: Handle this
-            return null;
-        } else if (characters.size() == 1) {
-            return characters.get(0);
-        } else {
-            //TODO: Throw exception
-            return null;
-        }
+        serverRestClient.get("users/" + getServerId() + "/", null, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder().create();
+                character = gson.fromJson(response.toString(), Character.class);
+            }
+        });
+        return character;
     }
 
     public void isCorrectPin(final View v, final DialogSingleButtonListener dialogSingleButtonListener) {
@@ -75,7 +71,7 @@ public class CharacterService {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (matchesPin(editText.getText().toString())){
+                if (matchesPin(editText.getText().toString())) {
                     dialogSingleButtonListener.onButtonClicked(dialog);
                 } else {
                     Toast.makeText(v.getContext(), "Pin does not match", Toast.LENGTH_SHORT).show();
@@ -86,39 +82,6 @@ public class CharacterService {
         dialog.show();
     }
 
-    public void questReward(DifficultyLevel difficultyLevel){
-        int xp = 0;
-        int gold = 0;
-
-        switch (difficultyLevel){
-            case VERY_EASY:
-                xp = 100;
-                gold = 100;
-                break;
-            case EASY:
-                xp = 300;
-                gold = 300;
-                break;
-            case MEDIUM:
-                xp = 600;
-                gold = 600;
-                break;
-            case HARD:
-                xp = 1000;
-                gold = 1000;
-                break;
-            case VERY_HARD:
-                xp = 1500;
-                gold = 1500;
-                break;
-        }
-
-        Character c = getCharacter();
-        c.setXp(c.getXp() + xp);
-        c.setGold(c.getGold() + gold);
-        getCharacterDao().insertOrReplace(c);
-    }
-
     public boolean matchesPin(String pin) {
         //TODO: Probably make this more secure
         String pin2 = getCharacter().getParentPin();
@@ -126,24 +89,67 @@ public class CharacterService {
     }
 
     public String getToken(){
-        String token = getCharacter().getToken();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null);
         return token;
     }
 
     public void setToken(String token){
-        Character c = getCharacter();
-        c.setToken(token);
-        getCharacterDao().insertOrReplace(c);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("token", token);
+        editor.commit();
+    }
+
+    public String getGcmId(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        String gcm_id = sharedPreferences.getString("gcm_id", null);
+        return gcm_id;
+    }
+
+    public void setGcmId(String gcmId){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("gcm_id", gcmId);
+        editor.commit();
+
+        JSONObject jsonParams = new JSONObject();
+        try {
+            jsonParams.put("gcm_id", gcmId);
+            StringEntity stringEntity = new StringEntity(jsonParams.toString());
+
+            String url = "users/" + getServerId() + "/";
+            ServerRestClient serverRestClient = new ServerRestClient(getToken());
+
+            serverRestClient.put(context, url, stringEntity, "application/json", new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                }
+            });
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getServerId(){
-        return getCharacter().getServerId();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        int serverId = sharedPreferences.getInt("server_id", 0);
+        return serverId;
     }
 
     public void setServerId(int id){
-        Character c = getCharacter();
-        c.setServerId(id);
-        getCharacterDao().insertOrReplace(c);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("server_id", id);
+        editor.commit();
     }
 
     public void setParent(int id){

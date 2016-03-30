@@ -8,9 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.Character;
+import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Michael Porter on 09/02/16.
@@ -18,13 +26,25 @@ import com.michael.kidquest.services.CharacterService;
 public class CharacterScreenFragment extends Fragment {
 
     private View view;
+    private Character character;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_character_screen, container, false);
 
-        updateCharacter();
+        CharacterService characterService = new CharacterService(view.getContext().getApplicationContext());
+
+        ServerRestClient serverRestClient = new ServerRestClient(characterService.getToken());
+
+        serverRestClient.get("users/" + characterService.getServerId() + "/", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder().create();
+                character = gson.fromJson(response.toString(), Character.class);
+                updateCharacter(character);
+            }
+        });
 
         return view;
     }
@@ -32,19 +52,28 @@ public class CharacterScreenFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateCharacter();
+        CharacterService characterService = new CharacterService(view.getContext().getApplicationContext());
+
+        ServerRestClient serverRestClient = new ServerRestClient(characterService.getToken());
+
+        serverRestClient.get("users/" + characterService.getServerId() + "/", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder().create();
+                character = gson.fromJson(response.toString(), Character.class);
+                updateCharacter(character);
+            }
+        });
+
+
     }
 
-    public void updateCharacter(){
-        CharacterService cService = new CharacterService(view.getContext().getApplicationContext());
-
-        Character character = cService.getCharacter();
-
+    public void updateCharacter(Character character){
         TextView txtName = (TextView) view.findViewById(R.id.character_name);
         txtName.setText(character.getName());
 
         TextView txtLevel = (TextView) view.findViewById(R.id.character_level);
-        txtLevel.setText(String.format("Level: %s", String.valueOf(character.getLevel())));
+        txtLevel.setText(String.format("Level: %s", String.valueOf(character.getCharacter_level())));
 
         TextView txtGold = (TextView) view.findViewById(R.id.character_gold);
         txtGold.setText(String.format("%sgp", String.valueOf(character.getGold())));

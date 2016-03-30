@@ -12,16 +12,22 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.R;
 import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class ParentSetup extends AppCompatActivity {
+    private static final String TAG = "ParentSetup";
     private EditText mEmail;
     private EditText mPassword;
     private Button mSubmit;
@@ -48,11 +54,39 @@ public class ParentSetup extends AppCompatActivity {
                 String email = mEmail.getText().toString();
                 String password = mPassword.getText().toString();
 
-                getParentDetails(email, password);
+                registerParentDetails(email, password);
             }
         });
 
 
+    }
+
+    private void registerParentDetails(final String email, final String password){
+        ServerRestClient serverRestClient = new ServerRestClient();
+        JSONObject params = new JSONObject();
+
+        try {
+            params.put("email", email);
+            params.put("password", password);
+            StringEntity entity = new StringEntity(params.toString());
+
+            serverRestClient.post(this, "users/", entity, "application/json", new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(TAG, "Successfully registered parent");
+                    getParentDetails(email, password);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.i(TAG, "Failed to register parent");
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     private void getParentDetails(String email, String password){
@@ -76,7 +110,6 @@ public class ParentSetup extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
                 Log.i("ParentSetup", responseString);
             }
         });
