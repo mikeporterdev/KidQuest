@@ -8,10 +8,10 @@ public class Character {
 
     private Long id;
     /** Not-null value. */
-    private String name;
+    private String character_name;
     private int character_level;
     /** Not-null value. */
-    private String parentPin;
+    private String parent_pin;
     private int gold;
     private int xp;
     private String token;
@@ -24,11 +24,11 @@ public class Character {
         this.id = id;
     }
 
-    public Character(Long id, String name, int level, String parentPin, int gold, int xp, String token, Integer serverId) {
+    public Character(Long id, String name, int level, String parent_pin, int gold, int xp, String token, Integer serverId) {
         this.id = id;
-        this.name = name;
+        this.character_name = name;
         this.character_level = level;
-        this.parentPin = parentPin;
+        this.parent_pin = parent_pin;
         this.gold = gold;
         this.xp = xp;
         this.token = token;
@@ -44,13 +44,13 @@ public class Character {
     }
 
     /** Not-null value. */
-    public String getName() {
-        return name;
+    public String getCharacter_name() {
+        return character_name;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setName(String name) {
-        this.name = name;
+    public void setCharacter_name(String character_name) {
+        this.character_name = character_name;
     }
 
     public int getCharacter_level() {
@@ -62,13 +62,13 @@ public class Character {
     }
 
     /** Not-null value. */
-    public String getParentPin() {
-        return parentPin;
+    public String getParent_pin() {
+        return parent_pin;
     }
 
     /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setParentPin(String parentPin) {
-        this.parentPin = parentPin;
+    public void setParent_pin(String parent_pin) {
+        this.parent_pin = parent_pin;
     }
 
     public int getGold() {

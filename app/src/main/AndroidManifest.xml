@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
-        android:name=".greendao.KidQuestApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,7 +18,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".quest.AddQuestActivity"
             android:label="@string/title_activity_add_quest"
@@ -39,7 +38,7 @@
         <activity
             android:name=".character.ParentSetup"
             android:label="@string/title_activity_parent_setup"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
 
         <service
             android:name=".gcm.MyInstanceIDListenerService"

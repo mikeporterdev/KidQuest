@@ -3,11 +3,9 @@ package com.michael.kidquest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
@@ -21,7 +19,6 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Patterns;
@@ -39,7 +36,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
 
@@ -82,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private CharacterService cService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -362,8 +359,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     postRequest.setHeader("Content-type", "application/json");
                     HttpResponse postResponse = client.execute(postRequest);
                     //TODO: Check response
-                    //FIXME: Infinite loop requests
                     if (postResponse.getStatusLine().getStatusCode() == 201){
+                        SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("registered", false);
+                        editor.commit();
+
                         doInBackground((Void) null);
                     }
 
@@ -414,33 +415,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    public void firstTimeSetup(){
-        //Build login/register dialog
-        //get and store token in sharedpreferences
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter Character Name");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                com.michael.kidquest.greendao.model.Character character = new Character();
-
-                character.setName(input.getText().toString());
-                character.setParentPin("1066");
-
-                CharacterService cService = new CharacterService(getApplicationContext());
-                cService.addCharacter(character);
-            }
-        });
-
-        builder.show();
-    }
-
     public void startMainIfTokenValid(){
         CharacterService cService = new CharacterService(getApplicationContext());
 
@@ -462,5 +436,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             });
         }
     }
+
+
 }
 

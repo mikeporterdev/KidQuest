@@ -41,13 +41,20 @@ public class ServerRestClient {
         client.post(context, getAbsoluteUrl(url), entity, contentType, responseHandler);
     }
 
-    public void put(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler){
-        client.put(context, getAbsoluteUrl(url), entity, contentType, responseHandler);
+    public void put(Context context, String url, HttpEntity entity, AsyncHttpResponseHandler responseHandler){
+        client.put(context, getAbsoluteUrl(url), entity, "application/json", responseHandler);
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {
-        Log.i(TAG, Constants.SERVER_URL + relativeUrl);
-        return Constants.SERVER_URL + relativeUrl;
+        String url = Constants.SERVER_URL + relativeUrl;
+
+        //allows me to stop fucking up the urls
+        if (!url.endsWith("/")){
+            url = url.concat("/");
+        }
+
+        Log.i(TAG, url);
+        return url;
     }
 
     private static boolean getAuthRequired(){

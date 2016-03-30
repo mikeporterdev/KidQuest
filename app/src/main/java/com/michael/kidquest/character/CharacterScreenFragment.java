@@ -13,7 +13,6 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.Character;
-import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
 
 import org.json.JSONObject;
@@ -27,6 +26,14 @@ public class CharacterScreenFragment extends Fragment {
 
     private View view;
     private Character character;
+    private JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            Gson gson = new GsonBuilder().create();
+            character = gson.fromJson(response.toString(), Character.class);
+            updateCharacter(character);
+        }
+    };
 
     @Nullable
     @Override
@@ -34,18 +41,7 @@ public class CharacterScreenFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_character_screen, container, false);
 
         CharacterService characterService = new CharacterService(view.getContext().getApplicationContext());
-
-        ServerRestClient serverRestClient = new ServerRestClient(characterService.getToken());
-
-        serverRestClient.get("users/" + characterService.getServerId() + "/", null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Gson gson = new GsonBuilder().create();
-                character = gson.fromJson(response.toString(), Character.class);
-                updateCharacter(character);
-            }
-        });
-
+        characterService.getCharacter(handler);
         return view;
     }
 
@@ -53,24 +49,12 @@ public class CharacterScreenFragment extends Fragment {
     public void onResume() {
         super.onResume();
         CharacterService characterService = new CharacterService(view.getContext().getApplicationContext());
-
-        ServerRestClient serverRestClient = new ServerRestClient(characterService.getToken());
-
-        serverRestClient.get("users/" + characterService.getServerId() + "/", null, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Gson gson = new GsonBuilder().create();
-                character = gson.fromJson(response.toString(), Character.class);
-                updateCharacter(character);
-            }
-        });
-
-
+        characterService.getCharacter(handler);
     }
 
     public void updateCharacter(Character character){
         TextView txtName = (TextView) view.findViewById(R.id.character_name);
-        txtName.setText(character.getName());
+        txtName.setText(character.getCharacter_name());
 
         TextView txtLevel = (TextView) view.findViewById(R.id.character_level);
         txtLevel.setText(String.format("Level: %s", String.valueOf(character.getCharacter_level())));

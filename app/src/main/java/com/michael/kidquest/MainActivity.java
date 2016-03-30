@@ -1,5 +1,6 @@
 package com.michael.kidquest;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -13,7 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
@@ -57,8 +61,13 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         cService = new CharacterService(this.getApplicationContext());
 
         initialFragmentSetup();
-
         toolbarSetup();
+
+        boolean registered = sharedPreferences.getBoolean("registered", false);
+
+        if (!registered){
+            firstTimeSetup();
+        }
 
         ServerRestClient serverRestClient = new ServerRestClient(cService.getToken());
 
@@ -91,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         navBarList.setHasFixedSize(true);
 
         String[] navBarLocationStrings = getResources().getStringArray(R.array.navigation_drawer_items);
-        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, character.getName(), character.getCharacter_level());
+
+        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, character.getCharacter_name(), character.getCharacter_level());
         navBarList.setAdapter(mAdapter);
         navBarList.setLayoutManager(new LinearLayoutManager(this));
         mAdapter.setOnItemClickListener(new NavBarListAdapter.OnItemClickListener() {
@@ -172,5 +182,51 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             mDrawerLayout.closeDrawers();
         }
+    }
+
+
+    public void firstTimeSetup(){
+        //Build login/register dialog
+        //get and store token in sharedpreferences
+        cService = new CharacterService(getApplicationContext());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Character Name");
+        builder.setCancelable(false);
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                cService.updateCharacter(input.getText().toString(), null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Enter Parent Pin");
+                builder.setCancelable(false);
+
+                final EditText input = new EditText(MainActivity.this);
+                input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        cService.updateCharacter(null, input.getText().toString());
+
+                        SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("registered", true);
+                        editor.commit();
+                        childSidebarSetup();
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        builder.show();
     }
 }

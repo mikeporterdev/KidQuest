@@ -1,1 +1,1 @@
-include ':app', ':daogenerator', ':parentapp'
+include ':app'
