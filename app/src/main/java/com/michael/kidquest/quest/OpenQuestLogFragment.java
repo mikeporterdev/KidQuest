@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -57,14 +58,18 @@ public class OpenQuestLogFragment extends Fragment {
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Gson gson = new GsonBuilder().create();
+                Gson gson = new GsonBuilder()
+                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .create();
                 try {
                     List<Quest> quests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
 
                     List<Quest> openQuests = new ArrayList<Quest>();
 
+                    Date today = new Date();
+
                     for (Quest q : quests){
-                        if (!q.getConfirmed() && !q.getCompleted()){
+                        if (!q.getConfirmed() && !q.getCompleted() && q.getExpiryDate().after(today)){
                             openQuests.add(q);
                         }
                     }

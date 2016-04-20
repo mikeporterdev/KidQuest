@@ -54,14 +54,16 @@ public class PendingQuestLogFragment extends Fragment {
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Gson gson = new GsonBuilder().create();
+                Gson gson = new GsonBuilder()
+                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .create();
                 try {
                     List<Quest> quests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
 
                     List<Quest> pendingQuests = new ArrayList<Quest>();
 
                     for (Quest q : quests) {
-                        if (!q.getConfirmed() && q.getCompleted()){
+                        if (!q.getConfirmed() && q.getCompleted()) {
                             pendingQuests.add(q);
                         }
                     }

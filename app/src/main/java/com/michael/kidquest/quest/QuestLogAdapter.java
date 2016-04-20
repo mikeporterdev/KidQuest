@@ -23,6 +23,7 @@ import java.util.List;
 public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
     private final List<Quest> mQuests;
     private boolean isOpen;
+    private CharacterService characterService;
 
     public QuestLogAdapter(List<Quest> quests, boolean isOpen) {
         this.mQuests = quests;
@@ -42,6 +43,7 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
 
         viewHolder.txtQuestName.setText(q.getTitle());
 
+        characterService = new CharacterService(viewHolder.txtQuestName.getContext());
 
         if (q.getDescription() != null && !q.getDescription().equalsIgnoreCase("")) {
             viewHolder.txtQuestDescription.setVisibility(View.VISIBLE);
@@ -73,19 +75,24 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
             viewHolder.txtExpiryDate.setVisibility(View.GONE);
         }
 
-        viewHolder.btnAction.setText("Mark as Complete");
-        viewHolder.btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //get clicked quest and mark as completed
-                Quest q = mQuests.get(position);
-                QuestService qService = new QuestService(v.getContext().getApplicationContext());
-                qService.completeQuest(q);
+        if (!characterService.isParent()) {
+            viewHolder.btnAction.setText("Mark as Complete");
+            viewHolder.btnAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //get clicked quest and mark as completed
+                    Quest q = mQuests.get(position);
+                    QuestService qService = new QuestService(v.getContext().getApplicationContext());
+                    qService.completeQuest(q);
 
-                mQuests.remove(position);
-                notifyDataSetChanged();
-            }
-        });
+                    mQuests.remove(position);
+                    notifyDataSetChanged();
+                }
+            });
+        } else {
+            viewHolder.btnAction.setVisibility(View.GONE);
+        }
+
     }
 
     private void closeMethod(QuestViewHolder viewHolder, final int position) {

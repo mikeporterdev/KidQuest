@@ -55,17 +55,18 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-        parent = sharedPreferences.getBoolean("isparent", false);
-
         cService = new CharacterService(this.getApplicationContext());
+
+        parent = cService.isParent();
 
         initialFragmentSetup();
         toolbarSetup();
 
+
+        SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
         boolean registered = sharedPreferences.getBoolean("registered", false);
 
-        if (!registered){
+        if (!parent && !registered){
             firstTimeSetup();
         }
 

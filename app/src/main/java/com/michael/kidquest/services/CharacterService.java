@@ -72,27 +72,31 @@ public class CharacterService {
     }
 
     public void isCorrectPin(final View v, final DialogSingleButtonListener dialogSingleButtonListener) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-        builder.setTitle("Enter parent pin");
+        if (isParent()){
+            dialogSingleButtonListener.onButtonClicked(null);
+        } else {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle("Enter parent pin");
 
-        final EditText editText = new EditText(context);
-        editText.setInputType(InputType.TYPE_CLASS_PHONE | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        editText.setTextColor(Color.BLACK);
-        builder.setView(editText);
+            final EditText editText = new EditText(context);
+            editText.setInputType(InputType.TYPE_CLASS_PHONE | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            editText.setTextColor(Color.BLACK);
+            builder.setView(editText);
 
-        //Credit to Handrata Samsul for this code. http://stackoverflow.com/questions/35353350/alertdialog-return-boolean-value
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (matchesPin(editText.getText().toString())) {
-                    dialogSingleButtonListener.onButtonClicked(dialog);
-                } else {
-                    Toast.makeText(v.getContext(), "Pin does not match", Toast.LENGTH_SHORT).show();
+            //Credit to Handrata Samsul for this code. http://stackoverflow.com/questions/35353350/alertdialog-return-boolean-value
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (matchesPin(editText.getText().toString())) {
+                        dialogSingleButtonListener.onButtonClicked(dialog);
+                    } else {
+                        Toast.makeText(v.getContext(), "Pin does not match", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
 
     public boolean matchesPin(String pin) {
@@ -167,8 +171,8 @@ public class CharacterService {
 
     public String getParentPin() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-        String serverId = sharedPreferences.getString("parent_pin", null);
-        return "1066";
+        String serverId = sharedPreferences.getString("parent_pin", "1066");
+        return serverId;
     }
 
     public void setParentPin(String id) {
@@ -178,7 +182,20 @@ public class CharacterService {
         editor.commit();
     }
 
-    public void setParent(int id) {
+    public boolean isParent(){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        boolean isParent = sharedPreferences.getBoolean("is_parent", false);
+        return isParent;
+    }
+
+    public void setParent(boolean isParent){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("is_parent", isParent);
+        editor.commit();
+    }
+
+    public void addNewParent(int id) {
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("parent_id", id);

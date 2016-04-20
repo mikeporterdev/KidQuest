@@ -35,9 +35,12 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URI;
@@ -386,10 +389,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             String token = jsonObject.get("token").getAsString();
             int id = jsonObject.get("id").getAsInt();
+            boolean isParent = jsonObject.get("is_parent").getAsBoolean();
 
             CharacterService cService = new CharacterService(getApplicationContext());
             cService.setToken(token);
             cService.setServerId(id);
+            cService.setParent(isParent);
+
 
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
@@ -422,15 +428,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         if (token != null){
             ServerRestClient serverRestClient = new ServerRestClient(token);
-            serverRestClient.get("token/", null, new AsyncHttpResponseHandler() {
+            serverRestClient.get("token/", null, new JsonHttpResponseHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        String token = response.getString("token");
+                        int id = response.getInt("id");
+                        boolean isParent = response.getBoolean("is_parent");
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        CharacterService characterService = new CharacterService(LoginActivity.this);
+                        characterService.setServerId(id);
+                        characterService.setParent(isParent);
+
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 }
             });

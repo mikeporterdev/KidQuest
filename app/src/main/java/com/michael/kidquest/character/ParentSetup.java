@@ -101,7 +101,7 @@ public class ParentSetup extends AppCompatActivity {
 
                 int id = jsonobj.get("id").getAsInt();
 
-                characterService.setParent(id);
+                characterService.addNewParent(id);
 
                 Toast.makeText(getApplicationContext(), "Added parent account", Toast.LENGTH_SHORT).show();
                 finishActivity(3);
