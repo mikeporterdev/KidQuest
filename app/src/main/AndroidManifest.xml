@@ -27,6 +27,9 @@
             android:name=".widget.TabActivity"
             android:label="Add Preset Quest" />
         <activity
+            android:name=".reward.AddRewardActivity"
+            android:label="Add Reward"/>
+        <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
             <intent-filter>

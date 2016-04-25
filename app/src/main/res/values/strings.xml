@@ -8,6 +8,7 @@
         <item>Add Quest</item>
         <item>Set Up Parent</item>
         <item>Reward Shop</item>
+        <item>Add Reward</item>
     </string-array>
 
     <string-array name="difficulty">

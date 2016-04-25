@@ -37,7 +37,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
         Reward reward = mRewards.get(position);
 
         viewHolder.txtRewardName.setText(reward.getName());
-        viewHolder.txtRewardCost.setText(reward.getCost());
+        viewHolder.txtRewardCost.setText(String.valueOf(reward.getCost()));
 
         characterService = new CharacterService(viewHolder.txtRewardName.getContext());
 
@@ -49,9 +49,6 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
                     Reward r = mRewards.get(position);
                     RewardService rewardService = new RewardService(v.getContext().getApplicationContext());
                     rewardService.completeReward(r);
-
-                    mRewards.remove(position);
-                    notifyDataSetChanged();
                 }
             });
         } else {

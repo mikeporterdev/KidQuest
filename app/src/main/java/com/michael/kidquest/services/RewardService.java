@@ -2,6 +2,7 @@ package com.michael.kidquest.services;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.michael.kidquest.greendao.model.Reward;
@@ -75,6 +76,9 @@ public class RewardService {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                     Log.i(TAG, "Unable to mark as complete on server");
+                    if (statusCode==400){
+                        Toast.makeText(context, "Not enough gold", Toast.LENGTH_SHORT).show();
+                    }
                     error.printStackTrace();
                 }
             });
