@@ -16,7 +16,7 @@ import cz.msebera.android.httpclient.HttpEntity;
 public class ServerRestClient {
     private static final String TAG = "ServerRestClient";
     //milliseconds
-    private static final int GET_TIMEOUT = 3000;
+    private static final int TIMEOUT = 3000;
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
@@ -25,16 +25,16 @@ public class ServerRestClient {
 
     public ServerRestClient(String email, String password) {
         client.setBasicAuth(email, password);
+        client.setTimeout(TIMEOUT);
     }
 
     public ServerRestClient(String token) {
         client.setBasicAuth(token, "nopassword");
+        client.setTimeout(TIMEOUT);
     }
 
     public void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
-        client.setTimeout(GET_TIMEOUT);
         client.get(getAbsoluteUrl(url), params, responseHandler);
-
     }
 
     public void post(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
@@ -43,6 +43,10 @@ public class ServerRestClient {
 
     public void put(Context context, String url, HttpEntity entity, AsyncHttpResponseHandler responseHandler){
         client.put(context, getAbsoluteUrl(url), entity, "application/json", responseHandler);
+    }
+
+    public void setRetries(int retries){
+        client.setMaxRetriesAndTimeout(retries, TIMEOUT);
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {
@@ -55,9 +59,5 @@ public class ServerRestClient {
 
         Log.i(TAG, url);
         return url;
-    }
-
-    private static boolean getAuthRequired(){
-        return true;
     }
 }

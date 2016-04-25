@@ -21,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
@@ -53,10 +54,11 @@ import java.util.Map;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.config.RequestConfig;
 import cz.msebera.android.httpclient.client.methods.HttpGet;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.entity.StringEntity;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -333,8 +335,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            HttpClient client = new DefaultHttpClient();
+            RequestConfig.Builder requestBuilder = RequestConfig.custom();
+            requestBuilder = requestBuilder.setConnectTimeout(1000);
+
+            HttpClientBuilder builder = HttpClientBuilder.create();
+            builder.setDefaultRequestConfig(requestBuilder.build());
+            HttpClient client = builder.build();
+
             HttpGet request = new HttpGet();
+
             request.addHeader("Authorization", "Basic " +
                     Base64.encodeToString((mEmail + ":" + mPassword).getBytes(), Base64.DEFAULT));
             try {
@@ -346,41 +355,44 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 } else if (response.getStatusLine().getStatusCode() == 401){
                     response.getEntity().consumeContent();
                     //Register account
+                    registerAccount(client);
 
-                    //TODO: prompt to register
-                    HttpPost postRequest = new HttpPost();
-
-                    Map<String, String> details = new HashMap<>();
-                    details.put("email", mEmail);
-                    details.put("password", mPassword);
-
-                    String json = new GsonBuilder().create().toJson(details, Map.class);
-
-                    postRequest.setEntity(new StringEntity(json));
-                    postRequest.setURI(new URI(Constants.SERVER_URL + "users/"));
-                    postRequest.setHeader("Accept", "application/json");
-                    postRequest.setHeader("Content-type", "application/json");
-                    HttpResponse postResponse = client.execute(postRequest);
-                    //TODO: Check response
-                    if (postResponse.getStatusLine().getStatusCode() == 201){
-                        SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("registered", false);
-                        editor.commit();
-
-                        doInBackground((Void) null);
-                    }
 
                 }
 
 
 
             } catch (URISyntaxException | IOException e) {
-                e.printStackTrace();
+                Log.i("LoginActivity", "Couldn't Connect");
             }
-
             // TODO: register the new account here.
             return true;
+        }
+
+        private void registerAccount(HttpClient client) throws URISyntaxException, IOException {
+            //TODO: prompt to register
+            HttpPost postRequest = new HttpPost();
+
+            Map<String, String> details = new HashMap<>();
+            details.put("email", mEmail);
+            details.put("password", mPassword);
+
+            String json = new GsonBuilder().create().toJson(details, Map.class);
+
+            postRequest.setEntity(new StringEntity(json));
+            postRequest.setURI(new URI(Constants.SERVER_URL + "users/"));
+            postRequest.setHeader("Accept", "application/json");
+            postRequest.setHeader("Content-type", "application/json");
+            HttpResponse postResponse = client.execute(postRequest);
+            //TODO: Check response
+            if (postResponse.getStatusLine().getStatusCode() == 201){
+                SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("registered", false);
+                editor.commit();
+
+                doInBackground((Void) null);
+            }
         }
 
         private void login(HttpResponse response) throws IOException {
@@ -406,13 +418,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
+
+            mPasswordView.setError("The server is currently unavailable, please try again later");
+            mPasswordView.requestFocus();
+
         }
+
+
 
         @Override
         protected void onCancelled() {
@@ -428,6 +440,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         if (token != null){
             ServerRestClient serverRestClient = new ServerRestClient(token);
+            serverRestClient.setRetries(0);
             serverRestClient.get("token/", null, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
