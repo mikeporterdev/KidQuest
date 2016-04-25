@@ -29,6 +29,7 @@ import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
 import com.michael.kidquest.quest.PendingQuestLogFragment;
+import com.michael.kidquest.reward.RewardFragment;
 import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
 import com.michael.kidquest.widget.NavBarListAdapter;
@@ -139,6 +140,10 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                                 startActivityForResult(intent, SETUP_PARENT_CODE);
                             }
                         });
+                        break;
+                    case 5:
+                        fragment = new RewardFragment();
+                        mToolbar.setTitle("Reward Shop");
                         break;
                     default:
                         Toast.makeText(view.getContext(), "no fragment found, position: " + position, Toast.LENGTH_SHORT).show();
