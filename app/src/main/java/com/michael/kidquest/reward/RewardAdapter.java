@@ -21,7 +21,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
     private final List<Reward> mRewards;
     private CharacterService characterService;
 
-    public RewardAdapter(List<Reward> rewards, boolean isOpen) {
+    public RewardAdapter(List<Reward> rewards) {
         this.mRewards = rewards;
     }
 
@@ -33,7 +33,7 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RewardViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final RewardViewHolder viewHolder, int position) {
         Reward reward = mRewards.get(position);
 
         viewHolder.txtRewardName.setText(reward.getName());
@@ -46,7 +46,8 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
             viewHolder.btnAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Reward r = mRewards.get(position);
+                    int pos = viewHolder.getAdapterPosition();
+                    Reward r = mRewards.get(pos);
                     RewardService rewardService = new RewardService(v.getContext().getApplicationContext());
                     rewardService.completeReward(r);
                 }

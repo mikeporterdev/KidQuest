@@ -63,6 +63,7 @@ public class CharacterScreenFragment extends Fragment {
         txtGold.setText(String.format("%sgp", String.valueOf(character.getGold())));
 
         TextView txtXp = (TextView) view.findViewById(R.id.character_xp);
-        txtXp.setText(String.format("XP: %s/10000", String.valueOf(character.getXp())));
+        String text = "XP: " + character.getXp() + "/" + character.getXpRequired();
+        txtXp.setText(text);
     }
 }

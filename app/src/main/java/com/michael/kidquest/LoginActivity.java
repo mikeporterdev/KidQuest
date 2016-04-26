@@ -388,7 +388,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (postResponse.getStatusLine().getStatusCode() == 201){
                 SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("registered", false);
+                editor.putBoolean("just_registered", true);
                 editor.commit();
 
                 doInBackground((Void) null);

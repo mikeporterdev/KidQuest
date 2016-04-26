@@ -195,6 +195,11 @@ public class CharacterService {
         editor.commit();
     }
 
+    public void signOut(){
+        context.getSharedPreferences("kidquest", Context.MODE_PRIVATE).edit().clear().commit();
+        Toast.makeText(context, "You have been signed out", Toast.LENGTH_SHORT).show();
+    }
+
     public void addNewParent(int id) {
         JSONObject jsonParams = new JSONObject();
         try {

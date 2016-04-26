@@ -55,7 +55,7 @@ public class RewardFragment extends Fragment {
                 Gson gson = new GsonBuilder().create();
                 try {
                     List<Reward> rewards = Arrays.asList(gson.fromJson(response.get("rewards").toString(), Reward[].class));
-                    RecyclerView.Adapter adapter = new RewardAdapter(rewards, true);
+                    RecyclerView.Adapter adapter = new RewardAdapter(rewards);
                     mRecyclerView.setAdapter(adapter);
                     mRecyclerView.setVisibility(View.VISIBLE);
 

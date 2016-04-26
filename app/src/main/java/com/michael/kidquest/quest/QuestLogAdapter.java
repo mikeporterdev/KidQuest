@@ -54,8 +54,8 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
             viewHolder.viewDivider.setVisibility(View.GONE);
         }
 
-        viewHolder.txtGoldReward.setText("10gp");
-        viewHolder.txtXpReward.setText("100xp");
+        viewHolder.txtGoldReward.setText(String.format("%dgp", q.getCurrentReward()));
+        viewHolder.txtXpReward.setText(String.format("%dxp", q.getXpReward()));
 
         if (isOpen){
             openMethod(viewHolder, position);

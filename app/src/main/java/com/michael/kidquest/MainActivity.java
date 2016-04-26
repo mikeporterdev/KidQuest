@@ -66,12 +66,17 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
 
         SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-        boolean registered = sharedPreferences.getBoolean("registered", false);
+        boolean just_registered = sharedPreferences.getBoolean("just_registered", false);
 
-        if (!parent && !registered){
+        if (!parent && just_registered){
             firstTimeSetup();
         }
 
+        setUpCharacter();
+
+    }
+
+    private void setUpCharacter() {
         ServerRestClient serverRestClient = new ServerRestClient(cService.getToken());
 
         serverRestClient.get("users/" + cService.getServerId() + "/", null, new JsonHttpResponseHandler() {
@@ -82,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                 childSidebarSetup();
             }
         });
-
     }
 
     private void initialFragmentSetup() {
@@ -154,6 +158,10 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                                 startActivity(intent);
                             }
                         });
+                        break;
+                    case 7:
+                        cService.signOut();
+                        finish();
                         break;
                     default:
                         Toast.makeText(view.getContext(), "no fragment found, position: " + position, Toast.LENGTH_SHORT).show();
@@ -236,7 +244,8 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("registered", true);
                         editor.commit();
-                        childSidebarSetup();
+                        setUpCharacter();
+                        initialFragmentSetup();
                     }
                 });
                 builder.show();
