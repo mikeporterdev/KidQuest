@@ -49,4 +49,5 @@
         completions."
     </string>
     <string name="title_activity_parent_setup">ParentSetup</string>
+    <string name="gcm_sender_id">400451561670</string>
 </resources>

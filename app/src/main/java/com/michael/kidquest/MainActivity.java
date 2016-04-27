@@ -3,11 +3,15 @@ package com.michael.kidquest;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +28,7 @@ import com.google.gson.GsonBuilder;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.character.CharacterScreenFragment;
 import com.michael.kidquest.character.ParentSetup;
+import com.michael.kidquest.gcm.RegistrationIntentService;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.quest.AddQuestActivity;
@@ -44,18 +49,21 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     private Toolbar mToolbar;
     private FragmentManager mFragmentManager;
     private CharacterService cService;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private final static int ADD_QUEST_CODE = 2;
     private final static int SETUP_PARENT_CODE = 3;
 
     private boolean parent;
     private Character character;
+    private boolean isReceiverRegistered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+
+        setUpNotifications();
 
         cService = new CharacterService(this.getApplicationContext());
 
@@ -74,6 +82,30 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
         setUpCharacter();
 
+    }
+
+    private void setUpNotifications() {
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences
+                        .getBoolean("SENT_TOKEN_TO_SERVER", false);
+            }
+        };
+
+        registerReceiver();
+
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
+    }
+
+    private void registerReceiver() {
+        if (!isReceiverRegistered){
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter("registrationComplete"));
+            isReceiverRegistered = true;
+        }
     }
 
     private void setUpCharacter() {

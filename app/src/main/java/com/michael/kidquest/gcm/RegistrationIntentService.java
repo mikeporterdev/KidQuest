@@ -2,6 +2,7 @@ package com.michael.kidquest.gcm;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -14,13 +15,10 @@ import java.io.IOException;
  * Created by m_por on 30/03/2016.
  */
 public class RegistrationIntentService extends IntentService {
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public RegistrationIntentService(String name) {
-        super(name);
+    public static final String TAG = "RegIntentService";
+
+    public RegistrationIntentService() {
+        super(TAG);
     }
 
     @Override
@@ -29,10 +27,16 @@ public class RegistrationIntentService extends IntentService {
         try {
             String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            CharacterService characterService = new CharacterService(this);
-            characterService.setGcmId(token);
+            Log.i(TAG, "onHandleIntent: GCM Registration Token: " + token);
+
+            sendRegistrationToServer(token);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendRegistrationToServer(String token) {
+        CharacterService characterService = new CharacterService(this);
+        characterService.setGcmId(token);
     }
 }
