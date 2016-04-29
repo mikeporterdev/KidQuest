@@ -402,12 +402,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             String token = jsonObject.get("token").getAsString();
             int id = jsonObject.get("id").getAsInt();
             boolean isParent = jsonObject.get("is_parent").getAsBoolean();
+            String parentPin = jsonObject.get("parent_pin").getAsString();
 
-            CharacterService cService = new CharacterService(getApplicationContext());
-            cService.setToken(token);
-            cService.setServerId(id);
-            cService.setParent(isParent);
-
+            updateChar(token, id, isParent, parentPin);
 
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
@@ -433,6 +430,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    private void updateChar(String token, int id, boolean isParent, String parentPin) {
+        CharacterService cService = new CharacterService(getApplicationContext());
+        cService.setToken(token);
+        cService.setServerId(id);
+        cService.setParent(isParent);
+        cService.setParentPin(parentPin);
+    }
+
     public void startMainIfTokenValid(){
         CharacterService cService = new CharacterService(getApplicationContext());
 
@@ -448,10 +453,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         String token = response.getString("token");
                         int id = response.getInt("id");
                         boolean isParent = response.getBoolean("is_parent");
+                        String parentPin = response.getString("parent_pin");
 
-                        CharacterService characterService = new CharacterService(LoginActivity.this);
-                        characterService.setServerId(id);
-                        characterService.setParent(isParent);
+                        updateChar(token, id, isParent, parentPin);
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);

@@ -171,8 +171,7 @@ public class CharacterService {
 
     public String getParentPin() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-        String serverId = sharedPreferences.getString("parent_pin", "1066");
-        return serverId;
+        return sharedPreferences.getString("parent_pin", null);
     }
 
     public void setParentPin(String id) {
@@ -184,8 +183,7 @@ public class CharacterService {
 
     public boolean isParent(){
         SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-        boolean isParent = sharedPreferences.getBoolean("is_parent", false);
-        return isParent;
+        return sharedPreferences.getBoolean("is_parent", false);
     }
 
     public void setParent(boolean isParent){
