@@ -3,6 +3,7 @@ package com.michael.kidquest.widget;
 /**
  * https://github.com/google/iosched
  */
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
@@ -17,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.michael.kidquest.R;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
@@ -200,6 +203,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
             if (tabTitleView != null) {
                 tabTitleView.setText(adapter.getPageTitle(i));
+                tabTitleView.setTextColor(getResources().getColor(R.color.white));
+                tabTitleView.setTextSize(8);
             }
             tabView.setOnClickListener(tabClickListener);
             String desc = mContentDescriptions.get(i, null);

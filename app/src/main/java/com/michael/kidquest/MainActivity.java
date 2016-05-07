@@ -1,8 +1,8 @@
 package com.michael.kidquest;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,6 +31,7 @@ import com.michael.kidquest.character.ParentSetup;
 import com.michael.kidquest.gcm.RegistrationIntentService;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.Quest;
+import com.michael.kidquest.main.MainTabActivity;
 import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
 import com.michael.kidquest.quest.PendingQuestLogFragment;
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         } else {
             fragment = new CharacterScreenFragment();
         }
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
 
@@ -149,8 +150,10 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                 Fragment fragment = null;
                 switch (position) {
                     case 0:
-                        fragment = new CharacterScreenFragment();
-                        mToolbar.setTitle("Your Character");
+                        Intent intent = new Intent(view.getContext(), MainTabActivity.class);
+                        startActivity(intent);
+                        //fragment = new CharacterScreenFragment();
+                        //mToolbar.setTitle("Your Character");
                         break;
                     case 1:
                         fragment = new OpenQuestLogFragment();
@@ -200,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                 }
 
                 if (fragment != null) {
-                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
                     fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     mDrawerLayout.closeDrawers();
                 }
@@ -234,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
         if (requestCode == ADD_QUEST_CODE) {
             Fragment fragment = new OpenQuestLogFragment();
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             mDrawerLayout.closeDrawers();
         }

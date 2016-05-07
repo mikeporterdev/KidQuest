@@ -31,7 +31,8 @@
                     android:layout_toStartOf="@+id/activity_main_gold"
                     android:text="@string/debug_quest_name"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:layout_toLeftOf="@+id/activity_main_gold" />
 
                 <TextView
                     android:id="@+id/activity_main_gold"
@@ -41,7 +42,8 @@
                     android:layout_gravity="end"
                     android:text="@string/debug_gold"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:layout_alignParentRight="true" />
 
                 <TextView
                     android:id="@+id/activity_main_xp"
@@ -51,7 +53,8 @@
                     android:layout_below="@id/activity_main_gold"
                     android:text="@string/debug_xp"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
 
@@ -76,7 +79,8 @@
                     android:layout_height="1dp"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/activity_main_item_quest_desc"
-                    android:background="@android:color/darker_gray" />
+                    android:background="@android:color/darker_gray"
+                    android:layout_alignParentLeft="true" />
 
                 <Button
                     android:id="@+id/btnAction"
@@ -87,7 +91,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_below="@id/divider"
                     android:text="Mark as complete"
-                    android:textColor="@color/accent_material_light" />
+                    android:textColor="@color/accent_material_light"
+                    android:layout_alignParentRight="true" />
 
                 <TextView
                     android:id="@+id/questExpiry"

@@ -78,6 +78,7 @@ public class AddQuestActivity extends AppCompatActivity {
         editQuestName = (EditText) findViewById(R.id.questName);
         editQuestDesc = (EditText) findViewById(R.id.questDesc);
 
+        assert btnSubmit != null;
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
