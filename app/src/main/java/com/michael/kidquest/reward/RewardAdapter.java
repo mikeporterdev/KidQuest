@@ -36,24 +36,33 @@ class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
         Reward reward = mRewards.get(position);
 
         viewHolder.txtRewardName.setText(reward.getName());
-        viewHolder.txtRewardCost.setText(String.valueOf(reward.getCost()) + "g");
 
-        CharacterService characterService = new CharacterService(viewHolder.txtRewardName.getContext());
-
-        if (!characterService.isParent()){
-            viewHolder.btnAction.setText("Purchase");
-            viewHolder.btnAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = viewHolder.getAdapterPosition();
-                    Reward r = mRewards.get(pos);
-                    RewardService rewardService = new RewardService(v.getContext().getApplicationContext());
-                    rewardService.completeReward(r);
-                }
-            });
+        if (reward.isCompleted()){
+            viewHolder.btnAction.setText("Already Purchased");
         } else {
-            viewHolder.btnAction.setVisibility(View.GONE);
+            viewHolder.txtRewardCost.setText(String.valueOf(reward.getCost()) + "g");
+
+            CharacterService characterService = new CharacterService(viewHolder.txtRewardName.getContext());
+
+            if (!characterService.isParent()){
+                viewHolder.btnAction.setText("Purchase");
+                viewHolder.btnAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int pos = viewHolder.getAdapterPosition();
+                        Reward r = mRewards.get(pos);
+                        RewardService rewardService = new RewardService(v.getContext().getApplicationContext());
+                        rewardService.completeReward(r);
+                        viewHolder.btnAction.setText("Already Purchased");
+                        viewHolder.btnAction.setOnClickListener(null);
+                    }
+                });
+            } else {
+                viewHolder.btnAction.setVisibility(View.GONE);
+            }
         }
+
+
     }
 
     @Override

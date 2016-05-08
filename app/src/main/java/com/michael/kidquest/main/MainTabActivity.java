@@ -50,6 +50,7 @@ public class MainTabActivity extends AppCompatActivity {
     private CharacterService cService;
     private final static int ADD_QUEST_CODE = 1;
     private final static int ADD_REWARD_CODE = 2;
+    private NavBarListAdapter mAdapter;
 
 
     @Override
@@ -167,7 +168,12 @@ public class MainTabActivity extends AppCompatActivity {
         }
         mDrawerLayout = (DrawerLayout) findViewById(R.id.tab_drawer_layout);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                mToolbar, R.string.drawer_open, R.string.drawer_close);
+                mToolbar, R.string.drawer_open, R.string.drawer_close){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                mAdapter.update();
+            }
+        };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
     }
@@ -176,13 +182,13 @@ public class MainTabActivity extends AppCompatActivity {
         RecyclerView navBarList = (RecyclerView) findViewById(R.id.left_drawer);
         assert navBarList != null;
         navBarList.setHasFixedSize(true);
-
         String[] navBarLocationStrings = getResources().getStringArray(R.array.navigation_drawer_items);
 
         CharacterService characterService = new CharacterService(getApplicationContext());
-        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, character);
+        mAdapter = new NavBarListAdapter(navBarLocationStrings, character);
         navBarList.setAdapter(mAdapter);
         navBarList.setLayoutManager(new LinearLayoutManager(this));
+
         mAdapter.setOnItemClickListener(new NavBarListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(final View view, int position) {

@@ -1,5 +1,6 @@
 package com.michael.kidquest.widget;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,8 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.R;
 import com.michael.kidquest.greendao.model.Character;
+import com.michael.kidquest.server.ServerRestClient;
+import com.michael.kidquest.services.CharacterService;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Michael Porter on 07/02/16.
@@ -17,11 +27,12 @@ public class NavBarListAdapter extends RecyclerView.Adapter<NavBarListAdapter.Vi
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    private final Character character;
+    private Character character;
 
     private final String[] navLocations;
     private final String characterName;
     private final int characterLevel;
+    private Context context;
 
 
     private OnItemClickListener mItemClickListener;
@@ -96,10 +107,12 @@ public class NavBarListAdapter extends RecyclerView.Adapter<NavBarListAdapter.Vi
     public void onBindViewHolder(NavBarListAdapter.ViewHolder holder, int position) {
 
         if(holder.holderId == 1){
+            context = holder.navDrawerItemName.getContext();
             holder.navDrawerItemName.setText(navLocations[position - 1]);
         } else {
+            context = holder.gold.getContext();
             holder.characterName.setText(characterName);
-            holder.characterLevel.setText("Level: " + String.valueOf(characterLevel));
+            holder.characterLevel.setText("Level: " + String.valueOf(character.getCharacter_level()));
             holder.progressBar.setMax(character.getXpRequired());
             holder.progressBar.setProgress(character.getXp());
             holder.gold.setText("Gold: " + String.valueOf(character.getGold()));
@@ -115,6 +128,22 @@ public class NavBarListAdapter extends RecyclerView.Adapter<NavBarListAdapter.Vi
     @Override
     public int getItemViewType(int position){
         return (isPositionHeader(position) ? TYPE_HEADER : TYPE_ITEM);
+    }
+
+    public void update(){
+        CharacterService cService = new CharacterService(context);
+        ServerRestClient serverRestClient = new ServerRestClient(cService.getToken());
+
+        serverRestClient.get("users/" + cService.getServerId() + "/", new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder().create();
+                character = gson.fromJson(response.toString(), Character.class);
+                notifyItemChanged(0);
+            }
+        });
+
+
     }
 
     private boolean isPositionHeader(int position){
