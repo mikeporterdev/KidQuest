@@ -12,10 +12,10 @@ import com.michael.kidquest.R;
  * Created by m_por on 16/02/2016.
  */
 public class TabActivity extends AppCompatActivity {
-    Toolbar toolbar;
-    ViewPager pager;
-    ViewPagerAdapter adapter;
-    SlidingTabLayout tabs;
+    private Toolbar toolbar;
+    private ViewPager pager;
+    private ViewPagerAdapter adapter;
+    private SlidingTabLayout tabs;
     int numberOfTabs = 2;
 
     @Override
@@ -32,7 +32,7 @@ public class TabActivity extends AppCompatActivity {
         pager.setAdapter(adapter);
 
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        tabs.setDistributeEvenly(true);
+        tabs.setDistributeEvenly();
 
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer(){
             @Override

@@ -11,8 +11,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
-import com.michael.kidquest.MainActivity;
 import com.michael.kidquest.R;
+import com.michael.kidquest.main.MainTabActivity;
 
 /**
  * Created by m_por on 27/04/2016.
@@ -30,7 +30,7 @@ public class MyGcmListenerService extends GcmListenerService {
     }
 
     private void sendNotification(String message) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainTabActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 

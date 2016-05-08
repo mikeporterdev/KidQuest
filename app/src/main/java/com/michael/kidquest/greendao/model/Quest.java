@@ -77,8 +77,8 @@ public class Quest implements java.io.Serializable {
         this.completed = completed;
     }
 
-    public boolean getConfirmed() {
-        return confirmed;
+    public boolean getUnconfirmed() {
+        return !confirmed;
     }
 
     public void setConfirmed(boolean confirmed) {

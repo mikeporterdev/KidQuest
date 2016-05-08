@@ -20,19 +20,19 @@
         android:hint="Reward Name"
         android:inputType="text" />
 
-    <TextView
-        android:id="@+id/character_gold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current Gold: 410gp"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
     <EditText
         android:id="@+id/rewardCost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Reward Cost"
         android:inputType="text" />
+
+    <TextView
+        android:id="@+id/character_gold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Gold:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
         android:id="@+id/addRewardSubmit"

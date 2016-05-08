@@ -21,9 +21,9 @@ import java.util.List;
  * <p/>
  * Builds the content of the quest cards
  */
-public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
+class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
     private final List<Quest> mQuests;
-    private boolean isOpen;
+    private final boolean isOpen;
     private CharacterService characterService;
 
     public QuestLogAdapter(List<Quest> quests, boolean isOpen) {
@@ -55,7 +55,7 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
             viewHolder.viewDivider.setVisibility(View.GONE);
         }
 
-        viewHolder.txtGoldReward.setText(String.format("%dgp", q.getCurrentReward()));
+        viewHolder.txtGoldReward.setText(String.format("%dg", q.getCurrentReward()));
         viewHolder.txtXpReward.setText(String.format("%dxp", q.getXpReward()));
 
         if (isOpen){

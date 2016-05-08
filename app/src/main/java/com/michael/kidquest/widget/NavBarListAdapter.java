@@ -19,15 +19,15 @@ public class NavBarListAdapter extends RecyclerView.Adapter<NavBarListAdapter.Vi
     private static final int TYPE_ITEM = 1;
     private final Character character;
 
-    private String[] navLocations;
-    private String characterName;
-    private int characterLevel;
+    private final String[] navLocations;
+    private final String characterName;
+    private final int characterLevel;
 
 
-    OnItemClickListener mItemClickListener;
+    private OnItemClickListener mItemClickListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        int holderId;
+        final int holderId;
 
         TextView characterName;
         TextView navDrawerItemName;
@@ -48,6 +48,7 @@ public class NavBarListAdapter extends RecyclerView.Adapter<NavBarListAdapter.Vi
                 progressBar = (ProgressBar) itemView.findViewById(R.id.progressBar);
                 gold = (TextView) itemView.findViewById(R.id.header_gold);
                 progressDesc = (TextView) itemView.findViewById(R.id.xpdesc);
+
                 holderId = 0;
             }
 

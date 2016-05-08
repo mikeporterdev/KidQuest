@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.michael.kidquest.Constants;
 
 import cz.msebera.android.httpclient.HttpEntity;
@@ -18,7 +17,7 @@ public class ServerRestClient {
     //milliseconds
     private static final int TIMEOUT = 3000;
 
-    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static final AsyncHttpClient client = new AsyncHttpClient();
 
     public ServerRestClient() {
     }
@@ -33,20 +32,20 @@ public class ServerRestClient {
         client.setTimeout(TIMEOUT);
     }
 
-    public void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler){
-        client.get(getAbsoluteUrl(url), params, responseHandler);
+    public void get(String url, AsyncHttpResponseHandler responseHandler){
+        client.get(getAbsoluteUrl(url), null, responseHandler);
     }
 
-    public void post(Context context, String url, HttpEntity entity, String contentType, AsyncHttpResponseHandler responseHandler) {
-        client.post(context, getAbsoluteUrl(url), entity, contentType, responseHandler);
+    public void post(Context context, String url, HttpEntity entity, AsyncHttpResponseHandler responseHandler) {
+        client.post(context, getAbsoluteUrl(url), entity, "application/json", responseHandler);
     }
 
     public void put(Context context, String url, HttpEntity entity, AsyncHttpResponseHandler responseHandler){
         client.put(context, getAbsoluteUrl(url), entity, "application/json", responseHandler);
     }
 
-    public void setRetries(int retries){
-        client.setMaxRetriesAndTimeout(retries, TIMEOUT);
+    public void setRetries(){
+        client.setMaxRetriesAndTimeout(0, TIMEOUT);
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {

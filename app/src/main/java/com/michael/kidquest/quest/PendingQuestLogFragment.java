@@ -33,7 +33,6 @@ import cz.msebera.android.httpclient.Header;
  */
 public class PendingQuestLogFragment extends Fragment {
     private RecyclerView mRecyclerView;
-    private Context context;
 
     private static final String TAG = "PendingQuestLogFragment";
     private CharacterService characterService;
@@ -48,7 +47,7 @@ public class PendingQuestLogFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_open_quests, container, false);
 
         mRecyclerView = (RecyclerView) view;
-        context = view.getContext();
+        Context context = view.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         characterService = new CharacterService(view.getContext().getApplicationContext());
         client = new ServerRestClient(characterService.getToken());
@@ -63,7 +62,7 @@ public class PendingQuestLogFragment extends Fragment {
 
     private void getQuests() {
         String url = "users/" + characterService.getServerId() + "/quests/";
-        client.get(url, null, new JsonHttpResponseHandler() {
+        client.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder()
@@ -75,7 +74,7 @@ public class PendingQuestLogFragment extends Fragment {
                     List<Quest> pendingQuests = new ArrayList<>();
 
                     for (Quest q : quests) {
-                        if (!q.getConfirmed() && q.getCompleted()) {
+                        if (q.getUnconfirmed() && q.getCompleted()) {
                             pendingQuests.add(q);
                         }
                     }
@@ -92,25 +91,7 @@ public class PendingQuestLogFragment extends Fragment {
                 }
             }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                //mProgressBar.setVisibility(View.GONE);
-                //mErrorMessage.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                //mProgressBar.setVisibility(View.GONE);
-                //mErrorMessage.setVisibility(View.VISIBLE);
-            }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     public void update() {
@@ -118,7 +99,7 @@ public class PendingQuestLogFragment extends Fragment {
         mQuests.clear();
 
         String url = "users/" + characterService.getServerId() + "/quests/";
-        client.get(url, null, new JsonHttpResponseHandler() {
+        client.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder()
@@ -130,7 +111,7 @@ public class PendingQuestLogFragment extends Fragment {
                     List<Quest> pendingQuests = new ArrayList<>();
 
                     for (Quest q : quests) {
-                        if (!q.getConfirmed() && q.getCompleted()) {
+                        if (q.getUnconfirmed() && q.getCompleted()) {
                             pendingQuests.add(q);
                         }
                     }
@@ -152,6 +133,5 @@ public class PendingQuestLogFragment extends Fragment {
     }
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Quest quest);
     }
 }

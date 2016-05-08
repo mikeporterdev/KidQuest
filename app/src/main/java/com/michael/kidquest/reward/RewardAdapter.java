@@ -17,9 +17,8 @@ import java.util.List;
  * <p/>
  * Builds the content of the quest cards
  */
-public class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
+class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
     private final List<Reward> mRewards;
-    private CharacterService characterService;
 
     public RewardAdapter(List<Reward> rewards) {
         this.mRewards = rewards;
@@ -37,9 +36,9 @@ public class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
         Reward reward = mRewards.get(position);
 
         viewHolder.txtRewardName.setText(reward.getName());
-        viewHolder.txtRewardCost.setText(String.valueOf(reward.getCost()));
+        viewHolder.txtRewardCost.setText(String.valueOf(reward.getCost()) + "g");
 
-        characterService = new CharacterService(viewHolder.txtRewardName.getContext());
+        CharacterService characterService = new CharacterService(viewHolder.txtRewardName.getContext());
 
         if (!characterService.isParent()){
             viewHolder.btnAction.setText("Purchase");

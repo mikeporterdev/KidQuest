@@ -37,7 +37,6 @@ import cz.msebera.android.httpclient.Header;
 public class OpenQuestLogFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private Context context;
 
     private static final String TAG = "OpenQuestLogFragment";
     private CharacterService characterService;
@@ -51,7 +50,7 @@ public class OpenQuestLogFragment extends Fragment {
         client = new ServerRestClient(characterService.getToken());
 
         mRecyclerView = (RecyclerView) view;
-        context = view.getContext();
+        Context context = view.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
 
@@ -62,7 +61,7 @@ public class OpenQuestLogFragment extends Fragment {
 
     private void getQuests() {
         String url = "users/" + characterService.getServerId() + "/quests/";
-        client.get(url, null, new JsonHttpResponseHandler() {
+        client.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder()
@@ -71,12 +70,12 @@ public class OpenQuestLogFragment extends Fragment {
                 try {
                     List<Quest> quests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
 
-                    List<Quest> openQuests = new ArrayList<Quest>();
+                    List<Quest> openQuests = new ArrayList<>();
 
                     Date today = new Date();
 
                     for (Quest q : quests){
-                        if (!q.getConfirmed() && !q.getCompleted() && q.getExpiryDate().after(today)){
+                        if (q.getUnconfirmed() && !q.getCompleted() && q.getExpiryDate().after(today)){
                             openQuests.add(q);
                         }
                     }
@@ -91,19 +90,6 @@ public class OpenQuestLogFragment extends Fragment {
                 }
             }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                //mProgressBar.setVisibility(View.GONE);
-                //mErrorMessage.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                //mProgressBar.setVisibility(View.GONE);
-                //mErrorMessage.setVisibility(View.VISIBLE);
-            }
         });
     }
 
@@ -125,7 +111,5 @@ public class OpenQuestLogFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Quest quest);
     }
 }

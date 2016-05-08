@@ -20,7 +20,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
  * Created by Michael Porter on 11/02/16.
  */
 public class QuestService {
-    private String TAG = "QuestService";
+    private final String TAG = "QuestService";
     private Context context;
 
     public void addQuest(Quest quest) {
@@ -38,7 +38,7 @@ public class QuestService {
             CharacterService characterService = new CharacterService(context);
             ServerRestClient client = new ServerRestClient(characterService.getToken());
             String url = "users/" + characterService.getServerId() + "/quests/";
-            client.post(context, url, entity, "application/json", new AsyncHttpResponseHandler() {
+            client.post(context, url, entity, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(TAG, "Quest saved on server");
@@ -112,11 +112,6 @@ public class QuestService {
         } catch (JSONException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-    }
-
-    private boolean validateQuest() {
-        //TODO: Actually validate a quest
-        return true;
     }
 
     public QuestService(Context context) {

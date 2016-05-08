@@ -32,11 +32,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.michael.kidquest.main.MainTabActivity;
 import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
 
@@ -109,6 +109,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        assert mEmailSignInButton != null;
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -334,6 +335,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private int responseCode = 0;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -360,12 +362,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (response.getStatusLine().getStatusCode() == 200){
                     login(response);
                 } else if (response.getStatusLine().getStatusCode() == 401){
-                    Toast.makeText(getApplicationContext(), "Email or Password not recognized", Toast.LENGTH_SHORT).show();
+                    responseCode = 401;
+
                 }
 
 
 
             } catch (URISyntaxException | IOException e) {
+                responseCode = -1;
                 Log.i("LoginActivity", "Couldn't Connect");
             }
             // TODO: register the new account here.
@@ -383,7 +387,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             updateChar(token, id, isParent, parentPin);
 
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainTabActivity.class);
             startActivity(intent);
         }
 
@@ -392,10 +396,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-
-            mPasswordView.setError("The server is currently unavailable, please try again later");
-            mPasswordView.requestFocus();
-
+            if (responseCode == 401){
+                mPasswordView.setError("Email or Password not recognized");
+                mPasswordView.requestFocus();
+            } else if (responseCode == -1){
+                mPasswordView.setError("The server is currently unavailable, please try again later");
+                mPasswordView.requestFocus();
+            }
         }
 
 
@@ -415,15 +422,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         cService.setParentPin(parentPin);
     }
 
-    public void startMainIfTokenValid(){
+    private void startMainIfTokenValid(){
         CharacterService cService = new CharacterService(getApplicationContext());
 
         String token = cService.getToken();
 
         if (token != null){
             ServerRestClient serverRestClient = new ServerRestClient(token);
-            serverRestClient.setRetries(0);
-            serverRestClient.get("token/", null, new JsonHttpResponseHandler() {
+            serverRestClient.setRetries();
+            serverRestClient.get("token/", new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
@@ -434,7 +441,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                         updateChar(token, id, isParent, parentPin);
 
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainTabActivity.class);
                         startActivity(intent);
                     } catch (JSONException e) {
                         e.printStackTrace();

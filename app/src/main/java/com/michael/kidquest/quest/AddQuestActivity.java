@@ -3,6 +3,7 @@ package com.michael.kidquest.quest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -41,7 +42,11 @@ public class AddQuestActivity extends AppCompatActivity {
         addListenerOnSpinnerItemSelection();
         addListenerOnButton();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Add a Quest");
+
         TextView textView = (TextView) findViewById(R.id.presetQuestLink);
+        assert textView != null;
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

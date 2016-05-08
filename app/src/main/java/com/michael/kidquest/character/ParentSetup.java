@@ -30,8 +30,6 @@ public class ParentSetup extends AppCompatActivity {
     private static final String TAG = "ParentSetup";
     private EditText mEmail;
     private EditText mPassword;
-    private Button mSubmit;
-    private ServerRestClient serverRestClient;
     private CharacterService characterService;
 
     @Override
@@ -42,12 +40,12 @@ public class ParentSetup extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         characterService = new CharacterService(getApplicationContext());
-        serverRestClient = new ServerRestClient(characterService.getToken());
+        ServerRestClient serverRestClient = new ServerRestClient(characterService.getToken());
 
         mEmail = (EditText) findViewById(R.id.parent_email);
         mPassword = (EditText) findViewById(R.id.parent_password);
 
-        mSubmit = (Button) findViewById(R.id.parent_email_sign_in_button);
+        Button mSubmit = (Button) findViewById(R.id.parent_email_sign_in_button);
         mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +68,7 @@ public class ParentSetup extends AppCompatActivity {
             params.put("password", password);
             StringEntity entity = new StringEntity(params.toString());
 
-            serverRestClient.post(this, "users/", entity, "application/json", new AsyncHttpResponseHandler() {
+            serverRestClient.post(this, "users/", entity, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(TAG, "Successfully registered parent");
@@ -92,7 +90,7 @@ public class ParentSetup extends AppCompatActivity {
     private void getParentDetails(String email, String password){
         ServerRestClient serverRestClient = new ServerRestClient(email, password);
 
-        serverRestClient.get("token/", null, new JsonHttpResponseHandler() {
+        serverRestClient.get("token/", new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();

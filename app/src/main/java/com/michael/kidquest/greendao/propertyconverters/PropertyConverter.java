@@ -5,7 +5,7 @@ package com.michael.kidquest.greendao.propertyconverters;
  *
  * Simple interface for the enum-to-database converter
  */
-public interface PropertyConverter<P, D> {
+interface PropertyConverter<P, D> {
 
     P convertToEntityProperty(D databaseValue);
 

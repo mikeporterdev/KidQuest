@@ -12,9 +12,8 @@ import com.michael.kidquest.reward.RewardFragment;
 /**
  * Created by m_por on 07/05/2016.
  */
-public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
-    private int numberOfTabs = 3;
-    CharSequence titles[] = {"Open Quests", "Pending Quests", "Rewards"};
+class MainViewPagerAdapter extends FragmentStatePagerAdapter {
+    private final CharSequence[] titles = {"Open Quests", "Pending Quests", "Rewards"};
     private static final String TAG = "MainViewPagerAdapter";
 
     private OpenQuestLogFragment openQuestLogFragment;
@@ -49,6 +48,7 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
+        int numberOfTabs = 3;
         return numberOfTabs;
     }
 

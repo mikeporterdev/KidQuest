@@ -25,9 +25,6 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
-/**
- * Created by Michael Porter on 11/02/16.
- */
 public class CharacterService {
     private Context context;
     private Character character;
@@ -68,7 +65,7 @@ public class CharacterService {
     public void getCharacter(JsonHttpResponseHandler handler) {
         ServerRestClient serverRestClient = new ServerRestClient(getToken());
 
-        serverRestClient.get("users/" + getServerId() + "/", null, handler);
+        serverRestClient.get("users/" + getServerId() + "/", handler);
     }
 
     public void isCorrectPin(final View v, final DialogSingleButtonListener dialogSingleButtonListener) {
@@ -90,6 +87,7 @@ public class CharacterService {
                     if (matchesPin(editText.getText().toString())) {
                         dialogSingleButtonListener.onButtonClicked(dialog);
                     } else {
+
                         Toast.makeText(v.getContext(), "Pin does not match", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -99,7 +97,7 @@ public class CharacterService {
         }
     }
 
-    public boolean matchesPin(String pin) {
+    private boolean matchesPin(String pin) {
         //TODO: Probably make this more secure
         String pin2 = getParentPin();
         return pin.equals(pin2);
@@ -107,8 +105,7 @@ public class CharacterService {
 
     public String getToken() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString("token", null);
-        return token;
+        return sharedPreferences.getString("token", null);
     }
 
     public void setToken(String token) {
@@ -120,8 +117,7 @@ public class CharacterService {
 
     public String getGcmId() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-        String gcm_id = sharedPreferences.getString("gcm_id", null);
-        return gcm_id;
+        return sharedPreferences.getString("gcm_id", null);
     }
 
     public void setGcmId(String gcmId) {
@@ -158,8 +154,7 @@ public class CharacterService {
 
     public int getServerId() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-        int serverId = sharedPreferences.getInt("server_id", 0);
-        return serverId;
+        return sharedPreferences.getInt("server_id", 0);
     }
 
     public void setServerId(int id) {
@@ -169,7 +164,7 @@ public class CharacterService {
         editor.commit();
     }
 
-    public String getParentPin() {
+    private String getParentPin() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("kidquest", Context.MODE_PRIVATE);
         return sharedPreferences.getString("parent_pin", null);
     }
@@ -232,4 +227,6 @@ public class CharacterService {
     public void setContext(Context context) {
         this.context = context;
     }
+
+
 }

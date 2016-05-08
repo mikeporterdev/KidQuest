@@ -19,18 +19,14 @@ import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-/**
- * Created by Michael Porter on 09/02/16.
- */
 public class CharacterScreenFragment extends Fragment {
 
     private View view;
-    private Character character;
-    private JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
+    private final JsonHttpResponseHandler handler = new JsonHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
             Gson gson = new GsonBuilder().create();
-            character = gson.fromJson(response.toString(), Character.class);
+            Character character = gson.fromJson(response.toString(), Character.class);
             updateCharacter(character);
         }
     };
@@ -52,7 +48,7 @@ public class CharacterScreenFragment extends Fragment {
         characterService.getCharacter(handler);
     }
 
-    public void updateCharacter(Character character){
+    private void updateCharacter(Character character){
         TextView txtName = (TextView) view.findViewById(R.id.character_name);
         txtName.setText(character.getCharacter_name());
 
@@ -60,7 +56,7 @@ public class CharacterScreenFragment extends Fragment {
         txtLevel.setText(String.format("Level: %s", String.valueOf(character.getCharacter_level())));
 
         TextView txtGold = (TextView) view.findViewById(R.id.character_gold);
-        txtGold.setText(String.format("%sgp", String.valueOf(character.getGold())));
+        txtGold.setText(String.format("%sg", String.valueOf(character.getGold())));
 
         TextView txtXp = (TextView) view.findViewById(R.id.character_xp);
         String text = "XP: " + character.getXp() + "/" + character.getXpRequired();

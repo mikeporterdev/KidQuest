@@ -11,10 +11,10 @@ import com.michael.kidquest.server.PresetQuestFragment;
 /**
  * Created by m_por on 16/02/2016.
  */
-public class ViewPagerAdapter extends FragmentStatePagerAdapter{
+class ViewPagerAdapter extends FragmentStatePagerAdapter{
     private static final String TAG = "ViewPagerAdapter";
-    CharSequence titles[]={"Staff Pick", "Trending"};
-    int numberOfTabs = 2;
+    private final CharSequence[] titles={"Staff Pick", "Trending"};
+    private final int numberOfTabs = 2;
 
     public ViewPagerAdapter(FragmentManager fm) {
         super(fm);

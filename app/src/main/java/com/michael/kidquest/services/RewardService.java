@@ -20,8 +20,8 @@ import cz.msebera.android.httpclient.entity.StringEntity;
  * Created by m_por on 25/04/2016.
  */
 public class RewardService {
-    private String TAG = "RewardService";
-    private Context context;
+    private final String TAG = "RewardService";
+    private final Context context;
 
     public RewardService(Context context) {
         this.context = context;
@@ -40,7 +40,7 @@ public class RewardService {
             ServerRestClient client = new ServerRestClient(characterService.getToken());
             String url = "users/" + characterService.getServerId() + "/rewards/";
 
-            client.post(context, url, entity, "application/json", new AsyncHttpResponseHandler() {
+            client.post(context, url, entity, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(TAG, "onSuccess: Reward Saved on server");

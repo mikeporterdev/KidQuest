@@ -31,7 +31,6 @@ import cz.msebera.android.httpclient.Header;
  */
 public class RewardFragment extends Fragment {
     private RecyclerView mRecyclerView;
-    private Context context;
 
     private static final String TAG = "RewardFragment";
 
@@ -41,7 +40,7 @@ public class RewardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_rewards, container, false);
 
         mRecyclerView = (RecyclerView) view;
-        context = view.getContext();
+        Context context = view.getContext();
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
@@ -49,7 +48,7 @@ public class RewardFragment extends Fragment {
         ServerRestClient client = new ServerRestClient(characterService.getToken());
 
         String url = "users/" + characterService.getServerId() + "/rewards/";
-        client.get(url, null, new JsonHttpResponseHandler() {
+        client.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();
@@ -65,19 +64,6 @@ public class RewardFragment extends Fragment {
 
             }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-                //mProgressBar.setVisibility(View.GONE);
-                //mErrorMessage.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                //mProgressBar.setVisibility(View.GONE);
-                //mErrorMessage.setVisibility(View.VISIBLE);
-            }
         });
 
         return view;

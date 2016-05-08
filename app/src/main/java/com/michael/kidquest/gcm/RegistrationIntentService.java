@@ -15,7 +15,7 @@ import java.io.IOException;
  * Created by m_por on 30/03/2016.
  */
 public class RegistrationIntentService extends IntentService {
-    public static final String TAG = "RegIntentService";
+    private static final String TAG = "RegIntentService";
 
     public RegistrationIntentService() {
         super(TAG);

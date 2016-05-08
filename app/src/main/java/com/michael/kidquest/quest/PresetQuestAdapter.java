@@ -19,8 +19,8 @@ import java.util.List;
  * Created by m_por on 15/02/2016.
  */
 public class PresetQuestAdapter extends RecyclerView.Adapter<PresetQuestAdapter.ViewHolder> {
-    private List<Quest> mQuests;
-    private Context mContext;
+    private final List<Quest> mQuests;
+    private final Context mContext;
 
     public PresetQuestAdapter(List<Quest> mQuests, Context mContext) {
         this.mQuests = mQuests;

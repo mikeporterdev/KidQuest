@@ -7,29 +7,44 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.R;
+import com.michael.kidquest.character.ParentSetup;
+import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.reward.AddRewardActivity;
+import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
+import com.michael.kidquest.widget.NavBarListAdapter;
 import com.michael.kidquest.widget.SlidingTabLayout;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by m_por on 07/05/2016.
  */
 public class MainTabActivity extends AppCompatActivity {
     private static final String TAG = "MainTabActivity";
-    private Toolbar toolbar;
     private ViewPager pager;
-    MainViewPagerAdapter adapter;
-    SlidingTabLayout layout;
+    private DrawerLayout mDrawerLayout;
+    private MainViewPagerAdapter adapter;
+    private SlidingTabLayout layout;
     int numberOfTabs = 3;
 
     private CharacterService cService;
@@ -44,8 +59,8 @@ public class MainTabActivity extends AppCompatActivity {
 
         cService = new CharacterService(this.getApplicationContext());
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        toolbarSetup();
+        setUpCharacter();
 
         adapter = new MainViewPagerAdapter(getSupportFragmentManager());
 
@@ -62,11 +77,6 @@ public class MainTabActivity extends AppCompatActivity {
 
                 Fragment f = adapter.getItem(position);
                 f.onResume();
-                //OpenQuestLogFragment fragment = (OpenQuestLogFragment) adapter.getItem(0);
-                //fragment.update();
-                //PendingQuestLogFragment pendingFragment = (PendingQuestLogFragment) adapter.getItem(1);
-                //pendingFragment.update(getApplicationContext());
-
             }
         });
 
@@ -74,7 +84,7 @@ public class MainTabActivity extends AppCompatActivity {
 
         layout = (SlidingTabLayout) findViewById(R.id.tabs);
         assert layout != null;
-        layout.setDistributeEvenly(true);
+        layout.setDistributeEvenly();
 
         layout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer(){
 
@@ -93,6 +103,7 @@ public class MainTabActivity extends AppCompatActivity {
 
     private void setUpFab(){
         FloatingActionMenu fam = (FloatingActionMenu) findViewById(R.id.menu);
+        assert fam != null;
         fam.setClosedOnTouchOutside(true);
 
         FloatingActionButton questFab = (FloatingActionButton) findViewById(R.id.menu_item_add_quest);
@@ -145,4 +156,70 @@ public class MainTabActivity extends AppCompatActivity {
         fam.close(true);
     }
 
+    private void toolbarSetup() {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        assert mToolbar != null;
+        mToolbar.setTitle("KidQuest");
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.tab_drawer_layout);
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                mToolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+    }
+
+    private void sidebarSetup(Character character){
+        RecyclerView navBarList = (RecyclerView) findViewById(R.id.left_drawer);
+        assert navBarList != null;
+        navBarList.setHasFixedSize(true);
+
+        String[] navBarLocationStrings = getResources().getStringArray(R.array.navigation_drawer_items);
+
+        CharacterService characterService = new CharacterService(getApplicationContext());
+        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, character);
+        navBarList.setAdapter(mAdapter);
+        navBarList.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter.setOnItemClickListener(new NavBarListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(final View view, int position) {
+                Fragment fragment = null;
+                switch (position) {
+                    case 1:
+                        cService.isCorrectPin(view, new DialogSingleButtonListener() {
+                            @Override
+                            public void onButtonClicked(DialogInterface dialog) {
+                                Intent intent = new Intent(view.getContext(), ParentSetup.class);
+                                startActivity(intent);
+                            }
+                        });
+                        break;
+                    case 2:
+                        cService.signOut();
+                        finish();
+                        break;
+                }
+
+
+                mDrawerLayout.closeDrawers();
+
+            }
+        });
+    }
+
+    private void setUpCharacter() {
+        ServerRestClient serverRestClient = new ServerRestClient(cService.getToken());
+
+        serverRestClient.get("users/" + cService.getServerId() + "/", new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder().create();
+                Character character = gson.fromJson(response.toString(), Character.class);
+                sidebarSetup(character);
+            }
+        });
+    }
 }

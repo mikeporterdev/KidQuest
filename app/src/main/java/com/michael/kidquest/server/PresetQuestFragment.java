@@ -34,7 +34,7 @@ import cz.msebera.android.httpclient.Header;
  */
 public class PresetQuestFragment extends Fragment {
 
-    private String TAG = "PresetQuestFragment";
+    private final String TAG = "PresetQuestFragment";
     private RecyclerView mRecyclerView;
     private Context context;
     private ProgressBar mProgressBar;
@@ -60,7 +60,7 @@ public class PresetQuestFragment extends Fragment {
         CharacterService characterService = new CharacterService(this.getContext());
         ServerRestClient client = new ServerRestClient(characterService.getToken());
 
-        client.get(url, null, new JsonHttpResponseHandler() {
+        client.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 Gson gson = new GsonBuilder().create();

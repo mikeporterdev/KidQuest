@@ -35,13 +35,6 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Or pick from a preset quest..."
-            android:gravity="end"
-            android:id="@+id/presetQuestLink"
-            android:layout_alignParentBottom="true"/>
+
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

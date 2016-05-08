@@ -25,7 +25,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
  * Created by m_por on 08/05/2016.
  */
 public class RegisterActivity extends AppCompatActivity {
-    private String TAG = "RegisterActivity";
+    private final String TAG = "RegisterActivity";
 
     private EditText mEmailView;
     private EditText mPasswordView;
@@ -108,10 +108,10 @@ public class RegisterActivity extends AppCompatActivity {
 
                     String json = new GsonBuilder().create().toJson(details, Map.class);
                     try {
-                        StringEntity entity = new StringEntity(json.toString());
+                        StringEntity entity = new StringEntity(json);
                         ServerRestClient serverRestClient = new ServerRestClient();
 
-                        serverRestClient.post(getApplicationContext(), "users/", entity, "application/json", new AsyncHttpResponseHandler(){
+                        serverRestClient.post(getApplicationContext(), "users/", entity, new AsyncHttpResponseHandler(){
 
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -123,7 +123,11 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                                 Log.e(TAG, "onFailure: Could not register");
-                                Toast.makeText(getApplicationContext(), "Account could not be created.", Toast.LENGTH_SHORT).show();
+                                if (statusCode == 409){
+                                    Toast.makeText(getApplicationContext(), "This email already exists.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Account could not be created.", Toast.LENGTH_SHORT).show();
+                                }
                                 error.printStackTrace();
                             }
                         });

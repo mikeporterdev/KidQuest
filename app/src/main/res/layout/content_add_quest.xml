@@ -44,4 +44,13 @@
         android:layout_height="wrap_content"
         android:text="@string/submit" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/or_pick_from_a_preset_quest"
+        android:gravity="end"
+        android:id="@+id/presetQuestLink"
+        android:paddingTop="32dp"
+        android:layout_alignParentBottom="true"/>
 </LinearLayout>
