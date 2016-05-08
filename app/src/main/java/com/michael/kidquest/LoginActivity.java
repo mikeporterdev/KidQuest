@@ -32,9 +32,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.server.ServerRestClient;
@@ -47,17 +47,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.client.config.RequestConfig;
 import cz.msebera.android.httpclient.client.methods.HttpGet;
-import cz.msebera.android.httpclient.client.methods.HttpPost;
-import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
@@ -117,6 +113,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+
+        TextView registerLink = (TextView) findViewById(R.id.registerlink);
+
+        assert registerLink != null;
+        registerLink.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -353,11 +360,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (response.getStatusLine().getStatusCode() == 200){
                     login(response);
                 } else if (response.getStatusLine().getStatusCode() == 401){
-                    response.getEntity().consumeContent();
-                    //Register account
-                    registerAccount(client);
-
-
+                    Toast.makeText(getApplicationContext(), "Email or Password not recognized", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -367,32 +370,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
             // TODO: register the new account here.
             return true;
-        }
-
-        private void registerAccount(HttpClient client) throws URISyntaxException, IOException {
-            //TODO: prompt to register
-            HttpPost postRequest = new HttpPost();
-
-            Map<String, String> details = new HashMap<>();
-            details.put("email", mEmail);
-            details.put("password", mPassword);
-
-            String json = new GsonBuilder().create().toJson(details, Map.class);
-
-            postRequest.setEntity(new StringEntity(json));
-            postRequest.setURI(new URI(Constants.SERVER_URL + "users/"));
-            postRequest.setHeader("Accept", "application/json");
-            postRequest.setHeader("Content-type", "application/json");
-            HttpResponse postResponse = client.execute(postRequest);
-            //TODO: Check response
-            if (postResponse.getStatusLine().getStatusCode() == 201){
-                SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("just_registered", true);
-                editor.commit();
-
-                doInBackground((Void) null);
-            }
         }
 
         private void login(HttpResponse response) throws IOException {

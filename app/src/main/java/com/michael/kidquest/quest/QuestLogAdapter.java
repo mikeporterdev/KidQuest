@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.R;
@@ -111,6 +112,7 @@ public class QuestLogAdapter extends RecyclerView.Adapter<QuestViewHolder> {
 
                         mQuests.remove(position);
                         notifyDataSetChanged();
+                        Toast.makeText(v.getContext().getApplicationContext(), "Rewards Given.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

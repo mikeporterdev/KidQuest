@@ -40,20 +40,27 @@ public class OpenQuestLogFragment extends Fragment {
     private Context context;
 
     private static final String TAG = "OpenQuestLogFragment";
+    private CharacterService characterService;
+    private ServerRestClient client;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_open_quests, container, false);
+        characterService = new CharacterService(view.getContext().getApplicationContext());
+        client = new ServerRestClient(characterService.getToken());
 
         mRecyclerView = (RecyclerView) view;
         context = view.getContext();
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        CharacterService characterService = new CharacterService(view.getContext().getApplicationContext());
 
-        ServerRestClient client = new ServerRestClient(characterService.getToken());
+        getQuests();
+
+        return view;
+    }
+
+    private void getQuests() {
         String url = "users/" + characterService.getServerId() + "/quests/";
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
@@ -98,8 +105,13 @@ public class OpenQuestLogFragment extends Fragment {
                 //mErrorMessage.setVisibility(View.VISIBLE);
             }
         });
+    }
 
-        return view;
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: OPEN RESUMED");
+        //getQuests();
     }
 
     /**

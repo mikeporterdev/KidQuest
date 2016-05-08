@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,24 +63,40 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/character_name"
+                    android:hint="Character Name"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/parent_pin"
+                    android:hint="Parent Pin Code"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/register_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
+                android:text="Register"
                 android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/not_a_member_u_register_here_u"
-                android:id="@+id/registerlink"
-                android:layout_gravity="center_horizontal"
-                />
 
 
         </LinearLayout>

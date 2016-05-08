@@ -17,6 +17,9 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
     CharSequence titles[] = {"Open Quests", "Pending Quests", "Rewards"};
     private static final String TAG = "MainViewPagerAdapter";
 
+    private OpenQuestLogFragment openQuestLogFragment;
+    private PendingQuestLogFragment pendingQuestLogFragment;
+
     public MainViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -27,7 +30,10 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new OpenQuestLogFragment();
             case 1:
-                return new PendingQuestLogFragment();
+                if (pendingQuestLogFragment == null){
+                    pendingQuestLogFragment = new PendingQuestLogFragment();
+                }
+                return pendingQuestLogFragment;
             case 2:
                 return new RewardFragment();
             default:
@@ -44,5 +50,10 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return numberOfTabs;
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 }

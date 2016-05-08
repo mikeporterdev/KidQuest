@@ -104,7 +104,7 @@ public class ParentSetup extends AppCompatActivity {
                 characterService.addNewParent(id);
 
                 Toast.makeText(getApplicationContext(), "Added parent account", Toast.LENGTH_SHORT).show();
-                finishActivity(3);
+                finish();
             }
 
             @Override

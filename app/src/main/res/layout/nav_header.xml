@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -11,7 +11,7 @@
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
         android:paddingBottom="16dp"
-        >
+        android:id="@+id/relativeLayout">
 
         <TextView
             android:id="@+id/character_name"
@@ -21,17 +21,61 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:text="CharacterName"/>
+            android:text="CharacterName"
+            android:layout_marginLeft="16dp" />
         <TextView
             android:id="@+id/character_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_below="@id/character_name"
             android:textColor="#FFFFFF"
-            android:text="Level"/>
+            android:text="Level"
+            android:layout_marginLeft="16dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:text="Gold:"
+            android:id="@+id/header_gold"
+            android:layout_below="@+id/character_name"
+            android:layout_alignParentRight="true"
+            android:paddingEnd="16dp"
+            android:textColor="#FFFFFF"
+            android:layout_alignParentEnd="true" />
 
-    </LinearLayout>
+    </RelativeLayout>
+
+    <ProgressBar
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignLeft="@+id/relativeLayout"
+        android:layout_alignStart="@+id/relativeLayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:paddingBottom="16dp"
+        android:progress="50"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:layout_alignLeft="@id/progressBar"
+        android:layout_alignTop="@id/progressBar"
+        android:layout_alignRight="@id/progressBar"
+        android:layout_alignBottom="@id/progressBar"
+        android:text="XP: 0/0"
+        android:textAlignment="center"
+        android:id="@+id/xpdesc"
+        />
+
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
@@ -41,5 +85,8 @@
         android:background="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
+
+
+
 
 </RelativeLayout>

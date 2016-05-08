@@ -4,13 +4,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.R;
 import com.michael.kidquest.quest.AddQuestActivity;
@@ -22,6 +25,7 @@ import com.michael.kidquest.widget.SlidingTabLayout;
  * Created by m_por on 07/05/2016.
  */
 public class MainTabActivity extends AppCompatActivity {
+    private static final String TAG = "MainTabActivity";
     private Toolbar toolbar;
     private ViewPager pager;
     MainViewPagerAdapter adapter;
@@ -50,6 +54,23 @@ public class MainTabActivity extends AppCompatActivity {
         assert pager != null;
         pager.setAdapter(adapter);
 
+        pager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                Log.i(TAG, "onPageSelected: ");
+
+                Fragment f = adapter.getItem(position);
+                f.onResume();
+                //OpenQuestLogFragment fragment = (OpenQuestLogFragment) adapter.getItem(0);
+                //fragment.update();
+                //PendingQuestLogFragment pendingFragment = (PendingQuestLogFragment) adapter.getItem(1);
+                //pendingFragment.update(getApplicationContext());
+
+            }
+        });
+
+
 
         layout = (SlidingTabLayout) findViewById(R.id.tabs);
         assert layout != null;
@@ -66,9 +87,14 @@ public class MainTabActivity extends AppCompatActivity {
         layout.setViewPager(pager);
 
         setUpFab();
+
+
     }
 
     private void setUpFab(){
+        FloatingActionMenu fam = (FloatingActionMenu) findViewById(R.id.menu);
+        fam.setClosedOnTouchOutside(true);
+
         FloatingActionButton questFab = (FloatingActionButton) findViewById(R.id.menu_item_add_quest);
         assert questFab != null;
         questFab.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +125,7 @@ public class MainTabActivity extends AppCompatActivity {
             }
         });
 
-        
+
     }
 
     @Override
@@ -113,5 +139,10 @@ public class MainTabActivity extends AppCompatActivity {
             pager.setAdapter(adapter);
             pager.setCurrentItem(2);
         }
+        FloatingActionMenu fam = (FloatingActionMenu) findViewById(R.id.menu);
+        assert fam != null;
+        fam.toggle(true);
+        fam.close(true);
     }
+
 }

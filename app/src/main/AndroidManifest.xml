@@ -75,6 +75,9 @@
             android:name=".character.ParentSetup"
             android:label="@string/title_activity_parent_setup"
             android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="Register"/>
     </application>
 
 </manifest>

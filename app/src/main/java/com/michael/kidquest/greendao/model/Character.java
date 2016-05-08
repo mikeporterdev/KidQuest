@@ -10,7 +10,7 @@ public class Character {
     private int xp;
     private String token;
     private Integer serverId;
-    private String xp_required;
+    private Integer xp_required;
 
     public Long getId() {
         return id;
@@ -48,7 +48,7 @@ public class Character {
         return serverId;
     }
 
-    public String getXpRequired() {
+    public int getXpRequired() {
         return xp_required;
     }
 }

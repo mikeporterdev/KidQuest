@@ -1,8 +1,5 @@
 package com.michael.kidquest;
 
-import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +8,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,9 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -32,11 +29,8 @@ import com.michael.kidquest.gcm.RegistrationIntentService;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.greendao.model.Quest;
 import com.michael.kidquest.main.MainTabActivity;
-import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.quest.OpenQuestLogFragment;
 import com.michael.kidquest.quest.PendingQuestLogFragment;
-import com.michael.kidquest.reward.AddRewardActivity;
-import com.michael.kidquest.reward.RewardFragment;
 import com.michael.kidquest.server.ServerRestClient;
 import com.michael.kidquest.services.CharacterService;
 import com.michael.kidquest.widget.NavBarListAdapter;
@@ -46,6 +40,7 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity implements OpenQuestLogFragment.OnListFragmentInteractionListener, PendingQuestLogFragment.OnListFragmentInteractionListener {
+    private static final String TAG = "MainActivity";
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private FragmentManager mFragmentManager;
@@ -77,9 +72,9 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
         SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
         boolean just_registered = sharedPreferences.getBoolean("just_registered", false);
 
-        if (!parent && just_registered){
-            firstTimeSetup();
-        }
+        //if (!parent && just_registered){
+            //firstTimeSetup();
+        //}
 
         setUpCharacter();
 
@@ -137,11 +132,12 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
 
     private void childSidebarSetup() {
         RecyclerView navBarList = (RecyclerView) findViewById(R.id.left_drawer);
+        assert navBarList != null;
         navBarList.setHasFixedSize(true);
 
         String[] navBarLocationStrings = getResources().getStringArray(R.array.navigation_drawer_items);
 
-        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, character.getCharacter_name(), character.getCharacter_level());
+        NavBarListAdapter mAdapter = new NavBarListAdapter(navBarLocationStrings, character);
         navBarList.setAdapter(mAdapter);
         navBarList.setLayoutManager(new LinearLayoutManager(this));
         mAdapter.setOnItemClickListener(new NavBarListAdapter.OnItemClickListener() {
@@ -149,30 +145,11 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
             public void onItemClick(final View view, int position) {
                 Fragment fragment = null;
                 switch (position) {
-                    case 0:
+                    case 1:
                         Intent intent = new Intent(view.getContext(), MainTabActivity.class);
                         startActivity(intent);
-                        //fragment = new CharacterScreenFragment();
-                        //mToolbar.setTitle("Your Character");
-                        break;
-                    case 1:
-                        fragment = new OpenQuestLogFragment();
-                        mToolbar.setTitle("Your Quests");
                         break;
                     case 2:
-                        fragment = new PendingQuestLogFragment();
-                        mToolbar.setTitle("Your Pending Quests");
-                        break;
-                    case 3:
-                        cService.isCorrectPin(view, new DialogSingleButtonListener() {
-                            @Override
-                            public void onButtonClicked(DialogInterface dialog) {
-                                Intent intent = new Intent(view.getContext(), AddQuestActivity.class);
-                                startActivityForResult(intent, ADD_QUEST_CODE);
-                            }
-                        });
-                        break;
-                    case 4:
                         cService.isCorrectPin(view, new DialogSingleButtonListener() {
                             @Override
                             public void onButtonClicked(DialogInterface dialog) {
@@ -181,20 +158,7 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                             }
                         });
                         break;
-                    case 5:
-                        fragment = new RewardFragment();
-                        mToolbar.setTitle("Reward Shop");
-                        break;
-                    case 6:
-                        cService.isCorrectPin(view, new DialogSingleButtonListener() {
-                            @Override
-                            public void onButtonClicked(DialogInterface dialog) {
-                                Intent intent = new Intent(view.getContext(), AddRewardActivity.class);
-                                startActivity(intent);
-                            }
-                        });
-                        break;
-                    case 7:
+                    case 3:
                         cService.signOut();
                         finish();
                         break;
@@ -202,11 +166,9 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
                         Toast.makeText(view.getContext(), "no fragment found, position: " + position, Toast.LENGTH_SHORT).show();
                 }
 
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-                    mDrawerLayout.closeDrawers();
-                }
+
+                mDrawerLayout.closeDrawers();
+
             }
         });
     }
@@ -232,61 +194,8 @@ public class MainActivity extends AppCompatActivity implements OpenQuestLogFragm
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ADD_QUEST_CODE) {
-            Fragment fragment = new OpenQuestLogFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-            mDrawerLayout.closeDrawers();
-        }
-    }
-
-
-    public void firstTimeSetup(){
-        //Build login/register dialog
-        //get and store token in sharedpreferences
-        cService = new CharacterService(getApplicationContext());
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter Character Name");
-        builder.setCancelable(false);
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                cService.updateCharacter(input.getText().toString(), null);
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Enter Parent Pin");
-                builder.setCancelable(false);
-
-                final EditText input = new EditText(MainActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        cService.updateCharacter(null, input.getText().toString());
-
-                        SharedPreferences sharedPreferences = getSharedPreferences("kidquest", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("registered", true);
-                        editor.commit();
-                        setUpCharacter();
-                        initialFragmentSetup();
-                    }
-                });
-                builder.show();
-            }
-        });
-
-        builder.show();
+    protected void onResume() {
+        super.onResume();
+        setUpCharacter();
     }
 }

@@ -36,6 +36,11 @@ public class PendingQuestLogFragment extends Fragment {
     private Context context;
 
     private static final String TAG = "PendingQuestLogFragment";
+    private CharacterService characterService;
+    private ServerRestClient client;
+    private RecyclerView.Adapter mAdapter;
+
+    private List<Quest> mQuests;
 
     @Nullable
     @Override
@@ -44,12 +49,19 @@ public class PendingQuestLogFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) view;
         context = view.getContext();
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        characterService = new CharacterService(view.getContext().getApplicationContext());
+        client = new ServerRestClient(characterService.getToken());
 
-        CharacterService characterService = new CharacterService(view.getContext().getApplicationContext());
+        characterService = new CharacterService(context.getApplicationContext());
+        client = new ServerRestClient(characterService.getToken());
 
-        ServerRestClient client = new ServerRestClient(characterService.getToken());
+        getQuests();
+
+        return view;
+    }
+
+    private void getQuests() {
         String url = "users/" + characterService.getServerId() + "/quests/";
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
@@ -60,13 +72,15 @@ public class PendingQuestLogFragment extends Fragment {
                 try {
                     List<Quest> quests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
 
-                    List<Quest> pendingQuests = new ArrayList<Quest>();
+                    List<Quest> pendingQuests = new ArrayList<>();
 
                     for (Quest q : quests) {
                         if (!q.getConfirmed() && q.getCompleted()) {
                             pendingQuests.add(q);
                         }
                     }
+
+                    mQuests = pendingQuests;
 
                     RecyclerView.Adapter adapter = new QuestLogAdapter(pendingQuests, false);
                     mRecyclerView.setAdapter(adapter);
@@ -92,8 +106,49 @@ public class PendingQuestLogFragment extends Fragment {
                 //mErrorMessage.setVisibility(View.VISIBLE);
             }
         });
+    }
 
-        return view;
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    public void update() {
+
+        mQuests.clear();
+
+        String url = "users/" + characterService.getServerId() + "/quests/";
+        client.get(url, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Gson gson = new GsonBuilder()
+                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .create();
+                try {
+                    List<Quest> quests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
+
+                    List<Quest> pendingQuests = new ArrayList<>();
+
+                    for (Quest q : quests) {
+                        if (!q.getConfirmed() && q.getCompleted()) {
+                            pendingQuests.add(q);
+                        }
+                    }
+
+                    mQuests = pendingQuests;
+
+                    mAdapter.notifyDataSetChanged();
+
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    //mProgressBar.setVisibility(View.GONE);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error parsing list of trending quests", e);
+                }
+            }
+        });
+
+        mAdapter = new QuestLogAdapter(mQuests, false);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     public interface OnListFragmentInteractionListener {
