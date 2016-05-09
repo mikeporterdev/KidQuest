@@ -21,6 +21,7 @@ import com.michael.kidquest.services.CharacterService;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,7 +55,21 @@ public class RewardFragment extends Fragment {
                 Gson gson = new GsonBuilder().create();
                 try {
                     List<Reward> rewards = Arrays.asList(gson.fromJson(response.get("rewards").toString(), Reward[].class));
-                    RecyclerView.Adapter adapter = new RewardAdapter(rewards);
+
+                    List<Reward> orderedRewards = new ArrayList<>();
+                    for (Reward r : rewards){
+                        if (!r.isCompleted()){
+                            orderedRewards.add(r);
+                        }
+                    }
+
+                    for (Reward r : rewards) {
+                        if (r.isCompleted()){
+                            orderedRewards.add(r);
+                        }
+                    }
+
+                    RecyclerView.Adapter adapter = new RewardAdapter(orderedRewards);
                     mRecyclerView.setAdapter(adapter);
                     mRecyclerView.setVisibility(View.VISIBLE);
 

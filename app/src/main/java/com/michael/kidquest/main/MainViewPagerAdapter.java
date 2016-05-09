@@ -13,6 +13,7 @@ import com.michael.kidquest.reward.RewardFragment;
  * Created by m_por on 07/05/2016.
  */
 class MainViewPagerAdapter extends FragmentStatePagerAdapter {
+    public static final String STATE_SUPERCLASS = "STATE_SUPERCLASS";
     private final CharSequence[] titles = {"Open Quests", "Pending Quests", "Rewards"};
     private static final String TAG = "MainViewPagerAdapter";
 
@@ -27,14 +28,21 @@ class MainViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new OpenQuestLogFragment();
+                if (openQuestLogFragment == null){
+                    openQuestLogFragment = new OpenQuestLogFragment();
+                }
+                openQuestLogFragment.setRetainInstance(true);
+                return openQuestLogFragment;
             case 1:
                 if (pendingQuestLogFragment == null){
                     pendingQuestLogFragment = new PendingQuestLogFragment();
                 }
+                pendingQuestLogFragment.setRetainInstance(true);
                 return pendingQuestLogFragment;
             case 2:
-                return new RewardFragment();
+                RewardFragment rewardFragment = new RewardFragment();
+                rewardFragment.setRetainInstance(true);
+                return rewardFragment;
             default:
                 Log.e(TAG, "getItem: Tab handler not found");
         }
@@ -56,4 +64,5 @@ class MainViewPagerAdapter extends FragmentStatePagerAdapter {
     public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
+
 }

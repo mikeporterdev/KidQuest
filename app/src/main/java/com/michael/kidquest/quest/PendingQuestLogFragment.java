@@ -52,11 +52,6 @@ public class PendingQuestLogFragment extends Fragment {
 
         Context context = view.getContext();
 
-        characterService = new CharacterService(context.getApplicationContext());
-        client = new ServerRestClient(characterService.getToken());
-
-        mQuests  = new ArrayList<>();
-
         mRecyclerView = (RecyclerView) view.findViewById(R.id.open_questlog_list);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -66,6 +61,17 @@ public class PendingQuestLogFragment extends Fragment {
         getQuests();
 
         return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Context context = getActivity();
+
+        characterService = new CharacterService(context.getApplicationContext());
+        client = new ServerRestClient(characterService.getToken());
+        mQuests  = new ArrayList<>();
+
     }
 
     private void getQuests() {
@@ -96,6 +102,7 @@ public class PendingQuestLogFragment extends Fragment {
                     mProgressBar.setVisibility(View.GONE);
                     if (mQuests.size() > 0){
                         mRecyclerView.setVisibility(View.VISIBLE);
+                        mErrorMessage.setVisibility(View.GONE);
                     } else {
                         mRecyclerView.setVisibility(View.INVISIBLE);
                         mErrorMessage.setText(R.string.noquestsfound);

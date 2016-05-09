@@ -19,6 +19,8 @@
         <activity
             android:name=".main.MainTabActivity"
             android:label="Quests and Rewards"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             />
         <receiver android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"

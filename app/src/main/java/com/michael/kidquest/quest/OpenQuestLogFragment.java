@@ -2,6 +2,7 @@ package com.michael.kidquest.quest;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,15 +47,15 @@ public class OpenQuestLogFragment extends Fragment {
     private ProgressBar mProgressBar;
     private TextView mErrorMessage;
 
+    private List<Quest> mQuests;
+    private QuestLogAdapter mAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_open_quests, container, false);
 
         Context context = view.getContext();
-
-        characterService = new CharacterService(context.getApplicationContext());
-        client = new ServerRestClient(characterService.getToken());
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.open_questlog_list);
 
@@ -67,11 +68,23 @@ public class OpenQuestLogFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Context context = getActivity();
+
+        characterService = new CharacterService(context.getApplicationContext());
+        client = new ServerRestClient(characterService.getToken());
+        mQuests  = new ArrayList<>();
+
+    }
+
     private void getQuests() {
         String url = "users/" + characterService.getServerId() + "/quests/";
         client.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                mQuests.clear();
                 Gson gson = new GsonBuilder()
                         .setDateFormat("yyyy-MM-dd HH:mm:ss")
                         .create();
@@ -88,12 +101,15 @@ public class OpenQuestLogFragment extends Fragment {
                         }
                     }
 
-                    RecyclerView.Adapter adapter = new QuestLogAdapter(openQuests, true);
-                    mRecyclerView.setAdapter(adapter);
+                    mQuests = openQuests;
+
+                    mAdapter = new QuestLogAdapter(mQuests, true);
+                    mRecyclerView.setAdapter(mAdapter);
 
                     mProgressBar.setVisibility(View.GONE);
                     if (openQuests.size() > 0){
                         mRecyclerView.setVisibility(View.VISIBLE);
+                        mErrorMessage.setVisibility(View.GONE);
                     } else {
                         mRecyclerView.setVisibility(View.INVISIBLE);
                         mErrorMessage.setText(R.string.noquestsfound);
@@ -125,7 +141,7 @@ public class OpenQuestLogFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: OPEN RESUMED");
-        //getQuests();
+        getQuests();
     }
 
     /**

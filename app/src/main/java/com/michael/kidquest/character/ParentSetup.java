@@ -39,6 +39,8 @@ public class ParentSetup extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        toolbar.setTitle("Register Parent Account");
+
         characterService = new CharacterService(getApplicationContext());
         ServerRestClient serverRestClient = new ServerRestClient(characterService.getToken());
 

@@ -1,11 +1,17 @@
 package com.michael.kidquest.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,6 +30,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.michael.kidquest.DialogSingleButtonListener;
 import com.michael.kidquest.R;
 import com.michael.kidquest.character.ParentSetup;
+import com.michael.kidquest.gcm.RegistrationIntentService;
 import com.michael.kidquest.greendao.model.Character;
 import com.michael.kidquest.quest.AddQuestActivity;
 import com.michael.kidquest.reward.AddRewardActivity;
@@ -51,6 +58,8 @@ public class MainTabActivity extends AppCompatActivity {
     private final static int ADD_QUEST_CODE = 1;
     private final static int ADD_REWARD_CODE = 2;
     private NavBarListAdapter mAdapter;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private boolean isReceiverRegistered;
 
 
     @Override
@@ -61,8 +70,16 @@ public class MainTabActivity extends AppCompatActivity {
         cService = new CharacterService(this.getApplicationContext());
 
         toolbarSetup();
-        setUpCharacter();
 
+        setUpCharacter();
+        setUpTabView();
+        setUpFab();
+        setUpNotifications();
+    }
+
+
+
+    private void setUpTabView() {
         adapter = new MainViewPagerAdapter(getSupportFragmentManager());
 
         pager = (ViewPager) findViewById(R.id.pager);
@@ -78,10 +95,9 @@ public class MainTabActivity extends AppCompatActivity {
 
                 Fragment f = adapter.getItem(position);
                 f.onResume();
+
             }
         });
-
-
 
         layout = (SlidingTabLayout) findViewById(R.id.tabs);
         assert layout != null;
@@ -96,10 +112,6 @@ public class MainTabActivity extends AppCompatActivity {
         });
 
         layout.setViewPager(pager);
-
-        setUpFab();
-
-
     }
 
     private void setUpFab(){
@@ -225,5 +237,29 @@ public class MainTabActivity extends AppCompatActivity {
                 sidebarSetup(character);
             }
         });
+    }
+
+    private void setUpNotifications() {
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences
+                        .getBoolean("SENT_TOKEN_TO_SERVER", false);
+            }
+        };
+
+        registerReceiver();
+
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
+    }
+
+    private void registerReceiver() {
+        if (!isReceiverRegistered){
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver, new IntentFilter("registrationComplete"));
+            isReceiverRegistered = true;
+        }
     }
 }
