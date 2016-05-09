@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,6 +40,8 @@ public class PendingQuestLogFragment extends Fragment {
     private CharacterService characterService;
     private ServerRestClient client;
     private RecyclerView.Adapter mAdapter;
+    private ProgressBar mProgressBar;
+    private TextView mErrorMessage;
 
     private List<Quest> mQuests;
 
@@ -46,14 +50,18 @@ public class PendingQuestLogFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_open_quests, container, false);
 
-        mRecyclerView = (RecyclerView) view;
         Context context = view.getContext();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        characterService = new CharacterService(view.getContext().getApplicationContext());
-        client = new ServerRestClient(characterService.getToken());
 
         characterService = new CharacterService(context.getApplicationContext());
         client = new ServerRestClient(characterService.getToken());
+
+        mQuests  = new ArrayList<>();
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.open_questlog_list);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mProgressBar = (ProgressBar) view.findViewById(R.id.quest_progress_bar);
+        mErrorMessage = (TextView) view.findViewById(R.id.quest_error_message);
 
         getQuests();
 
@@ -65,6 +73,7 @@ public class PendingQuestLogFragment extends Fragment {
         client.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                mQuests.clear();
                 Gson gson = new GsonBuilder()
                         .setDateFormat("yyyy-MM-dd HH:mm:ss")
                         .create();
@@ -81,55 +90,42 @@ public class PendingQuestLogFragment extends Fragment {
 
                     mQuests = pendingQuests;
 
-                    RecyclerView.Adapter adapter = new QuestLogAdapter(pendingQuests, false);
-                    mRecyclerView.setAdapter(adapter);
+                    mAdapter = new QuestLogAdapter(mQuests, false);
+                    mRecyclerView.setAdapter(mAdapter);
 
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    //mProgressBar.setVisibility(View.GONE);
+                    mProgressBar.setVisibility(View.GONE);
+                    if (mQuests.size() > 0){
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        mRecyclerView.setVisibility(View.INVISIBLE);
+                        mErrorMessage.setText(R.string.noquestsfound);
+                        mErrorMessage.setVisibility(View.VISIBLE);
+                    }
                 } catch (JSONException e) {
                     Log.e(TAG, "Error parsing list of trending quests", e);
                 }
             }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                mProgressBar.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                mProgressBar.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);
+            }
         });
     }
 
-    public void update() {
-
-        mQuests.clear();
-
-        String url = "users/" + characterService.getServerId() + "/quests/";
-        client.get(url, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Gson gson = new GsonBuilder()
-                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                        .create();
-                try {
-                    List<Quest> quests = Arrays.asList(gson.fromJson(response.get("quests").toString(), Quest[].class));
-
-                    List<Quest> pendingQuests = new ArrayList<>();
-
-                    for (Quest q : quests) {
-                        if (q.getUnconfirmed() && q.getCompleted()) {
-                            pendingQuests.add(q);
-                        }
-                    }
-
-                    mQuests = pendingQuests;
-
-                    mAdapter.notifyDataSetChanged();
-
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    //mProgressBar.setVisibility(View.GONE);
-                } catch (JSONException e) {
-                    Log.e(TAG, "Error parsing list of trending quests", e);
-                }
-            }
-        });
-
-        mAdapter = new QuestLogAdapter(mQuests, false);
-        mRecyclerView.setAdapter(mAdapter);
+    @Override
+    public void onResume() {
+        super.onResume();
+        getQuests();
     }
 
     public interface OnListFragmentInteractionListener {

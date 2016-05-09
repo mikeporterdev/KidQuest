@@ -1,14 +1,16 @@
 package com.michael.kidquest.quest;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,18 +43,24 @@ public class OpenQuestLogFragment extends Fragment {
     private static final String TAG = "OpenQuestLogFragment";
     private CharacterService characterService;
     private ServerRestClient client;
+    private ProgressBar mProgressBar;
+    private TextView mErrorMessage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_open_quests, container, false);
-        characterService = new CharacterService(view.getContext().getApplicationContext());
+
+        Context context = view.getContext();
+
+        characterService = new CharacterService(context.getApplicationContext());
         client = new ServerRestClient(characterService.getToken());
 
-        mRecyclerView = (RecyclerView) view;
-        Context context = view.getContext();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.open_questlog_list);
 
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mProgressBar = (ProgressBar) view.findViewById(R.id.quest_progress_bar);
+        mErrorMessage = (TextView) view.findViewById(R.id.quest_error_message);
 
         getQuests();
 
@@ -83,13 +91,33 @@ public class OpenQuestLogFragment extends Fragment {
                     RecyclerView.Adapter adapter = new QuestLogAdapter(openQuests, true);
                     mRecyclerView.setAdapter(adapter);
 
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    //mProgressBar.setVisibility(View.GONE);
+                    mProgressBar.setVisibility(View.GONE);
+                    if (openQuests.size() > 0){
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        mRecyclerView.setVisibility(View.INVISIBLE);
+                        mErrorMessage.setText(R.string.noquestsfound);
+                        mErrorMessage.setVisibility(View.VISIBLE);
+                    }
+
                 } catch (JSONException e) {
                     Log.e(TAG, "Error parsing list of trending quests", e);
                 }
             }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                mProgressBar.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                mProgressBar.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);
+            }
         });
     }
 

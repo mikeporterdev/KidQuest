@@ -184,7 +184,6 @@ public class MainTabActivity extends AppCompatActivity {
         navBarList.setHasFixedSize(true);
         String[] navBarLocationStrings = getResources().getStringArray(R.array.navigation_drawer_items);
 
-        CharacterService characterService = new CharacterService(getApplicationContext());
         mAdapter = new NavBarListAdapter(navBarLocationStrings, character);
         navBarList.setAdapter(mAdapter);
         navBarList.setLayoutManager(new LinearLayoutManager(this));
@@ -192,7 +191,6 @@ public class MainTabActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new NavBarListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(final View view, int position) {
-                Fragment fragment = null;
                 switch (position) {
                     case 1:
                         cService.isCorrectPin(view, new DialogSingleButtonListener() {

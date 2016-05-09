@@ -19,6 +19,7 @@ import java.util.List;
  */
 class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
     private final List<Reward> mRewards;
+    private CharacterService characterService;
 
     public RewardAdapter(List<Reward> rewards) {
         this.mRewards = rewards;
@@ -36,13 +37,14 @@ class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
         Reward reward = mRewards.get(position);
 
         viewHolder.txtRewardName.setText(reward.getName());
+        viewHolder.txtRewardCost.setText(String.valueOf(reward.getCost()) + "g");
 
         if (reward.isCompleted()){
             viewHolder.btnAction.setText("Already Purchased");
         } else {
-            viewHolder.txtRewardCost.setText(String.valueOf(reward.getCost()) + "g");
 
-            CharacterService characterService = new CharacterService(viewHolder.txtRewardName.getContext());
+
+            characterService = new CharacterService(viewHolder.txtRewardName.getContext());
 
             if (!characterService.isParent()){
                 viewHolder.btnAction.setText("Purchase");
@@ -52,9 +54,7 @@ class RewardAdapter extends RecyclerView.Adapter<RewardViewHolder> {
                         int pos = viewHolder.getAdapterPosition();
                         Reward r = mRewards.get(pos);
                         RewardService rewardService = new RewardService(v.getContext().getApplicationContext());
-                        rewardService.completeReward(r);
-                        viewHolder.btnAction.setText("Already Purchased");
-                        viewHolder.btnAction.setOnClickListener(null);
+                        rewardService.completeReward(r, viewHolder);
                     }
                 });
             } else {

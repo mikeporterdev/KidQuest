@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.michael.kidquest.greendao.model.Reward;
+import com.michael.kidquest.reward.RewardViewHolder;
 import com.michael.kidquest.server.ServerRestClient;
 
 import org.json.JSONException;
@@ -56,7 +57,7 @@ public class RewardService {
         }
     }
 
-    public void completeReward(Reward reward){
+    public void completeReward(Reward reward, final RewardViewHolder viewHolder){
         JSONObject jsonParams = new JSONObject();
         try {
             jsonParams.put("completed", true);
@@ -71,6 +72,8 @@ public class RewardService {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(TAG, "Quest marked as complete on server");
+                    viewHolder.btnAction.setText("Already Purchased");
+                    viewHolder.btnAction.setOnClickListener(null);
                 }
 
                 @Override

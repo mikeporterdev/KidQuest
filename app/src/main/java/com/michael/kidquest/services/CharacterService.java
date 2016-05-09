@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -76,10 +78,10 @@ public class CharacterService {
             builder.setTitle("Enter parent pin");
 
             final EditText editText = new EditText(context);
-            editText.setInputType(InputType.TYPE_CLASS_PHONE | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
             editText.setTextColor(Color.BLACK);
             builder.setView(editText);
-
             //Credit to Handrata Samsul for this code. http://stackoverflow.com/questions/35353350/alertdialog-return-boolean-value
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
@@ -93,7 +95,11 @@ public class CharacterService {
                 }
             });
             AlertDialog dialog = builder.create();
+
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
             dialog.show();
+
         }
     }
 

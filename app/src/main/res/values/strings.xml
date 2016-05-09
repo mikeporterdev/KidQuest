@@ -47,4 +47,5 @@
     <string name="gcm_sender_id">400451561670</string>
     <string name="not_a_member_u_register_here_u">Not a member? <u>Click here to register.</u></string>
     <string name="or_pick_from_a_preset_quest"><u>Or pick from a preset quest...</u></string>
+    <string name="noquestsfound">No quests found.\nAsk a parent to set one up for you.</string>
 </resources>

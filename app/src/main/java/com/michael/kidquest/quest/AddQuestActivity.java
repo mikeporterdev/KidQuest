@@ -12,15 +12,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.michael.kidquest.R;
-import com.michael.kidquest.widget.TabActivity;
 import com.michael.kidquest.greendao.custommodel.DifficultyLevel;
 import com.michael.kidquest.greendao.model.Quest;
+import com.michael.kidquest.server.ServerRestClient;
+import com.michael.kidquest.services.CharacterService;
 import com.michael.kidquest.services.QuestService;
+import com.michael.kidquest.widget.TabActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 
 public class AddQuestActivity extends AppCompatActivity {
@@ -96,12 +106,37 @@ public class AddQuestActivity extends AppCompatActivity {
                     quest.setTitle(editQuestName.getText().toString());
                     quest.setDescription(editQuestDesc.getText().toString());
 
-                    questService.addQuest(quest);
+                    JSONObject jsonParams = new JSONObject();
+                    try {
+                        jsonParams.put("title", quest.getTitle());
+                        jsonParams.put("difficulty_level", quest.getDifficultyLevel());
+                        jsonParams.put("description", quest.getDescription());
+                        StringEntity entity = new StringEntity(jsonParams.toString());
 
-                    Toast.makeText(AddQuestActivity.this, "Quest Added", Toast.LENGTH_SHORT).show();
+                        CharacterService characterService = new CharacterService(getApplicationContext());
+                        ServerRestClient client = new ServerRestClient(characterService.getToken());
+                        String url = "users/" + characterService.getServerId() + "/quests/";
+                        client.post(getApplicationContext(), url, entity, new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                Toast.makeText(AddQuestActivity.this, "Quest Added", Toast.LENGTH_SHORT).show();
 
-                    setResult(2);
-                    finish();
+                                setResult(2);
+                                finish();
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                Toast.makeText(AddQuestActivity.this, "Failed Sending Quest to Server", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+                    } catch (JSONException | UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+
                 } else {
                     editQuestName.setError("Quest Name is required");
                 }
