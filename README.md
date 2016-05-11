@@ -54,9 +54,21 @@ Once the parent has checked that the task has actually been completed, they can 
 The child will be notified that they have been given rewards.
 
 #### Adding Rewards
+Rewards are designed to be real life rewards that the parent can offer in order incentivise their child to complete the quest. 
+Rewards have a gold cost that will be subtracted from the user's gold bank.
 
 Adding rewards takes place much like adding a quest does. 
+1. Press the add button in the bottom right of the main screen.
+2. Press Add Reward.
+3. Type in the parent PIN code.
+4. Fill in the name and cost for the reward.
 
+The child then receives a notification about the reward.
+
+#### Purchasing Rewards
+
+To purchase a reward, open the main screen, open the rewards submenu and click purchase on the reward. 
+The parent will receive a notification about the purchased reward and will be expected to fulfill this for the child.
 
 ## Setup
 
