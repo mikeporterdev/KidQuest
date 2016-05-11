@@ -21,6 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -205,13 +206,17 @@ public class MainTabActivity extends AppCompatActivity {
             public void onItemClick(final View view, int position) {
                 switch (position) {
                     case 1:
-                        cService.isCorrectPin(view, new DialogSingleButtonListener() {
-                            @Override
-                            public void onButtonClicked(DialogInterface dialog) {
-                                Intent intent = new Intent(view.getContext(), ParentSetup.class);
-                                startActivity(intent);
-                            }
-                        });
+                        if (cService.isParent()){
+                            Toast.makeText(MainTabActivity.this, "You are already a parent user.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            cService.isCorrectPin(view, new DialogSingleButtonListener() {
+                                @Override
+                                public void onButtonClicked(DialogInterface dialog) {
+                                    Intent intent = new Intent(view.getContext(), ParentSetup.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
                         break;
                     case 2:
                         cService.signOut();

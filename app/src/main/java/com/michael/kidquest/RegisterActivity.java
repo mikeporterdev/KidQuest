@@ -75,6 +75,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                 String password = mPasswordView.getText().toString();
 
+                if (password.length() < 4){
+                    valid = false;
+                    mPasswordView.setError("Password is too short");
+                }
+
                 if (mParentPin == null || mParentPin.getText().toString().equals("")){
                     valid = false;
                     mParentPin.setError("You must enter a pin code");
