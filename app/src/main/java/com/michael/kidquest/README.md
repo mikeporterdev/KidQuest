@@ -1,6 +1,7 @@
 # KidQuest
 
-KidQuest is a gamified mobile task-management application designed for parents to manage their children's chores.
+KidQuest is a proof-of-concept gamified mobile task-management application designed for parents to manage their children's chores. 
+This has been created as the software artefact contribution to my BSc (Hons) Software Engineering degree.
 
 Its features include:
 
@@ -11,6 +12,19 @@ Its features include:
 ## Setup
 
 ### Compilation from Source
+
+Gradle is used as the build system for this application. To compile a runnable .apk file for an android phone use:
+
+```bash
+$ gradle assemble
+```
+
+This will generate two files in the KidQuest/app/build/outputs/apk/ folder:
+- app-debug-unaligned.apk
+- app-release-unsigned.apk
+
+It is recommended that the app-debug-unaligned.apk file is used for running the app.
+This file can be used to install the app on an Android phone, provided that the 'Install from Unknown Sources' option is enabled on the device.
 
 As mentioned in the report, the application has been tested on older versions of the android ecosystem going back to JellyBean (API 16), however an up to date version of Marshmallow (API 23) is recommended for this application.
 
