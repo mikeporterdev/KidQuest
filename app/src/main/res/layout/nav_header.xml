@@ -42,6 +42,7 @@
             android:layout_below="@+id/character_name"
             android:layout_alignParentRight="true"
             android:paddingEnd="16dp"
+            android:paddingRight="16dp"
             android:textColor="#FFFFFF"
             android:layout_alignParentEnd="true" />
 
@@ -72,7 +73,7 @@
         android:layout_alignRight="@id/progressBar"
         android:layout_alignBottom="@id/progressBar"
         android:text="XP: 0/0"
-        android:textAlignment="center"
+        android:gravity="center_horizontal"
         android:id="@+id/xpdesc"
         />
 

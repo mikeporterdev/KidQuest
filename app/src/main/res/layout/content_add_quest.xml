@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/or_pick_from_a_preset_quest"
-        android:gravity="end"
+        android:gravity="center"
         android:id="@+id/presetQuestLink"
         android:paddingTop="32dp"
         android:layout_alignParentBottom="true"/>
