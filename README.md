@@ -11,6 +11,26 @@ Its features include:
 
 ## Usage
 
+#### Register/Login
+
+Registering an account can be done via the register link on the login screen. 
+To register, enter the following:
+- A valid format email address
+- A password of more than four characters
+- An in-game character name
+- A PIN code to be used by the parent
+
+Once registered, the email/password can be used on the login screen.
+
+Note: The email address will not be verified as real or used for any email purposes, but will be stored on the server for login reasons. It is recommended that fake email addresses are used for the purpose of project evaluation. 
+
+#### Setting up Parent Account
+
+From the child's phone, press the 'Set up parent' link and enter an email address and password for them to login with.
+This will create the parent account on the server.
+The parent registration process MUST take place on this page the child's phone, rather than the register link on the login page.
+This process has been implemented for security purposes.
+
 #### Adding Tasks
 
 1. Press the add button in the bottom right of the main screen.
@@ -18,15 +38,25 @@ Its features include:
 3. Type in the parent PIN code.
 4. Fill in the name, description (optional) and select a difficulty rating for the quest.
 
+Added quests will appear in the Open Quests list and the child will be notified that there is a new quest available.
+
 #### Completing a Task
 
 When a task has been completed by the child, it needs to be moved into pending status to be verified by an adult.
 To complete a task, press the "Mark as Complete" button on the Open Quests section of the main screen.
 Rewards are not given until the task has been verified.
+The parent will be notified when a quest has been marked as complete.
 
 #### Verifying a Task
 
-Once the parent has verified that the task has been completed, 
+The parent can see quests that are awaiting verification by checking the Pending Quests list.
+Once the parent has checked that the task has actually been completed, they can give the child the in-game rewards by pressing the "Confirm Quest button".
+The child will be notified that they have been given rewards.
+
+#### Adding Rewards
+
+Adding rewards takes place much like adding a quest does. 
+
 
 ## Setup
 
@@ -71,7 +101,7 @@ The only changes required in the KidQuest application code is that the SERVER_UR
 
 Exact instructions for the server setup can be found in the server's README file.
 
-NB: The hosted instance will be maintained until June 10th for the benefit of examiners. 
+Note: The hosted instance will be maintained until June 10th for the benefit of examiners. 
 No changes will be made to server code, but uptime will be monitored. 
 It is highly recommended that no real data is used on the default instance of the server due to the ethical concerns of this project. 
 Email verification has not been implemented to allow the use of fake email addresses when registering to the service 
