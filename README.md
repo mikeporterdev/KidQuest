@@ -58,6 +58,7 @@ Rewards are designed to be real life rewards that the parent can offer in order 
 Rewards have a gold cost that will be subtracted from the user's gold bank.
 
 Adding rewards takes place much like adding a quest does. 
+
 1. Press the add button in the bottom right of the main screen.
 2. Press Add Reward.
 3. Type in the parent PIN code.
